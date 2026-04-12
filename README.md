@@ -14,6 +14,14 @@ https://dantasqu.github.io/junimo-perfection-journal/
 
 This is the current transparent journal artwork for the project.
 
+```text
+#####  #   #  #   #  #####  #   #   ###        ####   #####  ####   #####  #####   ####  #####  #####   ###   #   #       #####   ###   #   #  ####   #   #   ###   #      
+   #   #   #  ##  #    #    ## ##  #   #       #   #  #      #   #  #      #      #        #      #    #   #  ##  #          #   #   #  #   #  #   #  ##  #  #   #  #      
+   #   #   #  # # #    #    # # #  #   #       ####   ####   ####   ####   ####   #        #      #    #   #  # # #          #   #   #  #   #  ####   # # #  #####  #      
+#  #   #   #  #  ##    #    #   #  #   #       #      #      #  #   #      #      #        #      #    #   #  #  ##       #  #   #   #  #   #  #  #   #  ##  #   #  #      
+ ##     ###   #   #  #####  #   #   ###        #      #####  #   #  #      #####   ####    #    #####   ###   #   #        ##     ###    ###   #   #  #   #  #   #  #####  
+```
+
 ![Junimo Perfection Journal artwork](./branding/current/journal-art-transparent.png)
 
 ## Use It
