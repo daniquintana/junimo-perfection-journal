@@ -1,10 +1,14 @@
 # Junimo Perfection Journal
 
-A cozy Stardew Valley perfection tracker built as a static website.
+A cozy Stardew Valley perfection tracker, currently available as a browser app and Mac app.
 
 ## Live Site
 
 https://dantasqu.github.io/junimo-perfection-journal/
+
+## Current Version
+
+`1.1.0` — `Honey Junimo`
 
 ## Use It
 
@@ -17,6 +21,7 @@ Open the live site in any modern browser, or open `index.html` locally.
 - `app.js`: tracker logic and local save behavior
 - `data/wiki-data.js`: bundled Stardew Wiki tracker data
 - `branding/`: icon direction, palette, and visual references for the book + Junimo identity
+- `CHANGELOG.md`: release history
 
 ## Notes
 

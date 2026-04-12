@@ -1,5 +1,9 @@
 const data = window.STARDEW_WIKI_DATA;
-const STORAGE_KEY = "stardew-perfection-tracker-v1";
+const APP_VERSION = "1.1.0";
+const RELEASE_NAME = "Honey Junimo";
+const SAVE_SCHEMA_VERSION = 2;
+const STORAGE_KEY = "junimo-perfection-journal-save-v2";
+const LEGACY_STORAGE_KEYS = ["stardew-perfection-tracker-v1"];
 
 const flatShippingItems = data.other.shippingPages.flatMap((page) => page.items);
 const cookingIngredientCatalogMap = Object.fromEntries(
@@ -9,7 +13,8 @@ const cookingIngredientNames = uniqueIngredientNames(data.cooking.recipes);
 const craftingIngredientNames = uniqueIngredientNames(data.crafting.recipes);
 const buildingMaterialNames = uniqueBuildingMaterialNames(data.other.buildings);
 
-let state = buildState(loadSaved());
+const initialSave = loadSaved();
+let state = buildState(initialSave.state);
 const ui = {
   activeTab: "general",
   fishSearch: "",
@@ -61,6 +66,12 @@ function populateStaticOptions() {
   document.getElementById("cooking-status").value = ui.cookingStatus;
   document.getElementById("cooking-ingredient-category").value = ui.cookingIngredientCategory;
   document.getElementById("crafting-status").value = ui.craftingStatus;
+
+  const versionPill = document.getElementById("version-pill");
+  if (versionPill) {
+    versionPill.textContent = `Version ${APP_VERSION} • ${RELEASE_NAME}`;
+    versionPill.title = `Save format v${SAVE_SCHEMA_VERSION}`;
+  }
 }
 
 function bindEvents() {
@@ -259,6 +270,7 @@ function renderGeneral() {
 
   document.getElementById("general-footer").innerHTML = `
     <p><strong>Built-in wiki data:</strong> ${escapeHtml(data.meta.notes.join(" "))}</p>
+    <p class="subtle">App version: ${escapeHtml(APP_VERSION)} • ${escapeHtml(RELEASE_NAME)} • Save format v${SAVE_SCHEMA_VERSION}</p>
     <p class="subtle">Generated: ${escapeHtml(formatDate(data.meta.generatedAt))}</p>
     <div class="source-links">
       ${data.meta.wikiSourcePages
@@ -1372,9 +1384,8 @@ function buildMaterialRows(totals, stockMap, group) {
 
 function exportSave() {
   const payload = {
+    ...buildSavePayload(state),
     exportedAt: new Date().toISOString(),
-    appName: data.meta.appName,
-    state,
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
   const link = document.createElement("a");
@@ -1394,12 +1405,17 @@ function importSave(event) {
   reader.onload = () => {
     try {
       const parsed = JSON.parse(reader.result);
-      state = buildState(parsed.state || parsed);
+      const importedSave = normalizeSavePayload(parsed);
+      state = buildState(importedSave.state);
       saveState();
       renderAllDynamic();
       event.target.value = "";
     } catch (error) {
-      window.alert("That file could not be imported.");
+      window.alert(
+        error?.message === "future-save-version"
+          ? "That save was made with a newer version of Junimo Perfection Journal."
+          : "That file could not be imported."
+      );
       event.target.value = "";
     }
   };
@@ -1417,15 +1433,95 @@ function resetSave() {
 }
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(buildSavePayload(state)));
+  LEGACY_STORAGE_KEYS.forEach((key) => {
+    localStorage.setItem(key, JSON.stringify(state));
+  });
 }
 
 function loadSaved() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-  } catch (error) {
-    return {};
+  const keys = [STORAGE_KEY, ...LEGACY_STORAGE_KEYS];
+  for (const key of keys) {
+    const raw = localStorage.getItem(key);
+    if (!raw) {
+      continue;
+    }
+    try {
+      return normalizeSavePayload(JSON.parse(raw));
+    } catch (error) {
+      continue;
+    }
   }
+  return buildSavePayload({});
+}
+
+function buildSavePayload(stateOverride) {
+  return {
+    appName: data.meta.appName,
+    appVersion: APP_VERSION,
+    releaseName: RELEASE_NAME,
+    saveVersion: SAVE_SCHEMA_VERSION,
+    state: stateOverride,
+  };
+}
+
+function normalizeSavePayload(payload) {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return buildSavePayload({});
+  }
+
+  const isEnvelope =
+    payload.state &&
+    typeof payload.state === "object" &&
+    !Array.isArray(payload.state);
+
+  if (!isEnvelope) {
+    return {
+      ...buildSavePayload(migrateSaveState(payload, 1)),
+      appVersion: "legacy",
+      releaseName: "Legacy save",
+    };
+  }
+
+  const saveVersion = Number.parseInt(payload.saveVersion, 10);
+  if (Number.isFinite(saveVersion) && saveVersion > SAVE_SCHEMA_VERSION) {
+    throw new Error("future-save-version");
+  }
+
+  return {
+    appName: payload.appName || data.meta.appName,
+    appVersion: payload.appVersion || "legacy",
+    releaseName: payload.releaseName || "Legacy save",
+    saveVersion: SAVE_SCHEMA_VERSION,
+    state: migrateSaveState(payload.state, Number.isFinite(saveVersion) ? saveVersion : 1),
+  };
+}
+
+function migrateSaveState(savedState, fromVersion) {
+  let migrated = savedState && typeof savedState === "object" ? { ...savedState } : {};
+  const startingVersion = Number.isFinite(fromVersion) && fromVersion > 0 ? fromVersion : 1;
+
+  for (let version = startingVersion; version < SAVE_SCHEMA_VERSION; version += 1) {
+    if (version === 1) {
+      migrated = migrateSaveV1ToV2(migrated);
+    }
+  }
+
+  return migrated;
+}
+
+function migrateSaveV1ToV2(savedState) {
+  return {
+    ...savedState,
+    cooking: {
+      recipes: savedState?.cooking?.recipes || {},
+      pantry: savedState?.cooking?.pantry || {},
+    },
+    crafting: {
+      recipes: savedState?.crafting?.recipes || {},
+      stock: savedState?.crafting?.stock || {},
+    },
+  };
 }
 
 function buildState(saved) {
