@@ -1,18 +1,6 @@
 # Junimo Perfection Journal
 
-A cozy Stardew Valley perfection tracker, currently available as a browser app and Mac app.
-
-## Live Site
-
-https://dantasqu.github.io/junimo-perfection-journal/
-
-## Current Version
-
-`1.1.0` — `Honey Junimo`
-
-## Artwork Preview
-
-This is the current transparent journal artwork for the project.
+A cozy Stardew Valley perfection tracker for everything standing between a farm and true perfection. This repo holds the web version.
 
 ```text
 #####  #   #  #   #  #####  #   #   ###   
@@ -36,26 +24,39 @@ This is the current transparent journal artwork for the project.
 
 ![Junimo Perfection Journal artwork](./branding/current/journal-art-transparent.png)
 
-## Use It
+## Try It
 
-Open the live site in any modern browser, or open `index.html` locally.
+- Live site: [dantasqu.github.io/junimo-perfection-journal](https://dantasqu.github.io/junimo-perfection-journal/)
+- Local version: open `index.html` in a browser
+- Progress saves in the browser on each device
 
-## What's Included
+## Inside the Tracker
 
-- `index.html`: the app shell
-- `styles.css`: the Stardew-inspired UI styling
-- `app.js`: tracker logic and local save behavior
-- `data/wiki-data.js`: bundled Stardew Wiki tracker data
-- `branding/current/`: the current journal artwork files
+- fish
+- cooking
+- crafting
+- shipping
+- friendships
+- monster slayer goals
+- skills, stardrops, golden walnuts, obelisks, and the Gold Clock
+- import/export and local progress tracking
+
+## Repo Layout
+
+- `index.html`: app shell
+- `styles.css`: Stardew-inspired UI styling
+- `app.js`: tracker logic, rendering, save/import/export behavior
+- `data/`: bundled wiki-derived tracker data
+- `branding/current/`: current approved artwork
 - `branding/site/`: artwork used by the live site UI
 - `branding/social/`: GitHub/social preview exports
-- `branding/concepts/`: rougher alternate art explorations
-- `branding/references/`: Stardew and layout reference images
+- `branding/concepts/`: alternate drafts and experiments
+- `branding/references/`: Stardew and layout references
 - `CHANGELOG.md`: release history
 
 ## Notes
 
-- Progress is saved in the browser on each device.
-- The current hosted version is static because GitHub Pages is serving the front-end files directly.
-- If we ever want accounts, shared saves, or cloud sync, we can move to a non-static setup with a backend later.
-- Some images load from Stardew Valley Wiki URLs, so an internet connection helps those appear.
+- This repo is currently a static front-end hosted with GitHub Pages.
+- If we ever want accounts, shared saves, or cloud sync, we can move to a backend later.
+- Some images inside the tracker load from Stardew Valley Wiki URLs, so an internet connection helps those appear.
+- Current release: `1.1.0` — `Honey Junimo`
