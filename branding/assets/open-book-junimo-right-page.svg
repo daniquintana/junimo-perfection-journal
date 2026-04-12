@@ -107,36 +107,16 @@
 
   <circle cx="426" cy="239" r="94" fill="url(#pageGlow)" />
 
-  <g filter="url(#soft)" transform="translate(28 22) scale(0.88)">
-    <path
-      d="M405 185c11-16 27-25 45-25 35 0 60 27 60 66 0 43-29 80-61 102-30-20-62-57-62-102 0-37 23-67 58-67 10 0 21 3 30 9"
-      fill="url(#junimoBody)"
-      stroke="#2c6f2f"
-      stroke-width="5"
-      stroke-linejoin="round"
+  <g filter="url(#soft)">
+    <ellipse cx="450" cy="286" rx="54" ry="18" fill="#7a5a2b" opacity="0.16" />
+    <image
+      x="388"
+      y="168"
+      width="124"
+      height="124"
+      preserveAspectRatio="xMidYMid meet"
+      href="data:image/gif;base64,R0lGODlhMAAwAPIFAEfLGwQ9D43wMzKGHKW1gwAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJDwAFACwAAAAAMAAwAAAD/1i63P4wykmrvThHwHX4msMBHhgyYxmcz+e+bhSzCmyv0EzfsGwyugXvNRIYj8HaT7hUDgPFozFZoFqfUI502qx2da6o1DYoi8HfX1i7JZvZAjQOqP6IkbDy4FyfM+cuRyN6hIViejYOcoIchY57cIg9DYtGg4+Eh2WJlHlljCMAW6MClwNUfy56oHekpY2bXakfq5ahoq6gkn45tG+3wMHBqJ0BesLIycR0xr/JzyPLf9DUt9JO1dkA115Z2tDca6HiyOQc4XbW6crr0bLFwObD7efvzMCswvnb9tO3+/hsjeuH7Z9AZPvQNYMU7NgtAhAj7qKgytkth6EiSozFq0eFL4bAMI7QCHGiBRckCWQziQElyZUcVaSEeYqgBHmmhtAo2JAjpx30Qu36ubObzmLcKGJRNAnoE6YvWBAterIp1apRry5IAAAh+QQJDwAFACwDAAMAKgAtAAAD/1i63A7QyUkpBDXrF7cMoFeAgUY6p5dW69Jm7xcqsUveOE7le+7fPeDkRywNdQ2SYMm8KJnLGC8Jgi6dVasUyXhCsQGrYCscZQWXgTqnHlyYq6k5fIW02ep3dDaPn9NrOG16Y3xEbU12bYuLhHdFAYh1AIyVbhBMj0WSaIqWg5hLmn6ReaFiqImUgUZdIKAAqbKdqwNksLOpgLZ8NgEXwMHCw8FkxMfIYCggyc3Dxs7RENDSztTVydfTzNncwNoAJM3ixb003mDj6NutvsKqx/Dsy7/B8sP34Pfvk8pUpQMICBwoDNbAgZrotTkosKApAAwJJPy3kKHDSxAZTpQBEClbrRoUH0rbGATWSFYiIKlsp2JlERG+XPpIyYVmmSAgWdQ8crNlzwIJAAAh+QQJDwAFACwDAAMAKgAtAAAD/1garP7wgRkrZMHqMsG22Fd1ohOCWJqWV4OqKvucFQzLpjszQu93tlhrNfT9JkHiTpkLGHvApK5JwxwBgyzsKYhmFsKCFTrJDrZPL1U37pa1Kq4abDNfzfh8x1cN2slYeYJ7PX11WXeCehN8bI4BZoRcRh2SZjd0kYyTlJUAPpdhGJqfnFeWcEoYnqytroFnU3SvtK6hX0u1upW3Eau7wEiyYgzBwTRNxsDIs56/tM9zuc7FtdHCuMnUAbrXAMzE3J6nruTfw97mrObg6YCv7OgMZgT19qyk+Km+81n2957yBdw3hN4/AvoGvOr1QiCtgwTA8YOUJRhEiQUrArs4TCtDEofSZHzU2ArjhpEKXZmc2E5KNhaYliTBQaelFJo4ZXbMeTIMzxIxIyQAACH5BAUPAAUALAMAAwAqAC0AAAP/WLrcDtDJSSkENesXtwygV4CBRjqnl1br0mbvFyqxS944TuV77t894ORHLA11DZJgybwomcsYLwmCLp1VqxTJeEKxAatgKxxlBZeBOqceXJirqTl8hbTZ6nd0No+f02s4bXpjfERtTXZti4uEd0UBiHUAjJVuEEyPRZJoipaDmEuafpF5oWKoiZSBRl0goACpsp2rA2Sws6mAtnw2ARfAwcLDwWTEx8hgKCDJzcPGztEQ0NLO1NXJ19PM2dzA2gAkzeLFvTTeYOPo262+wqrH8OzLv8Hyw/fg9++TylSlAwgIHCgM1sCBmui1OSiwoCkADAkk/LeQocNLEBlOlAEQKVutGhQfStsYBNZIViIgqWynYmUREb5c+kjJhWaZICBZ1Dxys2XPAgkAADs="
     />
-    <path
-      d="M464 154c9-15 24-24 41-22-4 17-16 28-34 34"
-      fill="none"
-      stroke="#2e7b37"
-      stroke-width="7"
-      stroke-linecap="round"
-    />
-    <path
-      d="M470 126c16 2 28 11 34 27-14 5-28 1-40-12"
-      fill="url(#junimoLeaf)"
-      stroke="#22692d"
-      stroke-width="4"
-      stroke-linejoin="round"
-    />
-    <ellipse cx="427" cy="210" rx="7" ry="10" fill="#162210" />
-    <ellipse cx="471" cy="210" rx="7" ry="10" fill="#162210" />
-    <path d="M436 236c9 7 19 7 28 0" fill="none" stroke="#21461d" stroke-width="5" stroke-linecap="round" />
-    <path d="M409 254c-15 16-24 37-25 58" fill="none" stroke="#2f8338" stroke-width="6" stroke-linecap="round" />
-    <path d="M486 254c15 16 24 37 24 58" fill="none" stroke="#2f8338" stroke-width="6" stroke-linecap="round" />
-    <path d="M424 309c-1 17-10 31-24 42" fill="none" stroke="#2f8338" stroke-width="6" stroke-linecap="round" />
-    <path d="M469 309c2 17 11 31 25 42" fill="none" stroke="#2f8338" stroke-width="6" stroke-linecap="round" />
-    <ellipse cx="416" cy="221" rx="9" ry="5" fill="#d6ffb1" opacity="0.34" />
   </g>
 
   <g opacity="0.55">
