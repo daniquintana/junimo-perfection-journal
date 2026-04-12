@@ -26,7 +26,7 @@ A cozy Stardew Valley perfection tracker for everything standing between a farm 
 
 ## Try It
 
-- Live site: [dantasqu.github.io/junimo-perfection-journal](https://dantasqu.github.io/junimo-perfection-journal/)
+- Live site: [dantasqu.github.io/junimo-perfection-journal](https://dantasqu.github.io/junimo-perfection-journal/?v=20260412)
 - Local version: open `index.html` in a browser
 - Progress saves in the browser on each device
 
