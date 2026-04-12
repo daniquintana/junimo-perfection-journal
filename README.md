@@ -12,9 +12,9 @@ https://dantasqu.github.io/junimo-perfection-journal/
 
 ## Artwork Preview
 
-This is the current open-book golden Junimo art that now appears in the latest app and web hero.
+This is the current journal artwork for the project.
 
-![Open book with a golden Junimo](./branding/assets/open-book-golden-junimo.svg)
+![Junimo Perfection Journal artwork](./branding/assets/junimo-journal-open-book-art.png)
 
 ```text
       ______________________________________________
