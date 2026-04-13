@@ -20,7 +20,15 @@ A cozy Stardew Valley perfection tracker for everything standing between a farm 
             \___/ \___/ \__,_|_|  |_| |_|\__,_|_|
 ```
 
-![Junimo Perfection Journal artwork](./branding/current/journal-art-transparent.png)
+<p align="center">
+  <img src="./branding/site/hero-junimo-sprite.png" width="36" alt="Golden Junimo sprite" />
+  <img src="./branding/site/hero-junimo-sprite.png" width="36" alt="Golden Junimo sprite" />
+  <img src="./branding/site/hero-junimo-sprite.png" width="36" alt="Golden Junimo sprite" />
+  <img src="./branding/site/hero-junimo-sprite.png" width="36" alt="Golden Junimo sprite" />
+  <img src="./branding/site/hero-junimo-sprite.png" width="36" alt="Golden Junimo sprite" />
+  <img src="./branding/site/hero-junimo-sprite.png" width="36" alt="Golden Junimo sprite" />
+  <img src="./branding/site/hero-junimo-sprite.png" width="36" alt="Golden Junimo sprite" />
+</p>
 
 ## How to Use
 
