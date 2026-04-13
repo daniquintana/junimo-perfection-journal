@@ -141,7 +141,7 @@ function bindEvents() {
     renderOther();
   });
 
-  document.body.addEventListener("change", handleStateChange);
+  document.body.addEventListener("input", handleStateChange);
 
   document.getElementById("export-data").addEventListener("click", exportSave);
   document.getElementById("import-data").addEventListener("click", () => {
