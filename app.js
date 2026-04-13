@@ -27,6 +27,7 @@ const ui = {
   craftingStatus: "remaining",
   shippingSearch: "",
 };
+let scheduledRenderHandle = 0;
 
 const FISH_SPOT_ORDER = [
   "Legendary",
@@ -142,6 +143,7 @@ function bindEvents() {
   });
 
   document.body.addEventListener("input", handleStateChange);
+  document.body.addEventListener("change", handleStateChange);
 
   document.getElementById("export-data").addEventListener("click", exportSave);
   document.getElementById("import-data").addEventListener("click", () => {
@@ -208,7 +210,7 @@ function handleStateChange(event) {
   }
 
   saveState();
-  renderAllDynamic();
+  scheduleRenderAllDynamic();
 }
 
 function renderAllDynamic() {
@@ -231,6 +233,22 @@ function renderActiveTab() {
   } else {
     renderGeneral();
   }
+}
+
+function scheduleRenderAllDynamic() {
+  if (scheduledRenderHandle) {
+    return;
+  }
+
+  const scheduler =
+    typeof window !== "undefined" && typeof window.requestAnimationFrame === "function"
+      ? window.requestAnimationFrame.bind(window)
+      : (callback) => setTimeout(callback, 0);
+
+  scheduledRenderHandle = scheduler(() => {
+    scheduledRenderHandle = 0;
+    renderAllDynamic();
+  });
 }
 
 function renderGeneral() {
