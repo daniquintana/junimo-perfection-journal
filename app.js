@@ -497,7 +497,6 @@ function renderFish() {
                       ${itemThumb(fish, fish.name)}
                       <div>
                         <strong>${escapeHtml(fish.name)}</strong>
-                        ${fish.notes ? `<div class="subtle">${escapeHtml(fish.notes)}</div>` : ""}
                       </div>
                     </div>
                   </td>
@@ -528,7 +527,6 @@ function getFilteredFish() {
         fish.time,
         formatFishSeason(fish.season),
         fish.weather,
-        fish.notes,
       ]
         .join(" ")
         .toLowerCase();
