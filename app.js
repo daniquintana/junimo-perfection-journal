@@ -717,8 +717,8 @@ function renderRecipePlanner(config) {
   const remainingUnits = ingredientRows.reduce((sum, row) => sum + row.remaining, 0);
 
   document.getElementById(summaryEl).innerHTML = `
-    ${summaryCard(kind === "cooking" ? "Recipes left" : "Recipes left", `${remainingRecipes}`, kind === "cooking" ? "Still to cook" : "Still to craft", ratioToPercent(remainingRecipes / recipes.length))}
-    ${summaryCard(kind === "cooking" ? "Cooked" : "Crafted", `${doneCount}/${recipes.length}`, "Completion so far", ratioToPercent(doneCount / recipes.length))}
+    ${summaryCard(kind === "cooking" ? "Recipes left" : "Recipes left", `${remainingRecipes}`, kind === "cooking" ? "" : "Still to craft", ratioToPercent(remainingRecipes / recipes.length))}
+    ${summaryCard(kind === "cooking" ? "Cooked" : "Crafted", `${doneCount}/${recipes.length}`, kind === "cooking" ? "" : "Completion so far", ratioToPercent(doneCount / recipes.length))}
     ${summaryCard("Materials left", `${remainingUnits}`, "", ingredientRows.length ? 100 : 0)}
     ${summaryCard("Ingredients tracked", `${ingredientRows.length}`, "", ratioToPercent(Math.min(ingredientRows.length, recipes.length) / recipes.length))}
   `;
