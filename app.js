@@ -18,7 +18,7 @@ let state = buildState(initialSave.state);
 const ui = {
   activeTab: "general",
   fishSearch: "",
-  fishSpots: [],
+  fishSpot: "all",
   fishStatus: "remaining",
   cookingSearch: "",
   cookingStatus: "remaining",
@@ -53,26 +53,16 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function populateStaticOptions() {
-  const fishSpotFilters = document.getElementById("fish-spot-filters");
+  const fishSpot = document.getElementById("fish-spot");
   const fishSpots = FISH_SPOT_ORDER.filter((spot) =>
     data.fish.some((fish) => getFishSpots(fish).includes(spot))
   );
-  fishSpotFilters.innerHTML = `
-    <label class="filter-chip">
-      <input type="checkbox" data-fish-spot="all" ${ui.fishSpots.length === 0 ? "checked" : ""} />
-      <span>All spots</span>
-    </label>
-    ${fishSpots
-      .map(
-        (spot) => `
-          <label class="filter-chip">
-            <input type="checkbox" data-fish-spot="${escapeAttribute(spot)}" ${ui.fishSpots.includes(spot) ? "checked" : ""} />
-            <span>${escapeHtml(spot)}</span>
-          </label>
-        `
-      )
-      .join("")}
-  `;
+  fishSpot.insertAdjacentHTML(
+    "beforeend",
+    fishSpots
+      .map((spot) => `<option value="${escapeHtml(spot)}">${escapeHtml(spot)}</option>`)
+      .join("")
+  );
 
   const ingredientCategorySelect = document.getElementById("cooking-ingredient-category");
   const ingredientCategories = [
@@ -88,6 +78,7 @@ function populateStaticOptions() {
       .join("")
   );
 
+  document.getElementById("fish-spot").value = ui.fishSpot;
   document.getElementById("fish-status").value = ui.fishStatus;
   document.getElementById("cooking-status").value = ui.cookingStatus;
   document.getElementById("cooking-ingredient-category").value = ui.cookingIngredientCategory;
@@ -114,25 +105,8 @@ function bindEvents() {
     ui.fishSearch = event.target.value;
     renderFish();
   });
-  document.getElementById("fish-spot-filters").addEventListener("change", (event) => {
-    const target = event.target;
-    if (!target.matches("[data-fish-spot]")) {
-      return;
-    }
-
-    if (target.dataset.fishSpot === "all") {
-      ui.fishSpots = [];
-      syncFishSpotFilterUI();
-      renderFish();
-      return;
-    }
-
-    ui.fishSpots = Array.from(
-      document.querySelectorAll("#fish-spot-filters [data-fish-spot]:checked")
-    )
-      .map((input) => input.dataset.fishSpot)
-      .filter((spot) => spot && spot !== "all");
-    syncFishSpotFilterUI();
+  document.getElementById("fish-spot").addEventListener("change", (event) => {
+    ui.fishSpot = event.target.value;
     renderFish();
   });
   document.getElementById("fish-status").addEventListener("change", (event) => {
@@ -167,7 +141,7 @@ function bindEvents() {
     renderOther();
   });
 
-  document.body.addEventListener("input", handleStateChange);
+  document.body.addEventListener("change", handleStateChange);
 
   document.getElementById("export-data").addEventListener("click", exportSave);
   document.getElementById("import-data").addEventListener("click", () => {
@@ -559,8 +533,7 @@ function getFilteredFish() {
 
       return (
         matchesSearch(searchText, ui.fishSearch) &&
-        (ui.fishSpots.length === 0 ||
-          ui.fishSpots.some((spot) => getFishSpots(fish).includes(spot))) &&
+        (ui.fishSpot === "all" || getFishSpots(fish).includes(ui.fishSpot)) &&
         matchesStatus(done, ui.fishStatus)
       );
     });
@@ -574,7 +547,7 @@ function reconcileTabFilterForVisibility(tab) {
   if (tab === "fish") {
     const canAutoSwitch =
       ui.fishStatus === "remaining" &&
-      ui.fishSpots.length === 0 &&
+      ui.fishSpot === "all" &&
       !ui.fishSearch.trim() &&
       getFilteredFish().length === 0;
     if (canAutoSwitch) {
@@ -1306,16 +1279,6 @@ function getRemainingSnapshot() {
 
 function getMonsterGoalLabel(entry) {
   return entry.monsterType.split(":")[0].trim();
-}
-
-function syncFishSpotFilterUI() {
-  document.querySelectorAll("#fish-spot-filters [data-fish-spot]").forEach((input) => {
-    if (input.dataset.fishSpot === "all") {
-      input.checked = ui.fishSpots.length === 0;
-      return;
-    }
-    input.checked = ui.fishSpots.includes(input.dataset.fishSpot);
-  });
 }
 
 function getFishTypeLabel(fish) {
