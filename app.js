@@ -531,6 +531,8 @@ function renderFish() {
       </table>
     </div>
   `;
+
+  bindFishToggleInputs();
 }
 
 function getFilteredFish() {
@@ -559,6 +561,20 @@ function getFilteredFish() {
 
 function getRemainingFish() {
   return data.fish.filter((fish) => !state.fish[fish.id]);
+}
+
+function bindFishToggleInputs() {
+  document
+    .querySelectorAll("#fish-table [data-action='fish-toggle']")
+    .forEach((input) => {
+      input.addEventListener("change", (event) => {
+        event.stopPropagation();
+        state.fish[input.dataset.id] = input.checked;
+        saveState();
+        renderGeneral();
+        renderFish();
+      });
+    });
 }
 
 function reconcileTabFilterForVisibility(tab) {
