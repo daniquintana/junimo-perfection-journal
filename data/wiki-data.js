@@ -3683,7 +3683,7 @@ window.STARDEW_WIKI_DATA = {
         "description": "Takes 20 days to mature. Produces tea leaves during the final week of each season, except winter. No watering necessary!",
         "ingredients": [
           {
-            "item": "",
+            "item": "Wild Seeds (Any)",
             "quantity": 2
           },
           {
