@@ -144,9 +144,13 @@ function bindEvents() {
     renderCooking();
   });
 
-  document.getElementById("crafting-search").addEventListener("input", (event) => {
+  const craftingSearchInput = document.getElementById("crafting-search");
+  const handleCraftingSearch = (event) => {
     ui.craftingSearch = event.target.value;
     renderCrafting();
+  };
+  ["input", "change", "search"].forEach((eventName) => {
+    craftingSearchInput.addEventListener(eventName, handleCraftingSearch);
   });
   document.getElementById("crafting-status").addEventListener("change", (event) => {
     ui.craftingStatus = event.target.value;
