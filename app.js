@@ -723,16 +723,18 @@ function renderRecipePlanner(config) {
     .filter((row) => ingredientCategory === "all" || row.category === ingredientCategory)
     .sort((left, right) => right.remaining - left.remaining || left.item.localeCompare(right.item));
 
-  const remainingUnits = ingredientRows.reduce((sum, row) => sum + row.remaining, 0);
+  const visibleIngredientRows =
+    status === "remaining" ? ingredientRows.filter((row) => row.remaining > 0) : ingredientRows;
+  const remainingUnits = visibleIngredientRows.reduce((sum, row) => sum + row.remaining, 0);
 
   document.getElementById(summaryEl).innerHTML = `
     ${summaryCard(kind === "cooking" ? "Recipes left" : "Recipes left", `${remainingRecipes}`, kind === "cooking" ? "" : "Still to craft", ratioToPercent(remainingRecipes / recipes.length))}
     ${summaryCard(kind === "cooking" ? "Cooked" : "Crafted", `${doneCount}/${recipes.length}`, kind === "cooking" ? "" : "Completion so far", ratioToPercent(doneCount / recipes.length))}
-    ${summaryCard("Materials left", `${remainingUnits}`, "", ingredientRows.length ? 100 : 0)}
-    ${summaryCard("Ingredients tracked", `${ingredientRows.length}`, "", ratioToPercent(Math.min(ingredientRows.length, recipes.length) / recipes.length))}
+    ${summaryCard("Materials left", `${remainingUnits}`, "", visibleIngredientRows.length ? 100 : 0)}
+    ${summaryCard("Ingredients tracked", `${visibleIngredientRows.length}`, "", ratioToPercent(Math.min(visibleIngredientRows.length, recipes.length) / recipes.length))}
   `;
 
-  document.getElementById(ingredientsEl).innerHTML = ingredientRows.length
+  document.getElementById(ingredientsEl).innerHTML = visibleIngredientRows.length
     ? `
       <article class="planner-card">
         <h3>${kind === "cooking" ? "Ingredient Planner" : "Material Planner"}</h3>
@@ -748,7 +750,7 @@ function renderRecipePlanner(config) {
               </tr>
             </thead>
             <tbody>
-              ${ingredientRows
+              ${visibleIngredientRows
                 .map(
                   (row) => `
                     <tr>
@@ -782,7 +784,9 @@ function renderRecipePlanner(config) {
     `
     : emptyState(
         remainingRecipes
-          ? kind === "cooking" && ingredientCategory !== "all"
+          ? status === "remaining" && ingredientRows.length
+            ? "You already have enough of the remaining ingredients in this view."
+            : kind === "cooking" && ingredientCategory !== "all"
             ? `No remaining ingredients match the ${ingredientCategory} filter.`
             : "No remaining ingredients match the current filter."
           : `All ${kind} recipes are done, so there are no remaining ingredients to plan around.`
