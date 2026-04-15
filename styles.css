@@ -777,6 +777,29 @@ input[type="checkbox"] {
   grid-column: 1 / -1;
 }
 
+.cooking-layout.is-recipes #cooking-recipes.recipe-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.cooking-layout.is-split .planner-table-cooking th:first-child,
+.cooking-layout.is-split .planner-table-cooking td:first-child {
+  width: 40%;
+}
+
+.cooking-layout.is-split .planner-table-cooking th:nth-child(2),
+.cooking-layout.is-split .planner-table-cooking td:nth-child(2) {
+  width: 17%;
+}
+
+.cooking-layout.is-split .planner-table-cooking th:nth-child(3),
+.cooking-layout.is-split .planner-table-cooking td:nth-child(3),
+.cooking-layout.is-split .planner-table-cooking th:nth-child(4),
+.cooking-layout.is-split .planner-table-cooking td:nth-child(4),
+.cooking-layout.is-split .planner-table-cooking th:nth-child(5),
+.cooking-layout.is-split .planner-table-cooking td:nth-child(5) {
+  padding-right: 18px;
+}
+
 .planner-split #cooking-recipes.recipe-grid {
   grid-template-columns: minmax(0, 1fr);
 }
@@ -1203,6 +1226,10 @@ a {
     grid-template-columns: 1fr;
   }
 
+  .cooking-layout.is-recipes #cooking-recipes.recipe-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .collectibles-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1234,6 +1261,10 @@ a {
 
   .table-shell {
     overflow-x: auto;
+  }
+
+  .cooking-layout.is-recipes #cooking-recipes.recipe-grid {
+    grid-template-columns: 1fr;
   }
 
   .front-junimo {
