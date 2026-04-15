@@ -4,6 +4,19 @@ const RELEASE_NAME = "Honey Junimo";
 const SAVE_SCHEMA_VERSION = 2;
 const STORAGE_KEY = "junimo-perfection-journal-save-v2";
 const LEGACY_STORAGE_KEYS = ["stardew-perfection-tracker-v1"];
+const SAVE_STATE_KEYS = [
+  "fish",
+  "cooking",
+  "crafting",
+  "shipping",
+  "villagers",
+  "monsterGoals",
+  "skills",
+  "stardrops",
+  "buildings",
+  "buildingStock",
+  "goldenWalnuts",
+];
 const GOLDEN_WALNUT_ITEM = {
   name: "Golden Walnut",
   imageUrl: "https://stardewvalleywiki.com/mediawiki/images/5/54/Golden_Walnut.png",
@@ -113,9 +126,13 @@ function bindEvents() {
     });
   });
 
-  document.getElementById("fish-search").addEventListener("input", (event) => {
+  const fishSearchInput = document.getElementById("fish-search");
+  const handleFishSearch = (event) => {
     ui.fishSearch = event.target.value;
     renderFish();
+  };
+  ["input", "change", "search"].forEach((eventName) => {
+    fishSearchInput.addEventListener(eventName, handleFishSearch);
   });
   document.getElementById("fish-spot").addEventListener("change", (event) => {
     ui.fishSpot = event.target.value;
@@ -170,9 +187,13 @@ function bindEvents() {
     renderCrafting();
   });
 
-  document.getElementById("shipping-search").addEventListener("input", (event) => {
+  const shippingSearchInput = document.getElementById("shipping-search");
+  const handleShippingSearch = (event) => {
     ui.shippingSearch = event.target.value;
     renderShipping();
+  };
+  ["input", "change", "search"].forEach((eventName) => {
+    shippingSearchInput.addEventListener(eventName, handleShippingSearch);
   });
   document.getElementById("shipping-status").addEventListener("change", (event) => {
     ui.shippingStatus = event.target.value;
@@ -1663,6 +1684,8 @@ function importSave(event) {
       window.alert(
         error?.message === "future-save-version"
           ? "That save was made with a newer version of Junimo Perfection Journal."
+          : error?.message === "invalid-save-file"
+            ? "That file is not a Junimo Perfection Journal save."
           : "That file could not be imported."
       );
       return;
@@ -1707,16 +1730,16 @@ function resetSave() {
 }
 
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(buildSavePayload(state)));
+  writeStorageValue(STORAGE_KEY, JSON.stringify(buildSavePayload(state)));
   LEGACY_STORAGE_KEYS.forEach((key) => {
-    localStorage.setItem(key, JSON.stringify(state));
+    writeStorageValue(key, JSON.stringify(state));
   });
 }
 
 function loadSaved() {
   const keys = [STORAGE_KEY, ...LEGACY_STORAGE_KEYS];
   for (const key of keys) {
-    const raw = localStorage.getItem(key);
+    const raw = readStorageValue(key);
     if (!raw) {
       continue;
     }
@@ -1741,7 +1764,7 @@ function buildSavePayload(stateOverride) {
 
 function normalizeSavePayload(payload) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
-    return buildSavePayload({});
+    throw new Error("invalid-save-file");
   }
 
   const isEnvelope =
@@ -1750,6 +1773,9 @@ function normalizeSavePayload(payload) {
     !Array.isArray(payload.state);
 
   if (!isEnvelope) {
+    if (!looksLikeSaveStateObject(payload)) {
+      throw new Error("invalid-save-file");
+    }
     return {
       ...buildSavePayload(migrateSaveState(payload, 1)),
       appVersion: "legacy",
@@ -1760,6 +1786,10 @@ function normalizeSavePayload(payload) {
   const saveVersion = Number.parseInt(payload.saveVersion, 10);
   if (Number.isFinite(saveVersion) && saveVersion > SAVE_SCHEMA_VERSION) {
     throw new Error("future-save-version");
+  }
+
+  if (!looksLikeSaveStateObject(payload.state)) {
+    throw new Error("invalid-save-file");
   }
 
   return {
@@ -1796,6 +1826,33 @@ function migrateSaveV1ToV2(savedState) {
       stock: savedState?.crafting?.stock || {},
     },
   };
+}
+
+function looksLikeSaveStateObject(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return false;
+  }
+
+  return SAVE_STATE_KEYS.some((key) => Object.hasOwn(value, key));
+}
+
+function readStorageValue(key) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch (error) {
+    console.warn(`Could not read tracker storage for ${key}.`, error);
+    return null;
+  }
+}
+
+function writeStorageValue(key, value) {
+  try {
+    window.localStorage.setItem(key, value);
+    return true;
+  } catch (error) {
+    console.warn(`Could not save tracker storage for ${key}.`, error);
+    return false;
+  }
 }
 
 function buildState(saved) {
