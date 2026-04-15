@@ -424,7 +424,16 @@ function renderGeneralLeftBoard(remaining) {
             [
               ...remaining.stardrops,
               ...remaining.buildings,
-              ...(remaining.walnutsLeft ? [{ name: "Golden Walnuts", meta: `${state.goldenWalnuts}/${data.other.goldenWalnutsTarget} found`, value: `${remaining.walnutsLeft} left` }] : []),
+              ...(remaining.walnutsLeft
+                ? [
+                    {
+                      name: "Golden Walnuts",
+                      imageUrl: GOLDEN_WALNUT_ITEM.imageUrl,
+                      meta: `${state.goldenWalnuts}/${data.other.goldenWalnutsTarget} found`,
+                      value: `${remaining.walnutsLeft} left`,
+                    },
+                  ]
+                : []),
             ],
             (entry) => entry.name,
             (entry) => entry.meta,
