@@ -1032,19 +1032,16 @@ function renderMonsterGoals() {
             .map((goal) => {
               const current = state.monsterGoals[goal.id];
               const done = current >= goal.target;
-              return `
-                <tr>
-                  <td>
-                    <label class="toggle-line toggle-line-table">
-                      <input
-                        type="checkbox"
-                        data-action="monster-complete"
-                        data-id="${goal.id}"
-                        ${done ? "checked" : ""}
-                      />
-                      <span>${done ? "Complete" : "Mark complete"}</span>
-                    </label>
-                  </td>
+	          return `
+	                <tr>
+	                  <td class="monster-done-cell">
+	                    <input
+	                      type="checkbox"
+	                      data-action="monster-complete"
+	                      data-id="${goal.id}"
+	                      ${done ? "checked" : ""}
+	                    />
+	                  </td>
                   <td>
                     <strong>${escapeHtml(getMonsterGoalLabel(goal))}</strong>
                   </td>
