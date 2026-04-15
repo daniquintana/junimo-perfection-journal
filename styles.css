@@ -781,6 +781,36 @@ input[type="checkbox"] {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.cooking-layout.is-planner .planner-table-cooking th:first-child,
+.cooking-layout.is-planner .planner-table-cooking td:first-child {
+  width: 40%;
+}
+
+.cooking-layout.is-planner .planner-table-cooking th:nth-child(2),
+.cooking-layout.is-planner .planner-table-cooking td:nth-child(2) {
+  width: 18%;
+}
+
+.cooking-layout.is-planner .planner-table-cooking th:nth-child(3),
+.cooking-layout.is-planner .planner-table-cooking td:nth-child(3) {
+  width: 8%;
+}
+
+.cooking-layout.is-planner .planner-table-cooking th:nth-child(4),
+.cooking-layout.is-planner .planner-table-cooking td:nth-child(4) {
+  width: 16%;
+}
+
+.cooking-layout.is-planner .planner-table-cooking th:nth-child(5),
+.cooking-layout.is-planner .planner-table-cooking td:nth-child(5) {
+  min-width: 120px;
+  padding-right: 26px;
+}
+
+.cooking-layout.is-planner .planner-table-cooking input {
+  width: min(100%, 118px);
+}
+
 .cooking-layout.is-split .planner-table-cooking th:first-child,
 .cooking-layout.is-split .planner-table-cooking td:first-child {
   width: 40%;
