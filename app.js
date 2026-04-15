@@ -1156,6 +1156,8 @@ function renderSkills() {
                     data-id="${skill.id}"
                   />
                 </div>
+              </div>
+              <div class="skill-footer">
                 <label class="toggle-line">
                   <input
                     type="checkbox"
@@ -1165,9 +1167,6 @@ function renderSkills() {
                   />
                   <span>Max level</span>
                 </label>
-              </div>
-              <div class="token-row">
-                <span class="token">Target ${skill.targetLevel}</span>
                 <span class="status-pill ${done ? "is-done" : "is-pending"}">${done ? "Maxed" : `${skill.targetLevel - current} left`}</span>
               </div>
             </article>

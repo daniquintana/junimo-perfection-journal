@@ -1090,6 +1090,18 @@ input[type="checkbox"] {
   margin-top: 4px;
 }
 
+.skill-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.skill-footer .toggle-line {
+  justify-content: flex-start;
+}
+
 .villager-heart-entry {
   display: grid;
   justify-items: center;
