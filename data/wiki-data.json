@@ -6454,238 +6454,272 @@
         "name": "Abigail",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/6/63/Abigail_Icon.png"
       },
       {
         "id": "alex",
         "name": "Alex",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/7/73/Alex_Icon.png"
       },
       {
         "id": "caroline",
         "name": "Caroline",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/d/d4/Caroline_Icon.png/24px-Caroline_Icon.png"
       },
       {
         "id": "clint",
         "name": "Clint",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/7/74/Clint_Icon.png"
       },
       {
         "id": "demetrius",
         "name": "Demetrius",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/0/0b/Demetrius_Icon.png"
       },
       {
         "id": "dwarf",
         "name": "Dwarf",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/0/08/Dwarf_Icon.png"
       },
       {
         "id": "elliott",
         "name": "Elliott",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/6/6f/Elliott_Icon.png"
       },
       {
         "id": "emily",
         "name": "Emily",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/c/c3/Emily_Icon.png/24px-Emily_Icon.png"
       },
       {
         "id": "evelyn",
         "name": "Evelyn",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/5/54/Evelyn_Icon.png/24px-Evelyn_Icon.png"
       },
       {
         "id": "george",
         "name": "George",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/a/ad/George_Icon.png/24px-George_Icon.png"
       },
       {
         "id": "gus",
         "name": "Gus",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/d/db/Gus_Icon.png"
       },
       {
         "id": "haley",
         "name": "Haley",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/f/f7/Haley_Icon.png/24px-Haley_Icon.png"
       },
       {
         "id": "harvey",
         "name": "Harvey",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/7/7a/Harvey_Icon.png"
       },
       {
         "id": "jas",
         "name": "Jas",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/6/68/Jas_Icon.png"
       },
       {
         "id": "jodi",
         "name": "Jodi",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/f/f7/Jodi_Icon.png"
       },
       {
         "id": "kent",
         "name": "Kent",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/8/86/Kent_Icon.png/24px-Kent_Icon.png"
       },
       {
         "id": "krobus",
         "name": "Krobus",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/1/10/Krobus_Icon.png"
       },
       {
         "id": "leah",
         "name": "Leah",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/6/6e/Leah_Icon.png"
       },
       {
         "id": "leo",
         "name": "Leo",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/3/3d/Leo_Icon.png"
       },
       {
         "id": "lewis",
         "name": "Lewis",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/b/b6/Lewis_Icon.png"
       },
       {
         "id": "linus",
         "name": "Linus",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/d/db/Linus_Icon.png"
       },
       {
         "id": "marnie",
         "name": "Marnie",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/d/d4/Marnie_Icon.png/24px-Marnie_Icon.png"
       },
       {
         "id": "maru",
         "name": "Maru",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/2/23/Maru_Icon.png/24px-Maru_Icon.png"
       },
       {
         "id": "pam",
         "name": "Pam",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/b/b6/Pam_Icon.png/24px-Pam_Icon.png"
       },
       {
         "id": "penny",
         "name": "Penny",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/b/bc/Penny_Icon.png/24px-Penny_Icon.png"
       },
       {
         "id": "pierre",
         "name": "Pierre",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/c/cf/Pierre_Icon.png/24px-Pierre_Icon.png"
       },
       {
         "id": "robin",
         "name": "Robin",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/d/d1/Robin_Icon.png/24px-Robin_Icon.png"
       },
       {
         "id": "sam",
         "name": "Sam",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/5/52/Sam_Icon.png/24px-Sam_Icon.png"
       },
       {
         "id": "sandy",
         "name": "Sandy",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/7/7d/Sandy_Icon.png"
       },
       {
         "id": "sebastian",
         "name": "Sebastian",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/6/6a/Sebastian_Icon.png/24px-Sebastian_Icon.png"
       },
       {
         "id": "shane",
         "name": "Shane",
         "targetHearts": 8,
         "type": "datable",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/b/b4/Shane_Icon.png/24px-Shane_Icon.png"
       },
       {
         "id": "vincent",
         "name": "Vincent",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/0/0b/Vincent_Icon.png/24px-Vincent_Icon.png"
       },
       {
         "id": "willy",
         "name": "Willy",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/7/73/Willy_Icon.png/24px-Willy_Icon.png"
       },
       {
         "id": "wizard",
         "name": "Wizard",
         "targetHearts": 10,
         "type": "villager",
-        "sourceUrl": "https://stardewvalleywiki.com/Friendship"
+        "sourceUrl": "https://stardewvalleywiki.com/Friendship",
+        "imageUrl": "https://stardewvalleywiki.com/mediawiki/images/thumb/e/e9/Wizard_Icon.png/24px-Wizard_Icon.png"
       }
     ],
     "skills": [

@@ -930,6 +930,30 @@ input[type="checkbox"] {
   width: 76px;
 }
 
+.villager-heart-box {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+}
+
+.villager-portrait {
+  min-height: 42px;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+}
+
+.villager-portrait .item-thumb {
+  width: 42px;
+  height: 42px;
+  flex-basis: 42px;
+  border-radius: 12px;
+}
+
+.villager-heart-box input {
+  width: 86px;
+}
+
 .toggle-line {
   display: inline-flex;
   align-items: center;
@@ -940,6 +964,10 @@ input[type="checkbox"] {
 
 .toggle-line-table {
   white-space: nowrap;
+}
+
+.villager-card .toggle-line {
+  justify-content: center;
 }
 
 .building-controls {

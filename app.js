@@ -956,7 +956,8 @@ function renderVillagers() {
                 </div>
               </div>
               <div class="control-stack">
-                <div class="number-line">
+                <div class="villager-heart-box">
+                  <div class="villager-portrait">${itemThumb(villager, villager.name)}</div>
                   <label class="subtle" for="villager-${villager.id}">Current hearts</label>
                   <input
                     id="villager-${villager.id}"
