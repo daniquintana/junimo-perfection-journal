@@ -4,6 +4,10 @@ const RELEASE_NAME = "Honey Junimo";
 const SAVE_SCHEMA_VERSION = 2;
 const STORAGE_KEY = "junimo-perfection-journal-save-v2";
 const LEGACY_STORAGE_KEYS = ["stardew-perfection-tracker-v1"];
+const GOLDEN_WALNUT_ITEM = {
+  name: "Golden Walnut",
+  imageUrl: "https://stardewvalleywiki.com/mediawiki/images/5/54/Golden_Walnut.png",
+};
 
 const flatShippingItems = data.other.shippingPages.flatMap((page) => page.items);
 const cookingIngredientCatalogMap = Object.fromEntries(
@@ -1137,7 +1141,10 @@ function renderStardropsAndWalnuts() {
 
   document.getElementById("walnuts-content").innerHTML = `
     <article class="mini-card" style="margin-top: 14px;">
-      <h3>Golden Walnuts</h3>
+      <div class="item-inline">
+        ${itemThumb(GOLDEN_WALNUT_ITEM, GOLDEN_WALNUT_ITEM.name)}
+        <h3>Golden Walnuts</h3>
+      </div>
       <div class="control-stack">
         <div class="number-line">
           <span class="subtle">Current walnuts found</span>
