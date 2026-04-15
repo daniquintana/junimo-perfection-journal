@@ -670,6 +670,7 @@ function renderCrafting() {
     status: ui.craftingStatus,
     stockAction: "crafting-owned",
     extraBadge: (recipe) => recipe.category,
+    showPlanner: false,
   });
 }
 
@@ -687,6 +688,7 @@ function renderRecipePlanner(config) {
     stockAction,
     ingredientCategory = "all",
     extraBadge,
+    showPlanner = true,
   } = config;
 
   const filtered = recipes
@@ -727,14 +729,19 @@ function renderRecipePlanner(config) {
     status === "remaining" ? ingredientRows.filter((row) => row.remaining > 0) : ingredientRows;
   const remainingUnits = visibleIngredientRows.reduce((sum, row) => sum + row.remaining, 0);
 
-  document.getElementById(summaryEl).innerHTML = `
+  document.getElementById(summaryEl).innerHTML = showPlanner
+    ? `
     ${summaryCard(kind === "cooking" ? "Recipes left" : "Recipes left", `${remainingRecipes}`, kind === "cooking" ? "" : "Still to craft", ratioToPercent(remainingRecipes / recipes.length))}
     ${summaryCard(kind === "cooking" ? "Cooked" : "Crafted", `${doneCount}/${recipes.length}`, kind === "cooking" ? "" : "Completion so far", ratioToPercent(doneCount / recipes.length))}
     ${summaryCard("Materials left", `${remainingUnits}`, "", visibleIngredientRows.length ? 100 : 0)}
     ${summaryCard("Ingredients tracked", `${visibleIngredientRows.length}`, "", ratioToPercent(Math.min(visibleIngredientRows.length, recipes.length) / recipes.length))}
+  `
+    : `
+    ${summaryCard("Recipes left", `${remainingRecipes}`, "", ratioToPercent(remainingRecipes / recipes.length))}
+    ${summaryCard("Crafted", `${doneCount}/${recipes.length}`, "", ratioToPercent(doneCount / recipes.length))}
   `;
 
-  document.getElementById(ingredientsEl).innerHTML = visibleIngredientRows.length
+  document.getElementById(ingredientsEl).innerHTML = showPlanner && visibleIngredientRows.length
     ? `
       <article class="planner-card">
         <h3>${kind === "cooking" ? "Ingredient Planner" : "Material Planner"}</h3>
@@ -783,13 +790,15 @@ function renderRecipePlanner(config) {
       </article>
     `
     : emptyState(
-        remainingRecipes
+        showPlanner && remainingRecipes
           ? status === "remaining" && ingredientRows.length
             ? "You already have enough of the remaining ingredients in this view."
             : kind === "cooking" && ingredientCategory !== "all"
             ? `No remaining ingredients match the ${ingredientCategory} filter.`
             : "No remaining ingredients match the current filter."
-          : `All ${kind} recipes are done, so there are no remaining ingredients to plan around.`
+          : showPlanner
+          ? `All ${kind} recipes are done, so there are no remaining ingredients to plan around.`
+          : ""
       );
 
   document.getElementById(recipesEl).innerHTML = filtered.length
@@ -931,10 +940,7 @@ function renderVillagers() {
               <div class="recipe-top">
                 <div>
                   <h3>${escapeHtml(villager.name)}</h3>
-                  <div class="token-row">
-                    <span class="token">${villager.targetHearts} hearts for perfection</span>
-                    <span class="status-pill ${done ? "is-done" : "is-pending"}">${done ? "Done" : `${villager.targetHearts - current} left`}</span>
-                  </div>
+                  <span class="status-pill ${done ? "is-done" : "is-pending"}">${done ? "Done" : `${villager.targetHearts - current} left`}</span>
                 </div>
               </div>
               <div class="control-stack">
