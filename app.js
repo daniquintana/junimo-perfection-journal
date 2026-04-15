@@ -866,7 +866,7 @@ function renderRecipePlanner(config) {
         .map((recipe) => {
           const done = statusMap[recipe.id];
           return `
-            <article class="recipe-card ${done ? "is-done" : ""} ${kind === "crafting" ? "recipe-card-crafting" : ""}">
+            <article class="recipe-card ${done ? "is-done" : ""}">
               <div class="recipe-top">
                 <div class="recipe-title">
                   <input type="checkbox" data-action="${kind}-toggle" data-id="${recipe.id}" ${done ? "checked" : ""} />
@@ -876,26 +876,17 @@ function renderRecipePlanner(config) {
                       <h3>${escapeHtml(recipe.name)}</h3>
                     </div>
                     ${
-                      kind === "crafting"
-                        ? ""
-                        : `<div class="token-row">
-                      <span class="status-pill ${done ? "is-done" : "is-pending"}">${done ? (kind === "cooking" ? "Cooked" : "Crafted") : "Need"}</span>
-                      ${
-                        extraBadge
-                          ? `<span class="token">${escapeHtml(extraBadge(recipe))}</span>`
-                          : ""
-                      }
+                      extraBadge
+                        ? `<div class="token-row">
+                      <span class="token">${escapeHtml(extraBadge(recipe))}</span>
                     </div>`
+                        : ""
                     }
                   </div>
                 </div>
-                ${
-                  kind === "crafting"
-                    ? `<div class="recipe-status-corner">
-                  <span class="status-pill ${done ? "is-done" : "is-pending"}">${done ? "Crafted" : "Need"}</span>
-                </div>`
-                    : ""
-                }
+                <div class="recipe-status-corner">
+                  <span class="status-pill ${done ? "is-done" : "is-pending"}">${done ? (kind === "cooking" ? "Cooked" : "Crafted") : "Need"}</span>
+                </div>
               </div>
               ${kind === "cooking" || kind === "crafting" ? "" : `<p>${escapeHtml(recipe.description)}</p>`}
               <div class="meta-block">
