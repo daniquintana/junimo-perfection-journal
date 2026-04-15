@@ -949,6 +949,12 @@ function renderOther() {
 }
 
 function renderShipping() {
+  const summaryEl = document.getElementById("shipping-summary");
+  const contentEl = document.getElementById("shipping-content");
+  if (!summaryEl || !contentEl) {
+    return;
+  }
+
   const term = ui.shippingSearch.toLowerCase().trim();
   const filteredPages = data.other.shippingPages
     .map((page) => {
@@ -963,7 +969,7 @@ function renderShipping() {
   const filteredItemCount = filteredPages.reduce((sum, page) => sum + page.items.length, 0);
   const filteredRemaining = filteredPages.reduce((sum, page) => sum + page.remaining, 0);
 
-  document.getElementById("shipping-summary").innerHTML = `
+  summaryEl.innerHTML = `
     ${summaryCard("Shipping left", `${totalLeft}`, "Items still to ship", ratioToPercent(totalLeft / flatShippingItems.length))}
     ${summaryCard("Shipped", `${totalDone}/${flatShippingItems.length}`, "", ratioToPercent(totalDone / flatShippingItems.length))}
     ${summaryCard("Showing", `${filteredItemCount}`, "Items in the current search", ratioToPercent(filteredItemCount / flatShippingItems.length))}
@@ -971,11 +977,11 @@ function renderShipping() {
   `;
 
   if (!filteredPages.length) {
-    document.getElementById("shipping-content").innerHTML = emptyState("No shipped items match that search.");
+    contentEl.innerHTML = emptyState("No shipped items match that search.");
     return;
   }
 
-  document.getElementById("shipping-content").innerHTML = `
+  contentEl.innerHTML = `
     <div class="shipping-pages">
       ${filteredPages
         .map((page) => {
@@ -1639,13 +1645,20 @@ function importSave(event) {
       const importedSave = normalizeSavePayload(parsed);
       state = buildState(importedSave.state);
       saveState();
-      renderAllDynamic();
     } catch (error) {
       window.alert(
         error?.message === "future-save-version"
           ? "That save was made with a newer version of Junimo Perfection Journal."
           : "That file could not be imported."
       );
+      return;
+    }
+
+    try {
+      renderAllDynamic();
+    } catch (error) {
+      console.error("Imported save but failed to re-render the page.", error);
+      window.alert("That save was imported, but this page needs a refresh.");
     } finally {
       if (input) {
         try {
