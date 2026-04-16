@@ -1,6 +1,6 @@
 # Junimo Perfection Journal
 
-A cozy Stardew Valley perfection tracker for everything standing between a farm and true perfection. This repo holds the web version.
+A Stardew Valley perfection tracker for fish, cooking, crafting, shipping, friendships, and late-game goals.
 
 ```text
                 _             _
@@ -36,15 +36,14 @@ A cozy Stardew Valley perfection tracker for everything standing between a farm 
 
 - Open [dantasqu.github.io/junimo-perfection-journal](https://dantasqu.github.io/junimo-perfection-journal/?v=20260415x)
 - Best for quickly using the tracker on any computer with a browser
-- Limitations: progress is saved only in that browser on that device, so it does not sync automatically between computers
-- If someone wants to move progress between computers, they need to export their save file on one device and import it on the other
+- Progress is saved only in that browser on that device
+- To move progress between computers, export on one device and import on the other
 
-### Local Version
+### Downloads
 
-- Download the repo as a ZIP from GitHub with `Code` -> `Download ZIP`
-- Unzip it
-- Open `index.html` in a browser
-- Your progress stays on that browser on that computer unless you export your save
+- `Mac zip`: unzip it and open `Junimo Perfection Journal.app`
+- `Web zip`: unzip it and open `index.html` in a browser
+- There are two downloads because one is the Mac app and the other is the browser version for any computer
 
 ## Inside the Tracker
 
@@ -59,7 +58,8 @@ A cozy Stardew Valley perfection tracker for everything standing between a farm 
 
 ## Notes
 
-- This repo is currently a static front-end hosted with GitHub Pages, which means it is just the site files themselves with no login, server, or cloud sync behind them.
+- Based on Stardew Valley Wiki data.
+- The live site does not have login or cloud sync.
 - Some images inside the tracker load from Stardew Valley Wiki URLs, so an internet connection helps those appear.
 - Current release: `1.2.0`
 
