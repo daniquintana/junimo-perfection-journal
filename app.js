@@ -335,7 +335,7 @@ function renderGeneral() {
   const categoryLookup = {
     "produce-forage-shipped": progress.shipping,
     "obelisks-on-farm": progress.obelisks,
-    "gold-clock-on-farm": progress.goldClock,
+    "golden-clock-on-farm": progress.goldClock,
     "monster-slayer-hero": progress.monsters,
     "great-friends": progress.friends,
     "farmer-level": progress.skills,
@@ -619,8 +619,6 @@ function renderFish() {
       </table>
     </div>
   `;
-
-  bindFishToggleInputs();
 }
 
 function getFilteredFish() {
@@ -651,20 +649,6 @@ function getFilteredFish() {
 
 function getRemainingFish() {
   return data.fish.filter((fish) => !state.fish[fish.id]);
-}
-
-function bindFishToggleInputs() {
-  document
-    .querySelectorAll("#fish-table [data-action='fish-toggle']")
-    .forEach((input) => {
-      input.addEventListener("change", (event) => {
-        event.stopPropagation();
-        state.fish[input.dataset.id] = input.checked;
-        saveState();
-        renderGeneral();
-        renderFish();
-      });
-    });
 }
 
 function reconcileTabFilterForVisibility(tab) {
