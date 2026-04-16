@@ -365,9 +365,7 @@ function renderGeneral() {
     .join("");
 
   document.getElementById("general-footer").innerHTML = `
-    <p><strong>Built-in wiki data:</strong> ${escapeHtml(data.meta.notes.join(" "))}</p>
-    <p class="subtle">App version: ${escapeHtml(APP_VERSION)} • ${escapeHtml(RELEASE_NAME)} • Save format v${SAVE_SCHEMA_VERSION}</p>
-    <p class="subtle">Generated: ${escapeHtml(formatDate(data.meta.generatedAt))}</p>
+    <p class="subtle">Based on Stardew Valley Wiki data.</p>
     <div class="source-links">
       ${data.meta.wikiSourcePages
         .map(
