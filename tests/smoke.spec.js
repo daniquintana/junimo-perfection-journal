@@ -122,6 +122,14 @@ test('other perfection card grids keep a stable order while values change', asyn
   const collectiblesBefore = await page.locator('#collectibles-content .collectible-card h3').allInnerTexts();
   const buildingsBefore = await page.locator('#buildings-content .building-card h3').allInnerTexts();
 
+  await expect(page.locator('#skills-content .mini-card h3')).toHaveText([
+    'Farming',
+    'Foraging',
+    'Fishing',
+    'Mining',
+    'Combat',
+  ]);
+
   await page.locator('input[data-action="villager-hearts"][data-id="caroline"]').fill('10');
   await page.locator('input[data-action="skill-level"][data-id="combat"]').fill('10');
   await page.locator('#collectibles-content input[data-action="stardrop-toggle"]').first().check();

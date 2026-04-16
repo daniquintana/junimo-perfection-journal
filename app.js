@@ -1148,7 +1148,19 @@ function renderMonsterGoals() {
 }
 
 function renderSkills() {
-  const skills = [...data.other.skills].sort((left, right) => left.name.localeCompare(right.name));
+  const skillOrder = new Map([
+    ["Farming", 0],
+    ["Foraging", 1],
+    ["Fishing", 2],
+    ["Mining", 3],
+    ["Combat", 4],
+  ]);
+  const skills = [...data.other.skills].sort(
+    (left, right) =>
+      (skillOrder.get(left.name) ?? Number.MAX_SAFE_INTEGER) -
+        (skillOrder.get(right.name) ?? Number.MAX_SAFE_INTEGER) ||
+      left.name.localeCompare(right.name)
+  );
 
   document.getElementById("skills-content").innerHTML = `
     <div class="skills-grid">
