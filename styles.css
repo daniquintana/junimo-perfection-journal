@@ -541,6 +541,136 @@ select:focus {
   line-height: 1.7;
 }
 
+.celebration-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(45, 35, 22, 0.45);
+  backdrop-filter: blur(6px);
+}
+
+.celebration-overlay[hidden] {
+  display: none;
+}
+
+.celebration-card {
+  width: min(520px, calc(100vw - 32px));
+  padding: 28px 24px 24px;
+  border: 3px solid var(--wood-dark);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top, rgba(255, 241, 190, 0.92), rgba(255, 241, 190, 0) 42%),
+    linear-gradient(180deg, rgba(250, 237, 201, 0.99), rgba(236, 214, 160, 0.97));
+  box-shadow:
+    0 18px 40px rgba(40, 26, 10, 0.34),
+    0 0 0 8px rgba(255, 231, 170, 0.14);
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+  animation: celebration-pop 280ms ease;
+}
+
+.celebration-card::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 3px solid rgba(212, 154, 85, 0.88);
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+.celebration-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(114, 68, 32, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 248, 228, 0.9);
+  color: var(--accent-strong);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.celebration-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.celebration-sparkles span {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 248, 211, 1) 0, rgba(232, 196, 95, 0.92) 62%, rgba(232, 196, 95, 0) 70%);
+  opacity: 0.9;
+  animation: sparkle-drift 2.8s ease-in-out infinite;
+}
+
+.celebration-sparkles span:nth-child(1) {
+  top: 18%;
+  left: 14%;
+}
+
+.celebration-sparkles span:nth-child(2) {
+  top: 13%;
+  right: 18%;
+  animation-delay: 0.35s;
+}
+
+.celebration-sparkles span:nth-child(3) {
+  top: 34%;
+  left: 10%;
+  animation-delay: 0.8s;
+}
+
+.celebration-sparkles span:nth-child(4) {
+  top: 30%;
+  right: 11%;
+  animation-delay: 1.2s;
+}
+
+.celebration-sparkles span:nth-child(5) {
+  bottom: 21%;
+  left: 18%;
+  animation-delay: 0.55s;
+}
+
+.celebration-sparkles span:nth-child(6) {
+  bottom: 18%;
+  right: 16%;
+  animation-delay: 1.55s;
+}
+
+.celebration-junimo {
+  display: block;
+  width: 132px;
+  margin: 2px auto 14px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 14px 12px rgba(104, 73, 24, 0.28));
+  animation: junimo-bob 3.8s ease-in-out infinite;
+}
+
+.celebration-card h2 {
+  margin: 6px 0 10px;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  line-height: 1;
+}
+
+.celebration-copy {
+  max-width: 28ch;
+  margin: 0 auto 22px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
 #general-left-board {
   margin-bottom: 18px;
 }
@@ -1336,6 +1466,29 @@ a {
   }
 }
 
+@keyframes celebration-pop {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sparkle-drift {
+  0%,
+  100% {
+    transform: translateY(0) scale(0.9);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.08);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 980px) {
   .hero,
   .section-card-grid,
@@ -1406,5 +1559,9 @@ a {
 
   .version-pill {
     font-size: 0.78rem;
+  }
+
+  .celebration-card {
+    padding-inline: 18px;
   }
 }

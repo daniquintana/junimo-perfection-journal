@@ -29,6 +29,52 @@ test('fish checkbox updates the caught summary immediately', async ({ page }) =>
     .not.toBe(before);
 });
 
+test('reaching full perfection shows the celebration popup', async ({ page }) => {
+  await page.goto('/');
+
+  await page.evaluate(() => {
+    const data = window.STARDEW_WIKI_DATA;
+    const truthMap = (ids) => Object.fromEntries(ids.map((id) => [id, true]));
+    const fish = truthMap(data.fish.map((entry) => entry.id));
+    fish[data.fish[0].id] = false;
+
+    const save = {
+      appName: data.meta.appName,
+      appVersion: 'test',
+      releaseName: '',
+      saveVersion: 2,
+      state: {
+        fish,
+        cooking: {
+          recipes: truthMap(data.cooking.recipes.map((entry) => entry.id)),
+          pantry: {},
+        },
+        crafting: {
+          recipes: truthMap(data.crafting.recipes.map((entry) => entry.id)),
+          stock: {},
+        },
+        shipping: truthMap(data.other.shippingPages.flatMap((page) => page.items.map((item) => item.id))),
+        villagers: Object.fromEntries(data.other.villagers.map((entry) => [entry.id, entry.targetHearts])),
+        monsterGoals: Object.fromEntries(data.other.monsterGoals.map((entry) => [entry.id, entry.target])),
+        skills: Object.fromEntries(data.other.skills.map((entry) => [entry.id, entry.targetLevel])),
+        stardrops: truthMap(data.other.stardrops.map((entry) => entry.id)),
+        buildings: truthMap(data.other.buildings.map((entry) => entry.id)),
+        buildingStock: {},
+        goldenWalnuts: data.other.goldenWalnutsTarget,
+      },
+    };
+
+    window.localStorage.setItem('junimo-perfection-journal-save-v2', JSON.stringify(save));
+  });
+
+  await page.reload();
+  await page.getByRole('button', { name: 'Fish' }).click();
+  await page.locator('#fish-table input[data-action="fish-toggle"]').first().check();
+
+  await expect(page.locator('#perfection-celebration')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'You did it!' })).toBeVisible();
+});
+
 test('cooking views switch cleanly between recipes, planner, and split', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Cooking' }).click();

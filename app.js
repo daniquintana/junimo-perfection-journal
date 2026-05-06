@@ -49,6 +49,7 @@ const ui = {
   shippingStatus: "all",
 };
 let scheduledRenderHandle = 0;
+let lastRenderedPerfect = getProgressSnapshot().overallPercent >= 100;
 
 const FISH_SPOT_ORDER = [
   "Legendary",
@@ -211,6 +212,18 @@ function bindEvents() {
   });
   document.getElementById("import-file").addEventListener("change", importSave);
   document.getElementById("reset-data").addEventListener("click", resetSave);
+  document.getElementById("celebration-close").addEventListener("click", hidePerfectionCelebration);
+  document.getElementById("celebration-okay").addEventListener("click", hidePerfectionCelebration);
+  document.getElementById("perfection-celebration").addEventListener("click", (event) => {
+    if (event.target.id === "perfection-celebration") {
+      hidePerfectionCelebration();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      hidePerfectionCelebration();
+    }
+  });
 }
 
 function handleStateChange(event) {
@@ -283,12 +296,13 @@ function handleStateChange(event) {
 }
 
 function renderAllDynamic() {
-  renderGeneral();
+  const progress = renderGeneral();
   renderFish();
   renderCooking();
   renderCrafting();
   renderShipping();
   renderOther();
+  syncPerfectionCelebration(progress.overallPercent >= 100);
 }
 
 function renderActiveTab() {
@@ -351,9 +365,41 @@ function renderGeneral() {
           (page) =>
             `<a href="${page.url}" target="_blank" rel="noreferrer">${escapeHtml(page.label)}</a>`
         )
-        .join("")}
+      .join("")}
     </div>
   `;
+
+  return progress;
+}
+
+function syncPerfectionCelebration(isPerfect) {
+  if (isPerfect && !lastRenderedPerfect) {
+    showPerfectionCelebration();
+  } else if (!isPerfect) {
+    hidePerfectionCelebration();
+  }
+  lastRenderedPerfect = isPerfect;
+}
+
+function showPerfectionCelebration() {
+  const overlay = document.getElementById("perfection-celebration");
+  if (!overlay) {
+    return;
+  }
+  overlay.hidden = false;
+}
+
+function hidePerfectionCelebration() {
+  const overlay = document.getElementById("perfection-celebration");
+  if (!overlay) {
+    return;
+  }
+  overlay.hidden = true;
+}
+
+function setPerfectionCelebrationBaseline() {
+  lastRenderedPerfect = getProgressSnapshot().overallPercent >= 100;
+  hidePerfectionCelebration();
 }
 
 function renderGeneralLeftBoard(remaining) {
@@ -1649,6 +1695,7 @@ function importSave(event) {
       const importedSave = normalizeSavePayload(parsed);
       state = buildState(importedSave.state);
       saveState();
+      setPerfectionCelebrationBaseline();
     } catch (error) {
       window.alert(
         error?.message === "future-save-version"
@@ -1695,6 +1742,7 @@ function resetSave() {
   }
   state = buildState({});
   saveState();
+  setPerfectionCelebrationBaseline();
   renderAllDynamic();
 }
 

@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Junimo Perfection Journal</title>
-    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260506a" />
-    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260506a" />
-    <link rel="stylesheet" href="./styles.css?v=20260506a" />
-    <script src="./data/wiki-data.js?v=20260506a"></script>
-    <script src="./app.js?v=20260506a" defer></script>
+    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260506b" />
+    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260506b" />
+    <link rel="stylesheet" href="./styles.css?v=20260506b" />
+    <script src="./data/wiki-data.js?v=20260506b"></script>
+    <script src="./app.js?v=20260506b" defer></script>
   </head>
   <body>
     <div class="page-shell">
@@ -235,6 +235,47 @@
           </div>
         </section>
       </main>
+    </div>
+    <div
+      id="perfection-celebration"
+      class="celebration-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="celebration-title"
+      hidden
+    >
+      <div class="celebration-card">
+        <button
+          id="celebration-close"
+          class="celebration-close"
+          type="button"
+          aria-label="Close perfection celebration"
+        >
+          ×
+        </button>
+        <div class="celebration-sparkles" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <img
+          class="celebration-junimo"
+          src="./branding/site/hero-junimo-sprite.png"
+          alt=""
+        />
+        <p class="section-kicker">True Perfection</p>
+        <h2 id="celebration-title">You did it!</h2>
+        <p class="celebration-copy">
+          Every perfection goal is checked off. Your Stardew Valley 1.6 tracker
+          is complete.
+        </p>
+        <button id="celebration-okay" class="action-button" type="button">
+          Keep farming
+        </button>
+      </div>
     </div>
     <div class="front-junimo" aria-hidden="true">
       <img
