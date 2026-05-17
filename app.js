@@ -823,7 +823,11 @@ function renderRecipePlanner(config) {
     }))
     .sort((left, right) => right.needed - left.needed || left.orderIndex - right.orderIndex);
   const summaryVisibleIngredientRows =
-    status === "remaining" ? summaryIngredientRows.filter((row) => row.remaining > 0) : summaryIngredientRows;
+    status === "remaining"
+      ? summaryIngredientRows.filter((row) => row.remaining > 0)
+      : status === "pantry"
+      ? summaryIngredientRows.filter((row) => row.owned > 0)
+      : summaryIngredientRows;
   const ingredientTotals = aggregateIngredientsForStatus(
     plannerRecipes,
     statusMap,
@@ -846,8 +850,13 @@ function renderRecipePlanner(config) {
     .sort((left, right) => right.needed - left.needed || left.orderIndex - right.orderIndex);
 
   const visibleIngredientRows =
-    status === "remaining" ? ingredientRows.filter((row) => row.remaining > 0) : ingredientRows;
+    status === "remaining"
+      ? ingredientRows.filter((row) => row.remaining > 0)
+      : status === "pantry"
+      ? ingredientRows.filter((row) => row.owned > 0)
+      : ingredientRows;
   const remainingUnits = summaryVisibleIngredientRows.reduce((sum, row) => sum + row.remaining, 0);
+  const ownedUnits = summaryVisibleIngredientRows.reduce((sum, row) => sum + row.owned, 0);
   const plannerContainer = document.getElementById(ingredientsEl);
   if (plannerContainer) {
     plannerContainer.classList.toggle(
@@ -860,8 +869,16 @@ function renderRecipePlanner(config) {
     ? `
     ${summaryCard(kind === "cooking" ? "Recipes left" : "Recipes left", `${remainingRecipes}`, kind === "cooking" ? "" : "Still to craft", ratioToPercent(remainingRecipes / recipes.length))}
     ${summaryCard(kind === "cooking" ? "Cooked" : "Crafted", `${doneCount}/${recipes.length}`, kind === "cooking" ? "" : "Completion so far", ratioToPercent(doneCount / recipes.length))}
-    ${summaryCard("Materials left", `${remainingUnits}`, "", summaryVisibleIngredientRows.length ? 100 : 0)}
-    ${summaryCard("Ingredients tracked", `${summaryVisibleIngredientRows.length}`, "", ratioToPercent(Math.min(summaryVisibleIngredientRows.length, recipes.length) / recipes.length))}
+    ${
+      status === "pantry"
+        ? summaryCard("Pantry units", `${ownedUnits}`, "", summaryVisibleIngredientRows.length ? 100 : 0)
+        : summaryCard("Materials left", `${remainingUnits}`, "", summaryVisibleIngredientRows.length ? 100 : 0)
+    }
+    ${
+      status === "pantry"
+        ? summaryCard("Ingredients on hand", `${summaryVisibleIngredientRows.length}`, "", ratioToPercent(Math.min(summaryVisibleIngredientRows.length, recipes.length) / recipes.length))
+        : summaryCard("Ingredients tracked", `${summaryVisibleIngredientRows.length}`, "", ratioToPercent(Math.min(summaryVisibleIngredientRows.length, recipes.length) / recipes.length))
+    }
   `
     : `
     ${summaryCard("Recipes left", `${remainingRecipes}`, "", ratioToPercent(remainingRecipes / recipes.length))}

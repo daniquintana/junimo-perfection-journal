@@ -69,7 +69,7 @@ test('reaching full perfection shows the celebration popup', async ({ page }) =>
 
   await page.reload();
   await page.getByRole('button', { name: 'Fish' }).click();
-  await page.locator('#fish-table input[data-action="fish-toggle"]').first().check();
+  await page.locator('#fish-table input[data-action="fish-toggle"]').first().click({ force: true });
 
   await expect(page.locator('#perfection-celebration')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'You did it!' })).toBeVisible();
@@ -90,6 +90,54 @@ test('cooking views switch cleanly between recipes, planner, and split', async (
   await expect(page.locator('#cooking-layout.is-split')).toBeVisible();
   await expect(page.locator('#cooking-ingredients table')).toBeVisible();
   await expect(page.locator('#cooking-recipes .recipe-card').first()).toBeVisible();
+});
+
+test('cooking pantry status only shows ingredients already on hand', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const data = window.STARDEW_WIKI_DATA;
+    const save = {
+      appName: data.meta.appName,
+      appVersion: 'test',
+      releaseName: '',
+      saveVersion: 2,
+      state: {
+        fish: {},
+        cooking: {
+          recipes: {},
+          pantry: {},
+        },
+        crafting: {
+          recipes: {},
+          stock: {},
+        },
+        shipping: {},
+        villagers: {},
+        monsterGoals: {},
+        skills: {},
+        stardrops: {},
+        buildings: {},
+        buildingStock: {},
+        goldenWalnuts: 0,
+      },
+    };
+    save.state.cooking.pantry = {
+      Moss: 20,
+      Milk: 12,
+    };
+    window.localStorage.setItem('junimo-perfection-journal-save-v2', JSON.stringify(save));
+  });
+  await page.reload();
+  await page.getByRole('button', { name: 'Cooking' }).click();
+  await page.getByRole('button', { name: 'Planner' }).click();
+  await page.locator('#cooking-status').selectOption('pantry');
+
+  await expect(page.locator('#cooking-ingredients table')).toBeVisible();
+  await expect(page.locator('#cooking-ingredients')).toContainText('Moss');
+  await expect(page.locator('#cooking-ingredients')).toContainText('Milk');
+  await expect(page.locator('#cooking-ingredients')).not.toContainText('Wheat Flour');
+  await expect.poll(async () => summaryValue(page, '#cooking-summary', 2)).toBe('32');
+  await expect.poll(async () => summaryValue(page, '#cooking-summary', 3)).toBe('2');
 });
 
 test('shipping status filter narrows the visible items', async ({ page }) => {
