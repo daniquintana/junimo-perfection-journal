@@ -799,8 +799,12 @@ function renderRecipePlanner(config) {
 
   const doneCount = Object.values(statusMap).filter(Boolean).length;
   const remainingRecipes = recipes.length - doneCount;
+  const plannerStatusMode =
+    status === "done" ? "done" : status === "all" ? "all" : "remaining";
   const plannerRecipes = search.trim() ? filtered : recipes;
-  const summaryIngredientRows = Object.entries(aggregateRemainingIngredients(recipes, statusMap))
+  const summaryIngredientRows = Object.entries(
+    aggregateIngredientsForStatus(recipes, statusMap, plannerStatusMode)
+  )
     .map(([item, needed], index) => ({
       item,
       orderIndex: index,
@@ -816,7 +820,11 @@ function renderRecipePlanner(config) {
     .sort((left, right) => right.needed - left.needed || left.orderIndex - right.orderIndex);
   const summaryVisibleIngredientRows =
     status === "remaining" ? summaryIngredientRows.filter((row) => row.remaining > 0) : summaryIngredientRows;
-  const ingredientTotals = aggregateRemainingIngredients(plannerRecipes, statusMap);
+  const ingredientTotals = aggregateIngredientsForStatus(
+    plannerRecipes,
+    statusMap,
+    plannerStatusMode
+  );
   const ingredientRows = Object.entries(ingredientTotals)
     .map(([item, needed], index) => ({
       item,
@@ -1626,8 +1634,16 @@ function getProgressSnapshot() {
 }
 
 function aggregateRemainingIngredients(recipes, statusMap) {
+  return aggregateIngredientsForStatus(recipes, statusMap, "remaining");
+}
+
+function aggregateIngredientsForStatus(recipes, statusMap, mode = "remaining") {
   return recipes.reduce((totals, recipe) => {
-    if (statusMap[recipe.id]) {
+    const done = Boolean(statusMap[recipe.id]);
+    if (mode === "remaining" && done) {
+      return totals;
+    }
+    if (mode === "done" && !done) {
       return totals;
     }
     recipe.ingredients.forEach((ingredient) => {
