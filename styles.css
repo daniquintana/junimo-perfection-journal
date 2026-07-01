@@ -20,6 +20,7 @@
   --wood-light: #d39a56;
   --glow: rgba(255, 220, 116, 0.4);
   --stardew-backdrop: url("./branding/current/wiki-landscape-background.png");
+  --hoard-backdrop: url("./branding/current/gemini-dangerous-hoard-bg.png");
   --shadow: 0 10px 0 rgba(94, 59, 24, 0.12), 0 22px 30px rgba(62, 38, 15, 0.18);
   --radius-lg: 28px;
   --radius-md: 18px;
@@ -56,10 +57,16 @@ body {
 body.is-hoard-mode {
   background-color: #0d1d33;
   background-image:
+    linear-gradient(180deg, rgba(9, 16, 31, 0.62) 0%, rgba(15, 24, 44, 0.74) 100%),
+    var(--hoard-backdrop),
     radial-gradient(circle at 18% 18%, rgba(110, 167, 255, 0.26) 0, transparent 22%),
     radial-gradient(circle at 82% 14%, rgba(255, 217, 111, 0.18) 0, transparent 18%),
     radial-gradient(circle at 50% 72%, rgba(102, 66, 173, 0.2) 0, transparent 28%),
     linear-gradient(180deg, rgba(11, 24, 46, 0.94) 0%, rgba(19, 32, 61, 0.94) 45%, rgba(14, 24, 44, 0.98) 100%);
+  background-position: center top, center top, center top, center top, center top, center top;
+  background-size: cover, cover, auto, auto, auto, cover;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
 }
 
 body::before {
@@ -281,9 +288,17 @@ select {
 
 .tab-bar {
   display: flex;
-  gap: 10px;
+  gap: 16px;
   flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
   margin: 22px 0 18px;
+}
+
+.tab-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .tab-button {
@@ -303,6 +318,19 @@ select {
 .tab-button.is-active {
   background: linear-gradient(180deg, #f5ce77, #d19c46);
   border-color: var(--wood-dark);
+}
+
+.tab-button-hoard {
+  margin-left: auto;
+  background: linear-gradient(180deg, rgba(86, 86, 155, 0.98), rgba(48, 39, 102, 0.98));
+  box-shadow:
+    0 5px 0 rgba(31, 23, 71, 0.36),
+    inset 0 0 0 2px rgba(208, 205, 255, 0.18);
+}
+
+.tab-button-hoard.is-active {
+  background: linear-gradient(180deg, #a19bff, #655fc8);
+  border-color: #3d316f;
 }
 
 .tab-panel {

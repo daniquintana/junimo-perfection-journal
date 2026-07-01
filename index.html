@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Junimo Perfection Journal</title>
-    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260701b" />
-    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260701b" />
-    <link rel="stylesheet" href="./styles.css?v=20260701b" />
-    <script src="./data/wiki-data.js?v=20260701b"></script>
-    <script src="./app.js?v=20260701b" defer></script>
+    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260701c" />
+    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260701c" />
+    <link rel="stylesheet" href="./styles.css?v=20260701c" />
+    <script src="./data/wiki-data.js?v=20260701c"></script>
+    <script src="./app.js?v=20260701c" defer></script>
   </head>
   <body>
     <div class="page-shell">
@@ -37,13 +37,22 @@
       </header>
 
       <nav class="tab-bar" aria-label="Tracker tabs">
-        <button class="tab-button is-active" data-tab="general">General</button>
-        <button class="tab-button" data-tab="fish">Fish</button>
-        <button class="tab-button" data-tab="cooking">Cooking</button>
-        <button class="tab-button" data-tab="crafting">Crafting</button>
-        <button class="tab-button" data-tab="hoard">Hoard</button>
-        <button class="tab-button" data-tab="shipping">Shipping</button>
-        <button class="tab-button" data-tab="other">Other Perfection</button>
+        <div class="tab-cluster">
+          <button class="tab-button is-active" data-tab="general">General</button>
+          <button class="tab-button" data-tab="fish">Fish</button>
+          <button class="tab-button" data-tab="cooking">Cooking</button>
+          <button class="tab-button" data-tab="crafting">Crafting</button>
+          <button class="tab-button" data-tab="shipping">Shipping</button>
+          <button class="tab-button" data-tab="other">Other Perfection</button>
+        </div>
+        <button
+          id="hoard-mode-button"
+          class="tab-button tab-button-hoard"
+          data-tab="hoard"
+          type="button"
+        >
+          Enter the Dangerous Hoarding Pit
+        </button>
       </nav>
 
       <main class="tab-panels">
@@ -169,7 +178,9 @@
                 <h2>Hoard Progress</h2>
                 <p class="section-note">
                   Tracks the full stash you will need across cooking, crafting, shipping,
-                  and obelisks. It does not replace the fish collection checklist.
+                  and obelisks. It does not replace the fish collection checklist, and it
+                  does not track side build costs like bridge repairs, raccoon requests,
+                  or house upgrades.
                 </p>
               </div>
             </div>

@@ -12,7 +12,7 @@ test('loads the app and shows the main navigation', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Fish' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Cooking' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Crafting' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Hoard' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Enter the Dangerous Hoarding Pit' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Shipping' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Other Perfection' })).toBeVisible();
 });
@@ -258,13 +258,14 @@ test('hoard stocked filter only shows items tracked in the hoard tab itself', as
     window.localStorage.setItem('junimo-perfection-journal-save-v2', JSON.stringify(save));
   });
   await page.reload();
-  await page.getByRole('button', { name: 'Hoard' }).click();
+  await page.getByRole('button', { name: 'Enter the Dangerous Hoarding Pit' }).click();
   await page.locator('#hoard-status').selectOption('stocked');
 
   await expect(page.locator('#hoard-content table')).toBeVisible();
   await expect(page.locator('#hoard-content')).toContainText('Moss');
   await expect(page.locator('#hoard-content')).toContainText('Milk');
   await expect(page.locator('#hoard-content')).not.toContainText('Wheat Flour');
+  await expect(page.getByRole('button', { name: 'Back to the Regular Tracker' })).toBeVisible();
 });
 
 test('crafting list follows the in-game menu order at the top', async ({ page }) => {

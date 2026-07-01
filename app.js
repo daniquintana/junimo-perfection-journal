@@ -1,5 +1,5 @@
 const data = window.STARDEW_WIKI_DATA;
-const APP_VERSION = "1.3.0";
+const APP_VERSION = "1.3.1";
 const RELEASE_NAME = "";
 const SAVE_SCHEMA_VERSION = 2;
 const STORAGE_KEY = "junimo-perfection-journal-save-v2";
@@ -189,6 +189,7 @@ const initialSave = loadSaved();
 let state = buildState(initialSave.state);
 const ui = {
   activeTab: "general",
+  lastStandardTab: "general",
   fishSearch: "",
   fishSpot: "all",
   fishSeason: "all",
@@ -323,10 +324,15 @@ function syncUiFiltersFromControls() {
 function bindEvents() {
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.addEventListener("click", () => {
-      ui.activeTab = button.dataset.tab;
-      reconcileTabFilterForVisibility(ui.activeTab);
-      updateVisibleTab();
-      renderActiveTab();
+      if (button.dataset.tab === "hoard") {
+        if (ui.activeTab === "hoard") {
+          setActiveTab(ui.lastStandardTab || "general");
+        } else {
+          setActiveTab("hoard");
+        }
+        return;
+      }
+      setActiveTab(button.dataset.tab);
     });
   });
 
@@ -542,6 +548,16 @@ function renderActiveTab() {
   } else {
     renderGeneral();
   }
+}
+
+function setActiveTab(tabName) {
+  if (tabName !== "hoard") {
+    ui.lastStandardTab = tabName;
+  }
+  ui.activeTab = tabName;
+  reconcileTabFilterForVisibility(ui.activeTab);
+  updateVisibleTab();
+  renderActiveTab();
 }
 
 function scheduleRenderAllDynamic() {
@@ -2376,10 +2392,10 @@ function uniqueBuildingMaterialNames(buildings) {
 function buildHoardItemCatalog() {
   const catalog = {};
   const addItem = (name, imageUrl) => {
-    if (!name || catalog[name] || !imageUrl) {
+    if (!name || catalog[name]) {
       return;
     }
-    catalog[name] = { imageUrl };
+    catalog[name] = { imageUrl: imageUrl || buildHoardFallbackImageUrl(name) };
   };
 
   data.fish.forEach((fish) => addItem(fish.name, fish.imageUrl));
@@ -2393,6 +2409,11 @@ function buildHoardItemCatalog() {
   });
 
   return catalog;
+}
+
+function buildHoardFallbackImageUrl(name) {
+  const wikiFileName = `${name.replaceAll(":", "").trim().replaceAll(/\s+/g, "_")}.png`;
+  return `https://stardewvalleywiki.com/Special:Redirect/file/${encodeURIComponent(wikiFileName)}`;
 }
 
 function buildHoardItemNames() {
@@ -2540,5 +2561,12 @@ function updateVisibleTab() {
   document.querySelectorAll(".tab-panel").forEach((panel) => {
     panel.classList.toggle("is-active", panel.id === ui.activeTab);
   });
+  const hoardModeButton = document.getElementById("hoard-mode-button");
+  if (hoardModeButton) {
+    hoardModeButton.textContent =
+      ui.activeTab === "hoard"
+        ? "Back to the Regular Tracker"
+        : "Enter the Dangerous Hoarding Pit";
+  }
   document.body.classList.toggle("is-hoard-mode", ui.activeTab === "hoard");
 }

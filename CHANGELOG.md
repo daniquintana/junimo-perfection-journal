@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1
+
+- separated Hoard into its own mode-toggle button with dedicated pit styling
+- added a hoard-specific background image and clearer copy about what the mode does not track
+- added item-image fallbacks inside Hoard without changing the regular tracker layouts
+
 ## 1.3.0
 
 - added a separate Hoard tab for tracking the full stash needed across cooking, crafting, shipping, and obelisks
