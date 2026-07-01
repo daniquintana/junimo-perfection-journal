@@ -1026,7 +1026,7 @@ input[type="checkbox"] {
 }
 
 .hoard-panel .section-note {
-  max-width: 68ch;
+  max-width: none;
 }
 
 .hoard-hero-card,
