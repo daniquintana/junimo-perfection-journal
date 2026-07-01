@@ -24,6 +24,7 @@ const GOLDEN_WALNUT_ITEM = {
 };
 const HOARD_CATEGORY_ORDER = ["Shipping", "Cooking", "Crafting", "Obelisk"];
 const HOARD_IMAGE_FILE_OVERRIDES = {
+  "Aged Roe (any)": "Aged_Roe.png",
   "Ancient Seed": "Ancient_Seed.png",
   "Dried Fruit (any)": "Dried_Fruit.png",
   "Dried Mushrooms (any)": "Dried_Mushrooms.png",
@@ -41,6 +42,7 @@ const HOARD_IMAGE_FILE_OVERRIDES = {
   "Large Egg": "Large_Egg.png",
   "Large Egg (white)": "Large_Egg.png",
   "Large Egg (brown)": "Large_Brown_Egg.png",
+  "Roe (any)": "Roe.png",
   "Smoked Fish (any)": "Smoked_Fish.png",
   "Wild Seeds (Any)": "Wild_Seeds.png",
   "With Trapper profession: Wood": "Wood.png",
