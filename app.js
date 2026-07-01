@@ -2428,8 +2428,14 @@ function buildHoardItemCatalog() {
   data.fish.forEach((fish) => addItem(fish.name, fish.imageUrl));
   flatShippingItems.forEach((item) => addItem(item.name, item.imageUrl));
   (data.cooking.ingredientCatalog || []).forEach((item) => addItem(item.item, item.imageUrl));
-  data.cooking.recipes.forEach((recipe) => addItem(recipe.name, recipe.imageUrl));
-  data.crafting.recipes.forEach((recipe) => addItem(recipe.name, recipe.imageUrl));
+  data.cooking.recipes.forEach((recipe) => {
+    addItem(recipe.name, recipe.imageUrl);
+    recipe.ingredients.forEach((ingredient) => addItem(ingredient.item, ""));
+  });
+  data.crafting.recipes.forEach((recipe) => {
+    addItem(recipe.name, recipe.imageUrl);
+    recipe.ingredients.forEach((ingredient) => addItem(ingredient.item, ""));
+  });
   data.other.buildings.forEach((building) => {
     addItem(building.name, building.imageUrl);
     building.materials.forEach((material) => addItem(material.item, ""));
