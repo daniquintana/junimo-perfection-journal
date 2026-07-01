@@ -27,6 +27,7 @@ const HOARD_IMAGE_FILE_OVERRIDES = {
   "Aged Roe (any)": "Aged_Roe.png",
   "Acorn": "Acorn.png",
   "Ancient Seed": "Ancient_Seed.png",
+  "Any Fish": "Sardine.png",
   "Aquamarine": "Aquamarine.png",
   "Diamond": "Diamond.png",
   "Dried Fruit (any)": "Dried_Fruit.png",
