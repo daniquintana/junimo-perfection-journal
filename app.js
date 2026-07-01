@@ -1,5 +1,5 @@
 const data = window.STARDEW_WIKI_DATA;
-const APP_VERSION = "1.3.1";
+const APP_VERSION = "1.3.2";
 const RELEASE_NAME = "";
 const SAVE_SCHEMA_VERSION = 2;
 const STORAGE_KEY = "junimo-perfection-journal-save-v2";
@@ -23,6 +23,30 @@ const GOLDEN_WALNUT_ITEM = {
   imageUrl: "https://stardewvalleywiki.com/mediawiki/images/5/54/Golden_Walnut.png",
 };
 const HOARD_CATEGORY_ORDER = ["Shipping", "Cooking", "Crafting", "Obelisk"];
+const HOARD_IMAGE_FILE_OVERRIDES = {
+  "Ancient Seed": "Ancient_Seed.png",
+  "Dried Fruit (any)": "Dried_Fruit.png",
+  "Dried Mushrooms (any)": "Dried_Mushrooms.png",
+  "Dwarf Gadget": "Dwarf_Gadget.png",
+  "Egg": "Egg.png",
+  "Egg (white)": "Egg.png",
+  "Egg (brown)": "Brown_Egg.png",
+  "Frozen Tear": "Frozen_Tear.png",
+  "Honey": "Honey.png",
+  "Honey (any)": "Honey.png",
+  "Jelly": "Jelly.png",
+  "Jelly (any)": "Jelly.png",
+  "Juice": "Juice.png",
+  "Juice (any)": "Juice.png",
+  "Large Egg": "Large_Egg.png",
+  "Large Egg (white)": "Large_Egg.png",
+  "Large Egg (brown)": "Large_Brown_Egg.png",
+  "Smoked Fish (any)": "Smoked_Fish.png",
+  "Wild Seeds (Any)": "Wild_Seeds.png",
+  "With Trapper profession: Wood": "Wood.png",
+  "Wine": "Wine.png",
+  "Wine (any)": "Wine.png",
+};
 
 const flatShippingItems = data.other.shippingPages.flatMap((page) => page.items);
 const cookingIngredientCatalogMap = Object.fromEntries(
@@ -1009,7 +1033,7 @@ function renderHoard() {
     const matchesCategory =
       ui.hoardCategory === "all" || row.categories.includes(ui.hoardCategory);
     const matchesText = matchesSearch(
-      [row.name, row.categoryLabel].join(" ").toLowerCase(),
+      [row.displayName, row.name, row.categoryLabel].join(" ").toLowerCase(),
       ui.hoardSearch
     );
     const matchesStatus =
@@ -1053,8 +1077,8 @@ function renderHoard() {
                     <tr>
                       <td>
                         <div class="item-inline">
-                          ${itemThumb(row, row.name)}
-                          <strong>${escapeHtml(row.name)}</strong>
+                          ${itemThumb(row, row.displayName)}
+                          <strong>${escapeHtml(row.displayName)}</strong>
                         </div>
                       </td>
                       <td>${escapeHtml(row.categoryLabel)}</td>
@@ -1459,6 +1483,7 @@ function getHoardRows() {
       const owned = clampNumber(state.hoard[row.name], 0, 999999);
       return {
         ...row,
+        displayName: getHoardDisplayName(row.name),
         sourceIndex,
         owned,
         remaining: Math.max(row.needed - owned, 0),
@@ -2327,17 +2352,7 @@ function buildState(saved) {
   const cookingPantry = buildNumberMap(cookingIngredientNames, saved?.cooking?.pantry, 0, 999999);
   const craftingStock = buildNumberMap(craftingIngredientNames, saved?.crafting?.stock, 0, 999999);
   const buildingStock = buildNumberMap(buildingMaterialNames, saved?.buildingStock, 0, 999999999);
-  const hoardSeed = { ...(saved?.hoard || {}) };
-  hoardItemNames.forEach((name) => {
-    if (!Object.hasOwn(hoardSeed, name)) {
-      hoardSeed[name] = Math.max(
-        clampNumber(saved?.cooking?.pantry?.[name], 0, 999999),
-        clampNumber(saved?.crafting?.stock?.[name], 0, 999999),
-        clampNumber(saved?.buildingStock?.[name], 0, 999999)
-      );
-    }
-  });
-  const hoard = buildNumberMap(hoardItemNames, hoardSeed, 0, 999999);
+  const hoard = buildNumberMap(hoardItemNames, saved?.hoard, 0, 999999);
 
   return {
     fish: buildBooleanMap(data.fish.map((fish) => fish.id), saved?.fish),
@@ -2412,8 +2427,17 @@ function buildHoardItemCatalog() {
 }
 
 function buildHoardFallbackImageUrl(name) {
-  const wikiFileName = `${name.replaceAll(":", "").trim().replaceAll(/\s+/g, "_")}.png`;
+  const wikiFileName =
+    HOARD_IMAGE_FILE_OVERRIDES[name] ||
+    `${name.replaceAll(":", "").trim().replaceAll(/\s+/g, "_")}.png`;
   return `https://stardewvalleywiki.com/Special:Redirect/file/${encodeURIComponent(wikiFileName)}`;
+}
+
+function getHoardDisplayName(name) {
+  if (name === "With Trapper profession: Wood") {
+    return "Wood (Trapper)";
+  }
+  return name;
 }
 
 function buildHoardItemNames() {

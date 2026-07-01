@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.2
+
+- made Hoard inventory fully independent from the regular cooking, crafting, and building stock trackers
+- added extra hoard-only image overrides for tricky item names and variants
+- cleaned up the Trapper wood label inside Hoard
+
 ## 1.3.1
 
 - separated Hoard into its own mode-toggle button with dedicated pit styling

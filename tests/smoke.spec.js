@@ -268,6 +268,47 @@ test('hoard stocked filter only shows items tracked in the hoard tab itself', as
   await expect(page.getByRole('button', { name: 'Back to the Regular Tracker' })).toBeVisible();
 });
 
+test('hoard does not inherit pantry counts from the regular cooking tracker', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const data = window.STARDEW_WIKI_DATA;
+    const save = {
+      appName: data.meta.appName,
+      appVersion: 'test',
+      releaseName: '',
+      saveVersion: 2,
+      state: {
+        fish: {},
+        cooking: {
+          recipes: {},
+          pantry: {
+            'Wheat Flour': 20,
+          },
+        },
+        crafting: {
+          recipes: {},
+          stock: {},
+        },
+        shipping: {},
+        villagers: {},
+        monsterGoals: {},
+        skills: {},
+        stardrops: {},
+        buildings: {},
+        buildingStock: {},
+        goldenWalnuts: 0,
+      },
+    };
+    window.localStorage.setItem('junimo-perfection-journal-save-v2', JSON.stringify(save));
+  });
+  await page.reload();
+  await page.getByRole('button', { name: 'Enter the Dangerous Hoarding Pit' }).click();
+  await page.locator('#hoard-status').selectOption('stocked');
+
+  await expect(page.locator('#hoard-content')).toContainText('No hoard items match the current filters.');
+  await expect(page.locator('#hoard-content')).not.toContainText('Wheat Flour');
+});
+
 test('crafting list follows the in-game menu order at the top', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Crafting' }).click();
