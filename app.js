@@ -1,5 +1,5 @@
 const data = window.STARDEW_WIKI_DATA;
-const APP_VERSION = "1.2.2";
+const APP_VERSION = "1.3.0";
 const RELEASE_NAME = "";
 const SAVE_SCHEMA_VERSION = 2;
 const STORAGE_KEY = "junimo-perfection-journal-save-v2";
@@ -8,6 +8,7 @@ const SAVE_STATE_KEYS = [
   "fish",
   "cooking",
   "crafting",
+  "hoard",
   "shipping",
   "villagers",
   "monsterGoals",
@@ -21,6 +22,7 @@ const GOLDEN_WALNUT_ITEM = {
   name: "Golden Walnut",
   imageUrl: "https://stardewvalleywiki.com/mediawiki/images/5/54/Golden_Walnut.png",
 };
+const HOARD_CATEGORY_ORDER = ["Shipping", "Cooking", "Crafting", "Obelisk"];
 
 const flatShippingItems = data.other.shippingPages.flatMap((page) => page.items);
 const cookingIngredientCatalogMap = Object.fromEntries(
@@ -180,6 +182,8 @@ const cookingIngredientNames = uniqueIngredientNames(data.cooking.recipes);
 const craftingIngredientNames = uniqueIngredientNames(data.crafting.recipes);
 const buildingMaterialNames = uniqueBuildingMaterialNames(data.other.buildings);
 const craftingRecipesInGameOrder = orderCraftingRecipes(data.crafting.recipes);
+const hoardItemCatalogMap = buildHoardItemCatalog();
+const hoardItemNames = buildHoardItemNames();
 
 const initialSave = loadSaved();
 let state = buildState(initialSave.state);
@@ -196,6 +200,9 @@ const ui = {
   cookingView: "recipes",
   craftingSearch: "",
   craftingStatus: "remaining",
+  hoardSearch: "",
+  hoardCategory: "all",
+  hoardStatus: "remaining",
   shippingSearch: "",
   shippingStatus: "all",
 };
@@ -288,6 +295,9 @@ function syncUiFiltersFromControls() {
   const cookingIngredientCategory = document.getElementById("cooking-ingredient-category");
   const craftingSearch = document.getElementById("crafting-search");
   const craftingStatus = document.getElementById("crafting-status");
+  const hoardSearch = document.getElementById("hoard-search");
+  const hoardCategory = document.getElementById("hoard-category");
+  const hoardStatus = document.getElementById("hoard-status");
   const shippingSearch = document.getElementById("shipping-search");
   const shippingStatus = document.getElementById("shipping-status");
 
@@ -303,6 +313,9 @@ function syncUiFiltersFromControls() {
   }
   if (craftingSearch) ui.craftingSearch = craftingSearch.value;
   if (craftingStatus) ui.craftingStatus = craftingStatus.value;
+  if (hoardSearch) ui.hoardSearch = hoardSearch.value;
+  if (hoardCategory) ui.hoardCategory = hoardCategory.value;
+  if (hoardStatus) ui.hoardStatus = hoardStatus.value;
   if (shippingSearch) ui.shippingSearch = shippingSearch.value;
   if (shippingStatus) ui.shippingStatus = shippingStatus.value;
 }
@@ -376,6 +389,23 @@ function bindEvents() {
   document.getElementById("crafting-status").addEventListener("change", (event) => {
     ui.craftingStatus = event.target.value;
     renderCrafting();
+  });
+
+  const hoardSearchInput = document.getElementById("hoard-search");
+  const handleHoardSearch = (event) => {
+    ui.hoardSearch = event.target.value;
+    renderHoard();
+  };
+  ["input", "change", "search"].forEach((eventName) => {
+    hoardSearchInput.addEventListener(eventName, handleHoardSearch);
+  });
+  document.getElementById("hoard-category").addEventListener("change", (event) => {
+    ui.hoardCategory = event.target.value;
+    renderHoard();
+  });
+  document.getElementById("hoard-status").addEventListener("change", (event) => {
+    ui.hoardStatus = event.target.value;
+    renderHoard();
   });
 
   const shippingSearchInput = document.getElementById("shipping-search");
@@ -460,6 +490,8 @@ function handleStateChange(event) {
     state.cooking.pantry[target.dataset.item] = clampNumber(target.value, 0, 999999);
   } else if (target.matches("[data-action='crafting-owned']")) {
     state.crafting.stock[target.dataset.item] = clampNumber(target.value, 0, 999999);
+  } else if (target.matches("[data-action='hoard-owned']")) {
+    state.hoard[target.dataset.item] = clampNumber(target.value, 0, 999999);
   } else if (target.matches("[data-action='building-owned']")) {
     state.buildingStock[target.dataset.item] = clampNumber(target.value, 0, 999999999);
   } else if (target.matches("[data-action='golden-walnuts']")) {
@@ -488,6 +520,7 @@ function renderAllDynamic() {
   renderFish();
   renderCooking();
   renderCrafting();
+  renderHoard();
   renderShipping();
   renderOther();
   syncPerfectionCelebration(progress.overallPercent >= 100);
@@ -500,6 +533,8 @@ function renderActiveTab() {
     renderCooking();
   } else if (ui.activeTab === "crafting") {
     renderCrafting();
+  } else if (ui.activeTab === "hoard") {
+    renderHoard();
   } else if (ui.activeTab === "shipping") {
     renderShipping();
   } else if (ui.activeTab === "other") {
@@ -952,6 +987,85 @@ function renderCrafting() {
   });
 }
 
+function renderHoard() {
+  const rows = getHoardRows();
+  const filtered = rows.filter((row) => {
+    const matchesCategory =
+      ui.hoardCategory === "all" || row.categories.includes(ui.hoardCategory);
+    const matchesText = matchesSearch(
+      [row.name, row.categoryLabel].join(" ").toLowerCase(),
+      ui.hoardSearch
+    );
+    const matchesStatus =
+      ui.hoardStatus === "all" ||
+      (ui.hoardStatus === "remaining" && row.remaining > 0) ||
+      (ui.hoardStatus === "stocked" && row.owned > 0);
+    return matchesCategory && matchesText && matchesStatus;
+  });
+
+  const totalNeed = rows.reduce((sum, row) => sum + row.needed, 0);
+  const totalOwned = rows.reduce((sum, row) => sum + Math.min(row.owned, row.needed), 0);
+  const totalRemaining = rows.reduce((sum, row) => sum + row.remaining, 0);
+  const progress = totalNeed ? ratioToPercent(totalOwned / totalNeed) : 100;
+
+  document.getElementById("hoard-summary").innerHTML = `
+    ${summaryCard("Hoard Progress", `${progress.toFixed(1)}%`, "", progress)}
+    ${summaryCard("Units stocked", `${formatNumber(totalOwned)}/${formatNumber(totalNeed)}`, "", progress)}
+    ${summaryCard("Units still needed", `${formatNumber(totalRemaining)}`, "", totalNeed ? ratioToPercent(totalRemaining / totalNeed) : 0)}
+    ${summaryCard("Unique items tracked", `${rows.length}`, "", 100)}
+  `;
+
+  document.getElementById("hoard-content").innerHTML = filtered.length
+    ? `
+      <article class="planner-card hoard-card">
+        <h3>Dangerous Hoarding Pit</h3>
+        <div class="table-shell">
+          <table class="planner-table tight-table hoard-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Need</th>
+                <th>You have</th>
+                <th>Still need</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filtered
+                .map(
+                  (row) => `
+                    <tr>
+                      <td>
+                        <div class="item-inline">
+                          ${itemThumb(row, row.name)}
+                          <strong>${escapeHtml(row.name)}</strong>
+                        </div>
+                      </td>
+                      <td>${escapeHtml(row.categoryLabel)}</td>
+                      <td>${formatNumber(row.needed)}</td>
+                      <td>
+                        <input
+                          type="number"
+                          min="0"
+                          step="1"
+                          value="${row.owned}"
+                          data-action="hoard-owned"
+                          data-item="${escapeAttribute(row.name)}"
+                        />
+                      </td>
+                      <td><strong>${formatNumber(row.remaining)}</strong></td>
+                    </tr>
+                  `
+                )
+                .join("")}
+            </tbody>
+          </table>
+        </div>
+      </article>
+    `
+    : emptyState("No hoard items match the current filters.");
+}
+
 function renderRecipePlanner(config) {
   const {
     kind,
@@ -1283,6 +1397,70 @@ function renderShipping() {
         .join("")}
     </div>
   `;
+}
+
+function getHoardRows() {
+  const rows = new Map();
+  const ensureRow = (name) => {
+    if (!rows.has(name)) {
+      rows.set(name, {
+        name,
+        categories: [],
+        categorySet: new Set(),
+        needed: 0,
+        imageUrl: hoardItemCatalogMap[name]?.imageUrl || "",
+      });
+    }
+    return rows.get(name);
+  };
+  const tagRow = (name, category, quantity) => {
+    const row = ensureRow(name);
+    row.needed += quantity;
+    if (!row.categorySet.has(category)) {
+      row.categorySet.add(category);
+      row.categories.push(category);
+    }
+  };
+
+  flatShippingItems.forEach((item) => {
+    tagRow(item.name, "Shipping", 1);
+  });
+
+  Object.entries(aggregateIngredientsForStatus(data.cooking.recipes, {}, "all")).forEach(
+    ([item, needed]) => tagRow(item, "Cooking", needed)
+  );
+
+  Object.entries(aggregateIngredientsForStatus(craftingRecipesInGameOrder, {}, "all")).forEach(
+    ([item, needed]) => tagRow(item, "Crafting", needed)
+  );
+
+  Object.entries(aggregateAllObeliskMaterials()).forEach(([item, needed]) => {
+    tagRow(item, "Obelisk", needed);
+  });
+
+  return [...rows.values()]
+    .map((row, sourceIndex) => {
+      const owned = clampNumber(state.hoard[row.name], 0, 999999);
+      return {
+        ...row,
+        sourceIndex,
+        owned,
+        remaining: Math.max(row.needed - owned, 0),
+        categories: [...row.categories].sort(
+          (left, right) =>
+            HOARD_CATEGORY_ORDER.indexOf(left) - HOARD_CATEGORY_ORDER.indexOf(right)
+        ),
+      };
+    })
+    .map((row) => ({
+      ...row,
+      categoryLabel: row.categories.join(", "),
+    }))
+    .sort((left, right) => {
+      const leftRank = HOARD_CATEGORY_ORDER.indexOf(left.categories[0] || "Shipping");
+      const rightRank = HOARD_CATEGORY_ORDER.indexOf(right.categories[0] || "Shipping");
+      return leftRank - rightRank || left.name.localeCompare(right.name);
+    });
 }
 
 function renderVillagers() {
@@ -1880,6 +2058,33 @@ function aggregateRemainingBuildingMaterials() {
   return totals;
 }
 
+function aggregateRemainingObeliskMaterials() {
+  const totals = {};
+  data.other.buildings
+    .filter((building) => building.type === "obelisk")
+    .forEach((building) => {
+      if (state.buildings[building.id]) {
+        return;
+      }
+      building.materials.forEach((material) => {
+        totals[material.item] = (totals[material.item] || 0) + material.quantity;
+      });
+    });
+  return totals;
+}
+
+function aggregateAllObeliskMaterials() {
+  const totals = {};
+  data.other.buildings
+    .filter((building) => building.type === "obelisk")
+    .forEach((building) => {
+      building.materials.forEach((material) => {
+        totals[material.item] = (totals[material.item] || 0) + material.quantity;
+      });
+    });
+  return totals;
+}
+
 function buildMaterialRows(totals, stockMap, group) {
   return Object.entries(totals).map(([name, needed]) => {
     const owned = stockMap[name] || 0;
@@ -2071,6 +2276,7 @@ function migrateSaveV1ToV2(savedState) {
       recipes: savedState?.crafting?.recipes || {},
       stock: savedState?.crafting?.stock || {},
     },
+    hoard: savedState?.hoard || {},
   };
 }
 
@@ -2105,6 +2311,17 @@ function buildState(saved) {
   const cookingPantry = buildNumberMap(cookingIngredientNames, saved?.cooking?.pantry, 0, 999999);
   const craftingStock = buildNumberMap(craftingIngredientNames, saved?.crafting?.stock, 0, 999999);
   const buildingStock = buildNumberMap(buildingMaterialNames, saved?.buildingStock, 0, 999999999);
+  const hoardSeed = { ...(saved?.hoard || {}) };
+  hoardItemNames.forEach((name) => {
+    if (!Object.hasOwn(hoardSeed, name)) {
+      hoardSeed[name] = Math.max(
+        clampNumber(saved?.cooking?.pantry?.[name], 0, 999999),
+        clampNumber(saved?.crafting?.stock?.[name], 0, 999999),
+        clampNumber(saved?.buildingStock?.[name], 0, 999999)
+      );
+    }
+  });
+  const hoard = buildNumberMap(hoardItemNames, hoardSeed, 0, 999999);
 
   return {
     fish: buildBooleanMap(data.fish.map((fish) => fish.id), saved?.fish),
@@ -2116,6 +2333,7 @@ function buildState(saved) {
       recipes: buildBooleanMap(data.crafting.recipes.map((recipe) => recipe.id), saved?.crafting?.recipes),
       stock: craftingStock,
     },
+    hoard,
     shipping: buildBooleanMap(flatShippingItems.map((item) => item.id), saved?.shipping),
     villagers: buildNumberMap(data.other.villagers.map((villager) => villager.id), saved?.villagers, 0, 14),
     monsterGoals: buildNumberMap(data.other.monsterGoals.map((goal) => goal.id), saved?.monsterGoals, 0, 999999),
@@ -2153,6 +2371,41 @@ function uniqueBuildingMaterialNames(buildings) {
     if (right === "Gold") return 1;
     return left.localeCompare(right);
   });
+}
+
+function buildHoardItemCatalog() {
+  const catalog = {};
+  const addItem = (name, imageUrl) => {
+    if (!name || catalog[name] || !imageUrl) {
+      return;
+    }
+    catalog[name] = { imageUrl };
+  };
+
+  data.fish.forEach((fish) => addItem(fish.name, fish.imageUrl));
+  flatShippingItems.forEach((item) => addItem(item.name, item.imageUrl));
+  (data.cooking.ingredientCatalog || []).forEach((item) => addItem(item.item, item.imageUrl));
+  data.cooking.recipes.forEach((recipe) => addItem(recipe.name, recipe.imageUrl));
+  data.crafting.recipes.forEach((recipe) => addItem(recipe.name, recipe.imageUrl));
+  data.other.buildings.forEach((building) => {
+    addItem(building.name, building.imageUrl);
+    building.materials.forEach((material) => addItem(material.item, ""));
+  });
+
+  return catalog;
+}
+
+function buildHoardItemNames() {
+  const names = new Set();
+  flatShippingItems.forEach((item) => names.add(item.name));
+  Object.keys(aggregateIngredientsForStatus(data.cooking.recipes, {}, "all")).forEach((item) =>
+    names.add(item)
+  );
+  Object.keys(aggregateIngredientsForStatus(craftingRecipesInGameOrder, {}, "all")).forEach((item) =>
+    names.add(item)
+  );
+  Object.keys(aggregateAllObeliskMaterials()).forEach((item) => names.add(item));
+  return [...names].sort((left, right) => left.localeCompare(right));
 }
 
 function orderCraftingRecipes(recipes) {
@@ -2287,4 +2540,5 @@ function updateVisibleTab() {
   document.querySelectorAll(".tab-panel").forEach((panel) => {
     panel.classList.toggle("is-active", panel.id === ui.activeTab);
   });
+  document.body.classList.toggle("is-hoard-mode", ui.activeTab === "hoard");
 }

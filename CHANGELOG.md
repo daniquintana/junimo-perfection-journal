@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0
+
+- added a separate Hoard tab for tracking the full stash needed across cooking, crafting, shipping, and obelisks
+- added a distinct Qi-style hoard mode background and summary cards
+- kept hoard inventory separate from the cooking and crafting planners while preserving migration from older saves
+- expanded the smoke suite to cover the new tab and its saved-state behavior
+
 ## 1.2.2
 
 - added a True Perfection celebration popup when the tracker reaches 100%

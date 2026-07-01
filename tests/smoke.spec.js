@@ -12,6 +12,7 @@ test('loads the app and shows the main navigation', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Fish' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Cooking' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Crafting' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Hoard' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Shipping' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Other Perfection' })).toBeVisible();
 });
@@ -216,6 +217,54 @@ test('shipping status filter narrows the visible items', async ({ page }) => {
   await expect(page.locator('#shipping-content .pill-item.is-done')).toHaveCount(1);
   await expect(await summaryValue(page, '#shipping-summary', 0)).toBe('153');
   await expect(await summaryValue(page, '#shipping-summary', 1)).toBe('1/154');
+});
+
+test('hoard stocked filter only shows items tracked in the hoard tab itself', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const data = window.STARDEW_WIKI_DATA;
+    const save = {
+      appName: data.meta.appName,
+      appVersion: 'test',
+      releaseName: '',
+      saveVersion: 2,
+      state: {
+        fish: {},
+        cooking: {
+          recipes: {},
+          pantry: {
+            'Wheat Flour': 20,
+          },
+        },
+        crafting: {
+          recipes: {},
+          stock: {},
+        },
+        hoard: {
+          Moss: 20,
+          Milk: 12,
+          'Wheat Flour': 0,
+        },
+        shipping: {},
+        villagers: {},
+        monsterGoals: {},
+        skills: {},
+        stardrops: {},
+        buildings: {},
+        buildingStock: {},
+        goldenWalnuts: 0,
+      },
+    };
+    window.localStorage.setItem('junimo-perfection-journal-save-v2', JSON.stringify(save));
+  });
+  await page.reload();
+  await page.getByRole('button', { name: 'Hoard' }).click();
+  await page.locator('#hoard-status').selectOption('stocked');
+
+  await expect(page.locator('#hoard-content table')).toBeVisible();
+  await expect(page.locator('#hoard-content')).toContainText('Moss');
+  await expect(page.locator('#hoard-content')).toContainText('Milk');
+  await expect(page.locator('#hoard-content')).not.toContainText('Wheat Flour');
 });
 
 test('crafting list follows the in-game menu order at the top', async ({ page }) => {

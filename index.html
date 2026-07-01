@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Junimo Perfection Journal</title>
-    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260701a" />
-    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260701a" />
-    <link rel="stylesheet" href="./styles.css?v=20260701a" />
-    <script src="./data/wiki-data.js?v=20260701a"></script>
-    <script src="./app.js?v=20260701a" defer></script>
+    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260701b" />
+    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260701b" />
+    <link rel="stylesheet" href="./styles.css?v=20260701b" />
+    <script src="./data/wiki-data.js?v=20260701b"></script>
+    <script src="./app.js?v=20260701b" defer></script>
   </head>
   <body>
     <div class="page-shell">
@@ -41,6 +41,7 @@
         <button class="tab-button" data-tab="fish">Fish</button>
         <button class="tab-button" data-tab="cooking">Cooking</button>
         <button class="tab-button" data-tab="crafting">Crafting</button>
+        <button class="tab-button" data-tab="hoard">Hoard</button>
         <button class="tab-button" data-tab="shipping">Shipping</button>
         <button class="tab-button" data-tab="other">Other Perfection</button>
       </nav>
@@ -158,6 +159,47 @@
           <div id="crafting-summary" class="summary-grid compact"></div>
           <div id="crafting-ingredients" class="section-stack"></div>
           <div id="crafting-recipes" class="recipe-grid"></div>
+        </section>
+
+        <section id="hoard" class="tab-panel hoard-panel" aria-labelledby="hoard-tab">
+          <section class="section-card hoard-hero-card">
+            <div class="section-header">
+              <div>
+                <p class="section-kicker">Dangerous Hoarding Pit</p>
+                <h2>Hoard Progress</h2>
+                <p class="section-note">
+                  Tracks the full stash you will need across cooking, crafting, shipping,
+                  and obelisks. It does not replace the fish collection checklist.
+                </p>
+              </div>
+            </div>
+            <div class="panel-toolbar hoard-toolbar">
+              <label class="field">
+                <span>Search</span>
+                <input id="hoard-search" type="search" placeholder="Search hoard items" />
+              </label>
+              <label class="field">
+                <span>Category</span>
+                <select id="hoard-category">
+                  <option value="all">All categories</option>
+                  <option value="Shipping">Shipping</option>
+                  <option value="Cooking">Cooking</option>
+                  <option value="Crafting">Crafting</option>
+                  <option value="Obelisk">Obelisk</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Status</span>
+                <select id="hoard-status">
+                  <option value="remaining">Still need</option>
+                  <option value="all">All</option>
+                  <option value="stocked">Stocked</option>
+                </select>
+              </label>
+            </div>
+          </section>
+          <div id="hoard-summary" class="summary-grid compact"></div>
+          <div id="hoard-content" class="section-stack"></div>
         </section>
 
         <section id="shipping" class="tab-panel" aria-labelledby="shipping-tab">

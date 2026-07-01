@@ -53,6 +53,15 @@ body {
   position: relative;
 }
 
+body.is-hoard-mode {
+  background-color: #0d1d33;
+  background-image:
+    radial-gradient(circle at 18% 18%, rgba(110, 167, 255, 0.26) 0, transparent 22%),
+    radial-gradient(circle at 82% 14%, rgba(255, 217, 111, 0.18) 0, transparent 18%),
+    radial-gradient(circle at 50% 72%, rgba(102, 66, 173, 0.2) 0, transparent 28%),
+    linear-gradient(180deg, rgba(11, 24, 46, 0.94) 0%, rgba(19, 32, 61, 0.94) 45%, rgba(14, 24, 44, 0.98) 100%);
+}
+
 body::before {
   content: "";
   position: fixed;
@@ -65,6 +74,15 @@ body::before {
   z-index: 0;
 }
 
+body.is-hoard-mode::before {
+  background:
+    radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.26) 0 2px, transparent 3px),
+    radial-gradient(circle at 26% 10%, rgba(255, 255, 255, 0.22) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 63% 18%, rgba(255, 255, 255, 0.24) 0 2px, transparent 3px),
+    radial-gradient(circle at 84% 12%, rgba(255, 255, 255, 0.22) 0 1.5px, transparent 2.5px),
+    linear-gradient(180deg, rgba(39, 70, 119, 0.08), rgba(15, 24, 48, 0.16));
+}
+
 .page-shell::before {
   content: "";
   position: fixed;
@@ -74,6 +92,11 @@ body::before {
     linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(237, 230, 187, 0.04) 32%, rgba(109, 145, 63, 0.12) 100%);
   pointer-events: none;
   z-index: 0;
+}
+
+body.is-hoard-mode .page-shell::before {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(86, 65, 136, 0.1) 36%, rgba(10, 18, 35, 0.28) 100%);
 }
 
 .front-junimo {
@@ -964,6 +987,41 @@ input[type="checkbox"] {
 .cooking-layout.is-split .planner-table-cooking th:nth-child(5),
 .cooking-layout.is-split .planner-table-cooking td:nth-child(5) {
   padding-right: 18px;
+}
+
+.hoard-panel .section-note {
+  max-width: 68ch;
+}
+
+.hoard-hero-card,
+.hoard-panel .panel-toolbar,
+.hoard-panel .summary-card,
+.hoard-card {
+  background: linear-gradient(180deg, rgba(250, 241, 214, 0.96), rgba(230, 210, 164, 0.95));
+}
+
+.hoard-table th:first-child,
+.hoard-table td:first-child {
+  width: 40%;
+}
+
+.hoard-table th:nth-child(2),
+.hoard-table td:nth-child(2) {
+  width: 22%;
+}
+
+.hoard-table th:nth-child(3),
+.hoard-table td:nth-child(3),
+.hoard-table th:nth-child(4),
+.hoard-table td:nth-child(4),
+.hoard-table th:nth-child(5),
+.hoard-table td:nth-child(5) {
+  width: 12%;
+  white-space: nowrap;
+}
+
+.hoard-table input {
+  width: min(100%, 118px);
 }
 
 .planner-split #cooking-recipes.recipe-grid {
