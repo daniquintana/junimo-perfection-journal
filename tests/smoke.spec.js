@@ -218,6 +218,24 @@ test('shipping status filter narrows the visible items', async ({ page }) => {
   await expect(await summaryValue(page, '#shipping-summary', 1)).toBe('1/154');
 });
 
+test('crafting list follows the in-game menu order at the top', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Crafting' }).click();
+  const names = await page.locator('#crafting-recipes .recipe-card h3').evaluateAll((nodes) =>
+    nodes.slice(0, 8).map((node) => node.textContent?.trim())
+  );
+  expect(names).toEqual([
+    'Wood Fence',
+    'Stone Fence',
+    'Iron Fence',
+    'Hardwood Fence',
+    'Grass Starter',
+    'Blue Grass Starter',
+    'Gate',
+    'Chest',
+  ]);
+});
+
 test('export, reset, and import restore tracker state', async ({ page }, testInfo) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Fish' }).click();

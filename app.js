@@ -26,9 +26,160 @@ const flatShippingItems = data.other.shippingPages.flatMap((page) => page.items)
 const cookingIngredientCatalogMap = Object.fromEntries(
   (data.cooking.ingredientCatalog || []).map((entry) => [entry.item, entry])
 );
+const CRAFTING_GAME_ORDER_NAMES = [
+  "Wood Fence",
+  "Stone Fence",
+  "Iron Fence",
+  "Hardwood Fence",
+  "Grass Starter",
+  "Blue Grass Starter",
+  "Gate",
+  "Chest",
+  "Big Chest",
+  "Stone Chest",
+  "Big Stone Chest",
+  "Torch",
+  "Scarecrow",
+  "Deluxe Scarecrow",
+  "Bee House",
+  "Keg",
+  "Cask",
+  "Dehydrator",
+  "Furnace",
+  "Heavy Furnace",
+  "Anvil",
+  "Mini-Forge",
+  "Garden Pot",
+  "Wood Sign",
+  "Stone Sign",
+  "Dark Sign",
+  "Text Sign",
+  "Cheese Press",
+  "Mayonnaise Machine",
+  "Seed Maker",
+  "Loom",
+  "Oil Maker",
+  "Recycling Machine",
+  "Bait Maker",
+  "Fish Smoker",
+  "Preserves Jar",
+  "Charcoal Kiln",
+  "Tapper",
+  "Mushroom Log",
+  "Lightning Rod",
+  "Slime Incubator",
+  "Slime Egg-Press",
+  "Crystalarium",
+  "Mini-Jukebox",
+  "Sprinkler",
+  "Quality Sprinkler",
+  "Iridium Sprinkler",
+  "Flute Block",
+  "Drum Block",
+  "Basic Fertilizer",
+  "Tree Fertilizer",
+  "Staircase",
+  "Mystic Tree Seed",
+  "Quality Fertilizer",
+  "Basic Retaining Soil",
+  "Quality Retaining Soil",
+  "Speed-Gro",
+  "Deluxe Speed-Gro",
+  "Hyper Speed-Gro",
+  "Deluxe Fertilizer",
+  "Deluxe Retaining Soil",
+  "Cherry Bomb",
+  "Bomb",
+  "Mega Bomb",
+  "Explosive Ammo",
+  "Ancient Seeds",
+  "Spring Seeds",
+  "Summer Seeds",
+  "Fall Seeds",
+  "Winter Seeds",
+  "Fiber Seeds",
+  "Tea Sapling",
+  "Warp Totem: Farm",
+  "Warp Totem: Mountains",
+  "Warp Totem: Beach",
+  "Warp Totem: Desert",
+  "Warp Totem: Island",
+  "Rain Totem",
+  "Treasure Totem",
+  "Cookout Kit",
+  "Field Snack",
+  "Statue Of Blessings",
+  "Statue Of The Dwarf King",
+  "Jack-O-Lantern",
+  "Wood Floor",
+  "Straw Floor",
+  "Weathered Floor",
+  "Rustic Plank Floor",
+  "Crystal Floor",
+  "Stone Floor",
+  "Stone Walkway Floor",
+  "Brick Floor",
+  "Wood Path",
+  "Gravel Path",
+  "Cobblestone Path",
+  "Stepping Stone Path",
+  "Crystal Path",
+  "Bait",
+  "Deluxe Bait",
+  "Wild Bait",
+  "Magic Bait",
+  "Spinner",
+  "Dressed Spinner",
+  "Quality Bobber",
+  "Trap Bobber",
+  "Sonar Bobber",
+  "Cork Bobber",
+  "Treasure Hunter",
+  "Barbed Hook",
+  "Oil of Garlic",
+  "Life Elixir",
+  "Crab Pot",
+  "Iridium Band",
+  "Ring of Yoba",
+  "Glowstone Ring",
+  "Sturdy Ring",
+  "Tub o' Flowers",
+  "Wooden Brazier",
+  "Wicked Statue",
+  "Stone Brazier",
+  "Gold Brazier",
+  "Campfire",
+  "Carved Brazier",
+  "Stump Brazier",
+  "Skull Brazier",
+  "Barrel Brazier",
+  "Marble Brazier",
+  "Wood Lamp-post",
+  "Iron Lamp-post",
+  "Fairy Dust",
+  "Bug Steak",
+  "Magnet",
+  "Monster Musk",
+  "Mini-Obelisk",
+  "Farm Computer",
+  "Ostrich Incubator",
+  "Geode Crusher",
+  "Solar Panel",
+  "Bone Mill",
+  "Thorns Ring",
+  "Warrior Ring",
+  "Heavy Tapper",
+  "Hopper",
+  "Worm Bin",
+  "Deluxe Worm Bin",
+];
+const CRAFTING_GAME_ORDER_INDEX = new Map(
+  CRAFTING_GAME_ORDER_NAMES.map((name, index) => [name, index])
+);
 const cookingIngredientNames = uniqueIngredientNames(data.cooking.recipes);
 const craftingIngredientNames = uniqueIngredientNames(data.crafting.recipes);
 const buildingMaterialNames = uniqueBuildingMaterialNames(data.other.buildings);
+const craftingRecipesInGameOrder = orderCraftingRecipes(data.crafting.recipes);
 
 const initialSave = loadSaved();
 let state = buildState(initialSave.state);
@@ -787,7 +938,7 @@ function renderCooking() {
 function renderCrafting() {
   renderRecipePlanner({
     kind: "crafting",
-    recipes: data.crafting.recipes,
+    recipes: craftingRecipesInGameOrder,
     statusMap: state.crafting.recipes,
     stockMap: state.crafting.stock,
     summaryEl: "crafting-summary",
@@ -1400,7 +1551,7 @@ function renderBuildings() {
 function getRemainingSnapshot() {
   const fish = data.fish.filter((entry) => !state.fish[entry.id]);
   const cooking = data.cooking.recipes.filter((entry) => !state.cooking.recipes[entry.id]);
-  const crafting = data.crafting.recipes.filter((entry) => !state.crafting.recipes[entry.id]);
+  const crafting = craftingRecipesInGameOrder.filter((entry) => !state.crafting.recipes[entry.id]);
   const shipping = flatShippingItems.filter((entry) => !state.shipping[entry.id]);
   const villagers = data.other.villagers
     .filter((entry) => state.villagers[entry.id] < entry.targetHearts)
@@ -2002,6 +2153,30 @@ function uniqueBuildingMaterialNames(buildings) {
     if (right === "Gold") return 1;
     return left.localeCompare(right);
   });
+}
+
+function orderCraftingRecipes(recipes) {
+  return [...recipes]
+    .map((recipe, sourceIndex) => ({
+      recipe,
+      sourceIndex,
+      gameIndex: CRAFTING_GAME_ORDER_INDEX.get(recipe.name),
+    }))
+    .sort((left, right) => {
+      const leftHasGameOrder = left.gameIndex !== undefined;
+      const rightHasGameOrder = right.gameIndex !== undefined;
+      if (leftHasGameOrder && rightHasGameOrder) {
+        return left.gameIndex - right.gameIndex;
+      }
+      if (leftHasGameOrder) {
+        return -1;
+      }
+      if (rightHasGameOrder) {
+        return 1;
+      }
+      return left.sourceIndex - right.sourceIndex;
+    })
+    .map((entry) => entry.recipe);
 }
 
 function snapshotEntry(current, total) {
