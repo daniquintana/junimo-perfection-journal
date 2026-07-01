@@ -54,7 +54,7 @@ const HOARD_IMAGE_FILE_OVERRIDES = {
   "Pine Cone": "Pine_Cone.png",
   "Roe (any)": "Roe.png",
   "Smoked Fish (any)": "Smoked_Fish.png",
-  "Wild Seeds (Any)": "Wild_Seeds.png",
+  "Wild Seeds (Any)": "Spring_Seeds.png",
   "With Trapper profession: Wood": "Wood.png",
   "Wine": "Wine.png",
   "Wine (any)": "Wine.png",
