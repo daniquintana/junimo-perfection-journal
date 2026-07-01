@@ -136,6 +136,14 @@ body.is-hoard-mode .page-shell::before {
   height: auto;
 }
 
+body.is-hoard-mode .front-junimo {
+  filter: drop-shadow(0 14px 16px rgba(89, 48, 133, 0.4));
+}
+
+body.is-hoard-mode .front-junimo img {
+  filter: hue-rotate(105deg) saturate(1.7) brightness(0.92);
+}
+
 button,
 input,
 select {
