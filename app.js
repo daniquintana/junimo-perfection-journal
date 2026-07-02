@@ -535,6 +535,12 @@ function handleStateChange(event) {
     state.crafting.stock[target.dataset.item] = clampNumber(target.value, 0, 999999);
   } else if (target.matches("[data-action='hoard-owned']")) {
     state.hoard[target.dataset.item] = clampNumber(target.value, 0, 999999);
+  } else if (target.matches("[data-action='hoard-complete']")) {
+    const needed = clampNumber(target.dataset.need, 0, 999999);
+    const current = clampNumber(state.hoard[target.dataset.item], 0, 999999);
+    state.hoard[target.dataset.item] = target.checked
+      ? needed
+      : Math.max(Math.min(current, needed) - 1, 0);
   } else if (target.matches("[data-action='building-owned']")) {
     state.buildingStock[target.dataset.item] = clampNumber(target.value, 0, 999999999);
   } else if (target.matches("[data-action='golden-walnuts']")) {
@@ -1090,6 +1096,14 @@ function renderHoard() {
                     <tr>
                       <td>
                         <div class="item-inline">
+                          <input
+                            type="checkbox"
+                            data-action="hoard-complete"
+                            data-item="${escapeAttribute(row.name)}"
+                            data-need="${row.needed}"
+                            aria-label="Mark ${escapeAttribute(row.displayName)} as fully stocked"
+                            ${row.owned >= row.needed && row.needed > 0 ? "checked" : ""}
+                          />
                           ${itemThumb(row, row.displayName)}
                           <strong>${escapeHtml(row.displayName)}</strong>
                         </div>
