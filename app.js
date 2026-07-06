@@ -53,6 +53,7 @@ const HOARD_IMAGE_FILE_OVERRIDES = {
   "Marble": "Marble.png",
   "Mixed Seeds": "Mixed_Seeds.png",
   "Pine Cone": "Pine_Cone.png",
+  "Pickles (any)": "Pickles.png",
   "Roe (any)": "Roe.png",
   "Smoked Fish (any)": "Smoked_Fish.png",
   "Wild Seeds (Any)": "Spring_Seeds.png",
