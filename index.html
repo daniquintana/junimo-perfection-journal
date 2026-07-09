@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Junimo Perfection Journal</title>
-    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260705a" />
-    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260705a" />
-    <link rel="stylesheet" href="./styles.css?v=20260705a" />
-    <script src="./data/wiki-data.js?v=20260705a"></script>
-    <script src="./app.js?v=20260705a" defer></script>
+    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260708a" />
+    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260708a" />
+    <link rel="stylesheet" href="./styles.css?v=20260708a" />
+    <script src="./data/wiki-data.js?v=20260708a"></script>
+    <script src="./app.js?v=20260708a" defer></script>
   </head>
   <body>
     <div class="page-shell">
@@ -32,6 +32,31 @@
           <button id="export-data" class="action-button">Export save</button>
           <button id="import-data" class="action-button action-button-secondary">Import save</button>
           <button id="reset-data" class="action-button action-button-danger">Reset tracker</button>
+          <section class="help-card" aria-label="Help and feedback">
+            <p class="help-card-title">Help &amp; feedback</p>
+            <p class="help-card-text">
+              Found a bug or need help using the tracker?
+            </p>
+            <div class="help-links">
+              <a
+                href="https://github.com/daniquintana/junimo-perfection-journal/issues/new/choose"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Report a bug
+              </a>
+              <a
+                href="https://github.com/daniquintana/junimo-perfection-journal/issues"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View issues
+              </a>
+            </div>
+            <p class="help-card-tip">
+              Helpful details: a screenshot, your browser, and whether it happened on the live site or local app.
+            </p>
+          </section>
           <input id="import-file" type="file" accept="application/json" hidden />
         </div>
       </header>

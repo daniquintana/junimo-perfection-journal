@@ -34,7 +34,7 @@ A Stardew Valley perfection tracker for fish, cooking, crafting, shipping, frien
 
 ### Live Site
 
-- Open [daniquintana.github.io/junimo-perfection-journal](https://daniquintana.github.io/junimo-perfection-journal/?v=20260701e)
+- Open [daniquintana.github.io/junimo-perfection-journal](https://daniquintana.github.io/junimo-perfection-journal/)
 - Progress is saved only in that browser on that device
 - To move progress between computers, export on one device and import on the other
 
@@ -54,6 +54,11 @@ A Stardew Valley perfection tracker for fish, cooking, crafting, shipping, frien
 - monster slayer goals
 - skills, stardrops, golden walnuts, obelisks, and the Gold Clock
 - import/export and local progress tracking
+
+## Help & Feedback
+
+- Report bugs or tracker issues: [GitHub Issues](https://github.com/daniquintana/junimo-perfection-journal/issues/new/choose)
+- Before reporting, it helps to include a screenshot, your browser, and whether the issue happened on the live site or local app
 
 ## Notes
 
