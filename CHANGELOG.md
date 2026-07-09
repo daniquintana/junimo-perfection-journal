@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0
+
+- added a dedicated `?` guide/help page with tracker instructions, scope, and reporting notes
+- added easier feedback access from the tracker header
+- polished the hoard experience with completion checkboxes and a round of fallback image fixes
+
 ## 1.3.2
 
 - made Hoard inventory fully independent from the regular cooking, crafting, and building stock trackers
