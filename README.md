@@ -57,6 +57,7 @@ A Stardew Valley perfection tracker for fish, cooking, crafting, shipping, frien
 
 ## Help & Feedback
 
+- Use the `?` button inside the tracker to open the help page
 - Report bugs or tracker issues: [GitHub Issues](https://github.com/daniquintana/junimo-perfection-journal/issues/new/choose)
 - Before reporting, it helps to include a screenshot, your browser, and whether the issue happened on the live site or local app
 
