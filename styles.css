@@ -192,6 +192,7 @@ select {
 }
 
 .hero-copy,
+.hero-side,
 .hero-actions {
   position: relative;
   z-index: 1;
@@ -250,15 +251,23 @@ select {
   line-height: 1.6;
 }
 
-.hero-actions {
+.hero-side {
   display: grid;
-  gap: 12px;
   align-content: start;
   justify-items: center;
 }
 
+.hero-actions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+  margin-top: 4px;
+}
+
 .hero-actions .action-button {
-  width: min(100%, 86%);
+  width: 100%;
 }
 
 .help-badge,
@@ -1675,6 +1684,10 @@ a {
 
   .collectibles-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero-actions {
+    grid-template-columns: 1fr;
   }
 }
 
