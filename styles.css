@@ -325,6 +325,10 @@ select {
   gap: 18px;
 }
 
+.help-page-grid > .section-card {
+  padding-left: 26px;
+}
+
 .help-list {
   margin: 0;
   padding-left: 18px;
