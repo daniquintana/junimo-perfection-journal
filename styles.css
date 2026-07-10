@@ -254,6 +254,11 @@ select {
   display: grid;
   gap: 12px;
   align-content: start;
+  justify-items: center;
+}
+
+.hero-actions .action-button {
+  width: min(100%, 86%);
 }
 
 .help-badge,
