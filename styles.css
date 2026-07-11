@@ -362,6 +362,11 @@ select {
   margin: -2px auto 10px;
   image-rendering: pixelated;
   filter: drop-shadow(0 12px 16px rgba(100, 63, 25, 0.24));
+  cursor: pointer;
+}
+
+.hero-emblem:hover {
+  transform: translateY(-1px);
 }
 
 .action-button {
@@ -827,6 +832,75 @@ select:focus {
   margin: 0 auto 22px;
   color: var(--ink-soft);
   line-height: 1.5;
+}
+
+.owner-overlay .celebration-card {
+  width: min(920px, calc(100vw - 28px));
+}
+
+.owner-stats-copy {
+  max-width: 54ch;
+}
+
+.owner-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  text-align: left;
+}
+
+.owner-stat-card {
+  min-height: 100%;
+  padding: 16px;
+  border: 3px solid var(--wood-dark);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(249, 236, 200, 0.98), rgba(238, 216, 163, 0.96));
+  box-shadow: var(--shadow);
+  position: relative;
+}
+
+.owner-stat-card::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 3px solid rgba(212, 154, 85, 0.88);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.owner-stat-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.owner-stat-card h3 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+  line-height: 1.1;
+}
+
+.owner-stat-big {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.owner-stat-note {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+.owner-stat-list {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.owner-stat-list li + li {
+  margin-top: 6px;
 }
 
 #general-left-board {
@@ -1706,6 +1780,10 @@ a {
   }
 
   .hero-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .owner-stats-grid {
     grid-template-columns: 1fr;
   }
 }

@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Junimo Perfection Journal</title>
-    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260709e" />
-    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260709e" />
-    <link rel="stylesheet" href="./styles.css?v=20260709e" />
-    <script src="./data/wiki-data.js?v=20260709e"></script>
-    <script src="./app.js?v=20260709e" defer></script>
+    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260711a" />
+    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260711a" />
+    <link rel="stylesheet" href="./styles.css?v=20260711a" />
+    <script src="./data/wiki-data.js?v=20260711a"></script>
+    <script src="./app.js?v=20260711a" defer></script>
   </head>
   <body>
     <div class="page-shell">
@@ -26,6 +26,7 @@
         </div>
         <div class="hero-side">
           <img
+            id="hero-emblem-trigger"
             class="hero-emblem"
             src="./branding/site/hero-junimo-sprite.png"
             alt="Open journal artwork for Junimo Perfection Journal"
@@ -332,6 +333,32 @@
         <button id="celebration-okay" class="action-button" type="button">
           Keep farming
         </button>
+      </div>
+    </div>
+    <div
+      id="owner-stats-overlay"
+      class="celebration-overlay owner-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="owner-stats-title"
+      hidden
+    >
+      <div class="celebration-card owner-stats-card">
+        <button
+          id="owner-stats-close"
+          class="celebration-close"
+          type="button"
+          aria-label="Close owner stats"
+        >
+          ×
+        </button>
+        <p class="section-kicker">Secret Owner Page</p>
+        <h2 id="owner-stats-title">Tracker stats</h2>
+        <p class="celebration-copy owner-stats-copy">
+          Private stats for release downloads and this browser only. Live unique
+          visitor counts still need an analytics hookup.
+        </p>
+        <div id="owner-stats-content" class="owner-stats-grid"></div>
       </div>
     </div>
     <div class="front-junimo" aria-hidden="true">

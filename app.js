@@ -3,7 +3,12 @@ const APP_VERSION = "1.4.0";
 const RELEASE_NAME = "";
 const SAVE_SCHEMA_VERSION = 2;
 const STORAGE_KEY = "junimo-perfection-journal-save-v2";
+const OWNER_STATS_STORAGE_KEY = "junimo-perfection-journal-owner-stats-v1";
 const LEGACY_STORAGE_KEYS = ["stardew-perfection-tracker-v1"];
+const RELEASES_API_URL =
+  "https://api.github.com/repos/daniquintana/junimo-perfection-journal/releases";
+const OWNER_SECRET_TAP_TARGET = 5;
+const OWNER_SECRET_TAP_WINDOW_MS = 2200;
 const SAVE_STATE_KEYS = [
   "fish",
   "cooking",
@@ -225,6 +230,7 @@ const hoardItemNames = buildHoardItemNames();
 
 const initialSave = loadSaved();
 let state = buildState(initialSave.state);
+let ownerStats = loadOwnerStats();
 const ui = {
   activeTab: "general",
   lastStandardTab: "general",
@@ -247,6 +253,14 @@ const ui = {
 };
 let scheduledRenderHandle = 0;
 let lastRenderedPerfect = getProgressSnapshot().overallPercent >= 100;
+const ownerStatsUi = {
+  tapCount: 0,
+  tapResetHandle: 0,
+  downloadsLoading: false,
+  downloadsLoaded: false,
+  downloadsError: "",
+  downloadSummary: null,
+};
 
 const FISH_SPOT_ORDER = [
   "Legendary",
@@ -266,11 +280,13 @@ const FISH_SPOT_ORDER = [
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
+  recordOwnerActivity("pageViews");
   populateStaticOptions();
   bindEvents();
   syncUiFiltersFromControls();
   renderAllDynamic();
   updateVisibleTab();
+  renderOwnerStats();
 });
 
 window.addEventListener("pageshow", () => {
@@ -481,8 +497,16 @@ function bindEvents() {
       hidePerfectionCelebration();
     }
   });
+  document.getElementById("owner-stats-close").addEventListener("click", hideOwnerStats);
+  document.getElementById("owner-stats-overlay").addEventListener("click", (event) => {
+    if (event.target.id === "owner-stats-overlay") {
+      hideOwnerStats();
+    }
+  });
+  document.getElementById("hero-emblem-trigger").addEventListener("click", handleOwnerSecretTap);
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
+      hideOwnerStats();
       hidePerfectionCelebration();
     }
   });
@@ -683,6 +707,177 @@ function hidePerfectionCelebration() {
 function setPerfectionCelebrationBaseline() {
   lastRenderedPerfect = getProgressSnapshot().overallPercent >= 100;
   hidePerfectionCelebration();
+}
+
+function handleOwnerSecretTap() {
+  ownerStatsUi.tapCount += 1;
+  if (ownerStatsUi.tapResetHandle) {
+    window.clearTimeout(ownerStatsUi.tapResetHandle);
+  }
+  if (ownerStatsUi.tapCount >= OWNER_SECRET_TAP_TARGET) {
+    ownerStatsUi.tapCount = 0;
+    showOwnerStats();
+    return;
+  }
+  ownerStatsUi.tapResetHandle = window.setTimeout(() => {
+    ownerStatsUi.tapCount = 0;
+    ownerStatsUi.tapResetHandle = 0;
+  }, OWNER_SECRET_TAP_WINDOW_MS);
+}
+
+function showOwnerStats() {
+  const overlay = document.getElementById("owner-stats-overlay");
+  if (!overlay) {
+    return;
+  }
+  recordOwnerActivity("secretOpens");
+  overlay.hidden = false;
+  renderOwnerStats();
+  void loadReleaseDownloadStats();
+}
+
+function hideOwnerStats() {
+  const overlay = document.getElementById("owner-stats-overlay");
+  if (!overlay) {
+    return;
+  }
+  overlay.hidden = true;
+}
+
+function renderOwnerStats() {
+  const container = document.getElementById("owner-stats-content");
+  if (!container) {
+    return;
+  }
+
+  const downloadsMarkup = renderOwnerDownloadsCard();
+  const browserMarkup = `
+    <section class="owner-stat-card">
+      <h3>This browser</h3>
+      <p class="owner-stat-big">${formatNumber(ownerStats.pageViews || 0)}</p>
+      <p class="owner-stat-note">Page opens on this browser/device only.</p>
+      <ul class="owner-stat-list">
+        <li>Exports: ${formatNumber(ownerStats.exports || 0)}</li>
+        <li>Imports: ${formatNumber(ownerStats.imports || 0)}</li>
+        <li>Resets: ${formatNumber(ownerStats.resets || 0)}</li>
+        <li>Secret opens: ${formatNumber(ownerStats.secretOpens || 0)}</li>
+        <li>Last seen: ${escapeHtml(formatOwnerDate(ownerStats.lastSeenAt))}</li>
+      </ul>
+    </section>
+  `;
+  const analyticsMarkup = `
+    <section class="owner-stat-card">
+      <h3>Live site visitors</h3>
+      <p class="owner-stat-big">Not connected</p>
+      <p class="owner-stat-note">
+        To estimate different people on the live site, this tracker still needs
+        analytics like GoatCounter or Plausible. A hidden popup alone cannot
+        count global visitors.
+      </p>
+    </section>
+  `;
+
+  container.innerHTML = `${downloadsMarkup}${browserMarkup}${analyticsMarkup}`;
+}
+
+function renderOwnerDownloadsCard() {
+  if (ownerStatsUi.downloadsLoading && !ownerStatsUi.downloadSummary) {
+    return `
+      <section class="owner-stat-card">
+        <h3>App downloads</h3>
+        <p class="owner-stat-big">...</p>
+        <p class="owner-stat-note">Loading public GitHub release download counts.</p>
+      </section>
+    `;
+  }
+
+  if (ownerStatsUi.downloadsError) {
+    return `
+      <section class="owner-stat-card">
+        <h3>App downloads</h3>
+        <p class="owner-stat-big">Unavailable</p>
+        <p class="owner-stat-note">${escapeHtml(ownerStatsUi.downloadsError)}</p>
+      </section>
+    `;
+  }
+
+  const summary = ownerStatsUi.downloadSummary;
+  if (!summary || !summary.assets.length) {
+    return `
+      <section class="owner-stat-card">
+        <h3>App downloads</h3>
+        <p class="owner-stat-big">0</p>
+        <p class="owner-stat-note">No public release assets were found yet.</p>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="owner-stat-card">
+      <h3>App downloads</h3>
+      <p class="owner-stat-big">${formatNumber(summary.totalDownloads)}</p>
+      <p class="owner-stat-note">Summed from public GitHub release assets across ${formatNumber(summary.releaseCount)} releases.</p>
+      <ul class="owner-stat-list">
+        ${summary.assets
+          .map(
+            (asset) =>
+              `<li>${escapeHtml(asset.name)}: ${formatNumber(asset.count)}</li>`
+          )
+          .join("")}
+      </ul>
+    </section>
+  `;
+}
+
+async function loadReleaseDownloadStats() {
+  if (ownerStatsUi.downloadsLoading || ownerStatsUi.downloadsLoaded) {
+    return;
+  }
+
+  ownerStatsUi.downloadsLoading = true;
+  ownerStatsUi.downloadsError = "";
+  renderOwnerStats();
+
+  try {
+    const response = await window.fetch(RELEASES_API_URL, {
+      headers: { Accept: "application/vnd.github+json" },
+    });
+    if (!response.ok) {
+      throw new Error(`GitHub API returned ${response.status}.`);
+    }
+
+    const releases = await response.json();
+    if (!Array.isArray(releases)) {
+      throw new Error("GitHub releases response was not valid.");
+    }
+
+    const assetCounts = new Map();
+    let totalDownloads = 0;
+
+    releases.forEach((release) => {
+      (release.assets || []).forEach((asset) => {
+        const name = asset?.name || "Unnamed asset";
+        const count = Number.isFinite(asset?.download_count) ? asset.download_count : 0;
+        totalDownloads += count;
+        assetCounts.set(name, (assetCounts.get(name) || 0) + count);
+      });
+    });
+
+    ownerStatsUi.downloadSummary = {
+      totalDownloads,
+      releaseCount: releases.length,
+      assets: [...assetCounts.entries()]
+        .map(([name, count]) => ({ name, count }))
+        .sort((left, right) => right.count - left.count || left.name.localeCompare(right.name)),
+    };
+    ownerStatsUi.downloadsLoaded = true;
+  } catch (error) {
+    ownerStatsUi.downloadsError =
+      error?.message || "Could not load GitHub release download counts.";
+  } finally {
+    ownerStatsUi.downloadsLoading = false;
+    renderOwnerStats();
+  }
 }
 
 function renderGeneralLeftBoard(remaining) {
@@ -2182,6 +2377,7 @@ function exportSave() {
   link.download = "junimo-perfection-journal-save.json";
   link.click();
   URL.revokeObjectURL(link.href);
+  recordOwnerActivity("exports");
 }
 
 function importSave(event) {
@@ -2212,6 +2408,7 @@ function importSave(event) {
 
     try {
       renderAllDynamic();
+      recordOwnerActivity("imports");
     } catch (error) {
       console.error("Imported save but failed to re-render the page.", error);
       window.alert("That save was imported, but this page needs a refresh.");
@@ -2247,6 +2444,7 @@ function resetSave() {
   saveState();
   setPerfectionCelebrationBaseline();
   renderAllDynamic();
+  recordOwnerActivity("resets");
 }
 
 function saveState() {
@@ -2374,6 +2572,62 @@ function writeStorageValue(key, value) {
     console.warn(`Could not save tracker storage for ${key}.`, error);
     return false;
   }
+}
+
+function createOwnerStatsDefaults() {
+  return {
+    pageViews: 0,
+    exports: 0,
+    imports: 0,
+    resets: 0,
+    secretOpens: 0,
+    lastSeenAt: null,
+  };
+}
+
+function loadOwnerStats() {
+  const defaults = createOwnerStatsDefaults();
+  const raw = readStorageValue(OWNER_STATS_STORAGE_KEY);
+  if (!raw) {
+    return defaults;
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    return {
+      ...defaults,
+      ...(parsed && typeof parsed === "object" ? parsed : {}),
+    };
+  } catch (_error) {
+    return defaults;
+  }
+}
+
+function saveOwnerStats() {
+  writeStorageValue(OWNER_STATS_STORAGE_KEY, JSON.stringify(ownerStats));
+}
+
+function recordOwnerActivity(field) {
+  ownerStats = {
+    ...createOwnerStatsDefaults(),
+    ...ownerStats,
+  };
+  ownerStats[field] = clampNumber((ownerStats[field] || 0) + 1, 0, 999999999);
+  ownerStats.lastSeenAt = new Date().toISOString();
+  saveOwnerStats();
+}
+
+function formatOwnerDate(value) {
+  if (!value) {
+    return "Not yet";
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "Not yet";
+  }
+
+  return date.toLocaleString();
 }
 
 function buildState(saved) {
