@@ -768,11 +768,11 @@ function renderOwnerStats() {
   const analyticsMarkup = `
     <section class="owner-stat-card">
       <h3>Live site visitors</h3>
-      <p class="owner-stat-big">Not connected</p>
+      <p class="owner-stat-big">GoatCounter</p>
       <p class="owner-stat-note">
-        To estimate different people on the live site, this tracker still needs
-        analytics like GoatCounter or Plausible. A hidden popup alone cannot
-        count global visitors.
+        Live site visits are now tracked separately through GoatCounter on the
+        public website. This popup does not read those numbers directly, but
+        your visitor estimates should now be collecting there.
       </p>
     </section>
   `;

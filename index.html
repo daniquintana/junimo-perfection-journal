@@ -4,11 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Junimo Perfection Journal</title>
-    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260711a" />
-    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260711a" />
-    <link rel="stylesheet" href="./styles.css?v=20260711a" />
-    <script src="./data/wiki-data.js?v=20260711a"></script>
-    <script src="./app.js?v=20260711a" defer></script>
+    <link rel="icon" type="image/png" href="./branding/site/favicon-junimo.png?v=20260711b" />
+    <link rel="apple-touch-icon" href="./branding/site/favicon-junimo.png?v=20260711b" />
+    <link rel="stylesheet" href="./styles.css?v=20260711b" />
+    <script src="./data/wiki-data.js?v=20260711b"></script>
+    <script src="./app.js?v=20260711b" defer></script>
+    <script>
+      if (
+        window.location.hostname === "daniquintana.github.io" &&
+        window.location.pathname.startsWith("/junimo-perfection-journal")
+      ) {
+        const goatcounterScript = document.createElement("script");
+        goatcounterScript.async = true;
+        goatcounterScript.dataset.goatcounter =
+          "https://daniquintana.goatcounter.com/count";
+        goatcounterScript.src = "https://gc.zgo.at/count.js";
+        document.head.appendChild(goatcounterScript);
+      }
+    </script>
   </head>
   <body>
     <div class="page-shell">
@@ -355,8 +368,8 @@
         <p class="section-kicker">Secret Owner Page</p>
         <h2 id="owner-stats-title">Tracker stats</h2>
         <p class="celebration-copy owner-stats-copy">
-          Private stats for release downloads and this browser only. Live unique
-          visitor counts still need an analytics hookup.
+          Private stats for release downloads and this browser only. Live site
+          visits are now tracked separately with GoatCounter.
         </p>
         <div id="owner-stats-content" class="owner-stats-grid"></div>
       </div>
