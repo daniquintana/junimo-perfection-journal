@@ -774,6 +774,16 @@ function renderOwnerStats() {
         public website. This popup does not read those numbers directly, but
         your visitor estimates should now be collecting there.
       </p>
+      <p class="owner-stat-actions">
+        <a
+          class="help-page-link owner-dashboard-link"
+          href="https://daniquintana.goatcounter.com/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Open GoatCounter dashboard
+        </a>
+      </p>
     </section>
   `;
 

@@ -892,6 +892,14 @@ select:focus {
   line-height: 1.45;
 }
 
+.owner-stat-actions {
+  margin: 14px 0 0;
+}
+
+.owner-dashboard-link {
+  min-height: 44px;
+}
+
 .owner-stat-list {
   margin: 12px 0 0;
   padding-left: 18px;
