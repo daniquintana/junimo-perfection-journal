@@ -12,6 +12,109 @@ const OWNER_SECRET_TAP_WINDOW_MS = 2200;
 const MUSEUM_SECRET_TAP_TARGET = 5;
 const MUSEUM_SECRET_TAP_WINDOW_MS = 2200;
 const MUSEUM_DONATION_TARGET = 95;
+const MUSEUM_ARTIFACT_NAMES = [
+  "Dwarf Scroll I",
+  "Dwarf Scroll II",
+  "Dwarf Scroll III",
+  "Dwarf Scroll IV",
+  "Chipped Amphora",
+  "Arrowhead",
+  "Ancient Doll",
+  "Elvish Jewelry",
+  "Chewing Stick",
+  "Ornamental Fan",
+  "Dinosaur Egg",
+  "Rare Disc",
+  "Ancient Sword",
+  "Rusty Spoon",
+  "Rusty Spur",
+  "Rusty Cog",
+  "Chicken Statue",
+  "Ancient Seed",
+  "Prehistoric Tool",
+  "Dried Starfish",
+  "Anchor",
+  "Glass Shards",
+  "Bone Flute",
+  "Prehistoric Handaxe",
+  "Dwarvish Helm",
+  "Dwarf Gadget",
+  "Ancient Drum",
+  "Golden Mask",
+  "Golden Relic",
+  "Strange Doll (Green)",
+  "Strange Doll (Yellow)",
+  "Prehistoric Scapula",
+  "Prehistoric Tibia",
+  "Prehistoric Skull",
+  "Skeletal Hand",
+  "Prehistoric Rib",
+  "Prehistoric Vertebra",
+  "Skeletal Tail",
+  "Nautilus Fossil",
+  "Amphibian Fossil",
+  "Palm Fossil",
+  "Trilobite",
+];
+const MUSEUM_MINERAL_NAMES = [
+  "Emerald",
+  "Aquamarine",
+  "Ruby",
+  "Amethyst",
+  "Topaz",
+  "Jade",
+  "Diamond",
+  "Prismatic Shard",
+  "Quartz",
+  "Fire Quartz",
+  "Frozen Tear",
+  "Earth Crystal",
+  "Alamite",
+  "Bixite",
+  "Baryte",
+  "Aerinite",
+  "Calcite",
+  "Dolomite",
+  "Esperite",
+  "Fluorapatite",
+  "Geminite",
+  "Helvite",
+  "Jamborite",
+  "Jagoite",
+  "Kyanite",
+  "Lunarite",
+  "Malachite",
+  "Neptunite",
+  "Lemon Stone",
+  "Nekoite",
+  "Orpiment",
+  "Petrified Slime",
+  "Thunder Egg",
+  "Pyrite",
+  "Ocean Stone",
+  "Ghost Crystal",
+  "Tigerseye",
+  "Jasper",
+  "Opal",
+  "Fire Opal",
+  "Celestine",
+  "Marble",
+  "Sandstone",
+  "Granite",
+  "Basalt",
+  "Limestone",
+  "Soapstone",
+  "Hematite",
+  "Mudstone",
+  "Obsidian",
+  "Slate",
+  "Fairy Stone",
+  "Star Shards",
+];
+const MUSEUM_IMAGE_FILE_OVERRIDES = {
+  "Strange Doll (Green)": "Strange_Doll_(green).png",
+  "Strange Doll (Yellow)": "Strange_Doll_(yellow).png",
+};
 const SAVE_STATE_KEYS = [
   "fish",
   "cooking",
@@ -231,6 +334,9 @@ const buildingMaterialNames = uniqueBuildingMaterialNames(data.other.buildings);
 const craftingRecipesInGameOrder = orderCraftingRecipes(data.crafting.recipes);
 const hoardItemCatalogMap = buildHoardItemCatalog();
 const hoardItemNames = buildHoardItemNames();
+const MUSEUM_ITEMS = buildMuseumItems();
+const MUSEUM_ARTIFACTS = MUSEUM_ITEMS.filter((item) => item.type === "artifact");
+const MUSEUM_MINERALS = MUSEUM_ITEMS.filter((item) => item.type === "mineral");
 
 const initialSave = loadSaved();
 let state = buildState(initialSave.state);
@@ -537,15 +643,7 @@ function handleStateChange(event) {
   } else if (target.matches("[data-action='stardrop-toggle']")) {
     state.stardrops[target.dataset.id] = target.checked;
     if (target.dataset.id === "museum-donation") {
-      if (target.checked) {
-        state.museum.donations = MUSEUM_DONATION_TARGET;
-        state.museum.complete = true;
-      } else {
-        state.museum.complete = false;
-        if (state.museum.donations >= MUSEUM_DONATION_TARGET) {
-          state.museum.donations = MUSEUM_DONATION_TARGET - 1;
-        }
-      }
+      setAllMuseumItems(target.checked);
     }
   } else if (target.matches("[data-action='building-toggle']")) {
     state.buildings[target.dataset.id] = target.checked;
@@ -588,14 +686,8 @@ function handleStateChange(event) {
     state.hoard[target.dataset.item] = target.checked
       ? needed
       : Math.max(Math.min(current, needed) - 1, 0);
-  } else if (target.matches("[data-action='museum-donations']")) {
-    state.museum.donations = clampNumber(target.value, 0, MUSEUM_DONATION_TARGET);
-    state.museum.complete = state.museum.donations >= MUSEUM_DONATION_TARGET;
-  } else if (target.matches("[data-action='museum-complete']")) {
-    state.museum.complete = target.checked;
-    state.museum.donations = target.checked
-      ? MUSEUM_DONATION_TARGET
-      : Math.min(state.museum.donations, MUSEUM_DONATION_TARGET - 1);
+  } else if (target.matches("[data-action='museum-item-toggle']")) {
+    state.museum.items[target.dataset.id] = target.checked;
   } else if (target.matches("[data-action='building-owned']")) {
     state.buildingStock[target.dataset.item] = clampNumber(target.value, 0, 999999999);
   } else if (target.matches("[data-action='golden-walnuts']")) {
@@ -610,7 +702,7 @@ function handleStateChange(event) {
   const deferRenderUntilCommit =
     event.type === "input" &&
     target.matches(
-      "[data-action='villager-hearts'], [data-action='monster-count'], [data-action='skill-level'], [data-action='golden-walnuts'], [data-action='museum-donations']"
+      "[data-action='villager-hearts'], [data-action='monster-count'], [data-action='skill-level'], [data-action='golden-walnuts']"
     );
 
   saveState();
@@ -1779,62 +1871,76 @@ function renderMuseum() {
     return;
   }
 
-  const donations = clampNumber(state.museum.donations, 0, MUSEUM_DONATION_TARGET);
+  const donations = getMuseumDonationCount();
+  const artifactsDone = countMuseumItems(MUSEUM_ARTIFACTS);
+  const mineralsDone = countMuseumItems(MUSEUM_MINERALS);
   const complete = getMuseumCompletion();
   const left = Math.max(MUSEUM_DONATION_TARGET - donations, 0);
   const progress = ratioToPercent(donations / MUSEUM_DONATION_TARGET);
 
   summaryEl.innerHTML = `
     ${summaryCard("Donated", `${donations}/${MUSEUM_DONATION_TARGET}`, "", progress)}
-    ${summaryCard("Left", `${left}`, "", ratioToPercent(left / MUSEUM_DONATION_TARGET))}
-    ${summaryCard("Reward", complete ? "Checked" : "Not yet", "", complete ? 100 : 0)}
+    ${summaryCard("Artifacts", `${artifactsDone}/${MUSEUM_ARTIFACTS.length}`, "", ratioToPercent(artifactsDone / MUSEUM_ARTIFACTS.length))}
+    ${summaryCard("Minerals", `${mineralsDone}/${MUSEUM_MINERALS.length}`, "", ratioToPercent(mineralsDone / MUSEUM_MINERALS.length))}
+    ${summaryCard("Reward", complete ? "Checked" : `${left} left`, "", complete ? 100 : ratioToPercent(donations / MUSEUM_DONATION_TARGET))}
   `;
 
   contentEl.innerHTML = `
-    <div class="section-card-grid">
+    <article class="mini-card museum-card">
+      <h3>How this hidden test works</h3>
+      <p>
+        Check museum items one by one here. The Museum Donation Reward in
+        Other Perfection turns on automatically once all 95 items are checked.
+      </p>
+    </article>
+    <div class="museum-section-grid">
       <article class="mini-card museum-card">
-        <h3>Donation progress</h3>
-        <p>
-          Use this hidden test tab if you want the museum reward tracked
-          separately before we ever build a full museum list.
-        </p>
-        <div class="control-stack">
-          <div class="number-line">
-            <span class="subtle">Current donations</span>
-            <input
-              type="number"
-              min="0"
-              max="${MUSEUM_DONATION_TARGET}"
-              step="1"
-              value="${donations}"
-              data-action="museum-donations"
-            />
+        <div class="section-header museum-section-header">
+          <div>
+            <h3>Artifacts</h3>
           </div>
-          <label class="toggle-line">
-            <input
-              type="checkbox"
-              data-action="museum-complete"
-              ${complete ? "checked" : ""}
-            />
-            <span>Reward claimed</span>
-          </label>
+          <span class="status-pill ${artifactsDone === MUSEUM_ARTIFACTS.length ? "is-done" : "is-pending"}">${artifactsDone}/${MUSEUM_ARTIFACTS.length}</span>
         </div>
-        ${progressBar(donations / MUSEUM_DONATION_TARGET)}
+        <div class="museum-grid">
+          ${renderMuseumItemGrid(MUSEUM_ARTIFACTS)}
+        </div>
       </article>
       <article class="mini-card museum-card">
-        <h3>What this syncs</h3>
-        <p>
-          This only controls the Museum Donation Reward check in Other
-          Perfection. It does not track the full 95 museum items yet.
-        </p>
-        <div class="pill-grid">
-          <span class="token">Museum Donation Reward</span>
-          <span class="token">95 total donations</span>
-          <span class="token">Hidden test mode</span>
+        <div class="section-header museum-section-header">
+          <div>
+            <h3>Minerals</h3>
+          </div>
+          <span class="status-pill ${mineralsDone === MUSEUM_MINERALS.length ? "is-done" : "is-pending"}">${mineralsDone}/${MUSEUM_MINERALS.length}</span>
+        </div>
+        <div class="museum-grid">
+          ${renderMuseumItemGrid(MUSEUM_MINERALS)}
         </div>
       </article>
     </div>
   `;
+}
+
+function renderMuseumItemGrid(items) {
+  return items
+    .map((item) => {
+      const done = Boolean(state.museum.items[item.id]);
+      return `
+        <label class="museum-item ${done ? "is-done" : ""}">
+          <input
+            type="checkbox"
+            data-action="museum-item-toggle"
+            data-id="${item.id}"
+            ${done ? "checked" : ""}
+          />
+          ${itemThumb(item, item.name)}
+          <span class="museum-item-copy">
+            <strong>${escapeHtml(item.name)}</strong>
+            <span class="subtle">${item.type === "artifact" ? "Artifact" : "Mineral"}</span>
+          </span>
+        </label>
+      `;
+    })
+    .join("");
 }
 
 function renderVillagers() {
@@ -2591,7 +2697,7 @@ function buildSavePayload(stateOverride) {
 }
 
 function getMuseumCompletion() {
-  return state.museum.complete || state.museum.donations >= MUSEUM_DONATION_TARGET;
+  return getMuseumDonationCount() >= MUSEUM_DONATION_TARGET;
 }
 
 function syncMuseumRewardState() {
@@ -2599,6 +2705,20 @@ function syncMuseumRewardState() {
     return;
   }
   state.stardrops["museum-donation"] = getMuseumCompletion();
+}
+
+function getMuseumDonationCount() {
+  return countTrueValues(state.museum.items);
+}
+
+function countMuseumItems(items) {
+  return items.filter((item) => state.museum.items[item.id]).length;
+}
+
+function setAllMuseumItems(checked) {
+  MUSEUM_ITEMS.forEach((item) => {
+    state.museum.items[item.id] = checked;
+  });
 }
 
 function normalizeSavePayload(payload) {
@@ -2756,6 +2876,23 @@ function buildState(saved) {
   const craftingStock = buildNumberMap(craftingIngredientNames, saved?.crafting?.stock, 0, 999999);
   const buildingStock = buildNumberMap(buildingMaterialNames, saved?.buildingStock, 0, 999999999);
   const hoard = buildNumberMap(hoardItemNames, saved?.hoard, 0, 999999);
+  const museumItems = buildBooleanMap(
+    MUSEUM_ITEMS.map((item) => item.id),
+    saved?.museum?.items
+  );
+  const legacyMuseumComplete = Boolean(saved?.museum?.complete);
+  const legacyMuseumDonations = clampNumber(saved?.museum?.donations, 0, MUSEUM_DONATION_TARGET);
+  if (!saved?.museum?.items || typeof saved.museum.items !== "object") {
+    if (legacyMuseumComplete) {
+      MUSEUM_ITEMS.forEach((item) => {
+        museumItems[item.id] = true;
+      });
+    } else if (legacyMuseumDonations > 0) {
+      MUSEUM_ITEMS.slice(0, legacyMuseumDonations).forEach((item) => {
+        museumItems[item.id] = true;
+      });
+    }
+  }
 
   return {
     fish: buildBooleanMap(data.fish.map((fish) => fish.id), saved?.fish),
@@ -2769,8 +2906,7 @@ function buildState(saved) {
     },
     hoard,
     museum: {
-      donations: clampNumber(saved?.museum?.donations, 0, MUSEUM_DONATION_TARGET),
-      complete: Boolean(saved?.museum?.complete),
+      items: museumItems,
     },
     shipping: buildBooleanMap(flatShippingItems.map((item) => item.id), saved?.shipping),
     villagers: buildNumberMap(data.other.villagers.map((villager) => villager.id), saved?.villagers, 0, 14),
@@ -2818,6 +2954,33 @@ function buildBooleanMap(keys, saved) {
     output[key] = Boolean(saved && saved[key]);
   });
   return output;
+}
+
+function buildMuseumItems() {
+  return [
+    ...MUSEUM_ARTIFACT_NAMES.map((name, index) =>
+      buildMuseumItem("artifact", index, name)
+    ),
+    ...MUSEUM_MINERAL_NAMES.map((name, index) =>
+      buildMuseumItem("mineral", index, name)
+    ),
+  ];
+}
+
+function buildMuseumItem(type, index, name) {
+  return {
+    id: `museum-${type}-${index + 1}`,
+    type,
+    name,
+    imageUrl: buildMuseumImageUrl(name),
+  };
+}
+
+function buildMuseumImageUrl(name) {
+  const wikiFileName =
+    MUSEUM_IMAGE_FILE_OVERRIDES[name] ||
+    `${name.replaceAll(":", "").trim().replaceAll(/\s+/g, "_")}.png`;
+  return `https://stardewvalleywiki.com/Special:Redirect/file/${encodeURIComponent(wikiFileName)}`;
 }
 
 function buildNumberMap(keys, saved, minimum, maximum) {

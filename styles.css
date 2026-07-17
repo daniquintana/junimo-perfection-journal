@@ -1423,6 +1423,54 @@ input[type="checkbox"] {
   line-height: 1.55;
 }
 
+.museum-section-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.museum-section-header {
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.museum-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.museum-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 246, 220, 0.95);
+  min-width: 0;
+}
+
+.museum-item.is-done {
+  background: rgba(228, 240, 214, 0.95);
+}
+
+.museum-item input {
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.museum-item-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.museum-item-copy strong {
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
 .pill-grid {
   margin-top: 8px;
 }
@@ -1788,6 +1836,7 @@ a {
   .help-page-grid,
   .section-card-grid,
   .section-card.two-up,
+  .museum-section-grid,
   .cooking-toolbar,
   .planner-split {
     grid-template-columns: 1fr;
