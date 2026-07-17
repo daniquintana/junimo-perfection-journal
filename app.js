@@ -1926,16 +1926,19 @@ function renderMuseumItemGrid(items) {
       const done = Boolean(state.museum.items[item.id]);
       return `
         <label class="museum-item ${done ? "is-done" : ""}">
-          <input
-            type="checkbox"
-            data-action="museum-item-toggle"
-            data-id="${item.id}"
-            ${done ? "checked" : ""}
-          />
-          ${itemThumb(item, item.name)}
-          <span class="museum-item-copy">
-            <strong>${escapeHtml(item.name)}</strong>
-            <span class="subtle">${item.type === "artifact" ? "Artifact" : "Mineral"}</span>
+          <span class="museum-item-check">
+            <input
+              type="checkbox"
+              data-action="museum-item-toggle"
+              data-id="${item.id}"
+              ${done ? "checked" : ""}
+            />
+          </span>
+          <span class="museum-item-body">
+            ${itemThumb(item, item.name)}
+            <span class="museum-item-copy">
+              <strong>${escapeHtml(item.name)}</strong>
+            </span>
           </span>
         </label>
       `;

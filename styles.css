@@ -1436,39 +1436,64 @@ input[type="checkbox"] {
 
 .museum-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
 }
 
 .museum-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
+  position: relative;
+  display: block;
+  padding: 12px 12px 10px;
   border-radius: 18px;
   border: 1px solid var(--line);
   background: rgba(255, 246, 220, 0.95);
   min-width: 0;
+  min-height: 148px;
 }
 
 .museum-item.is-done {
   background: rgba(228, 240, 214, 0.95);
 }
 
-.museum-item input {
+.museum-item-check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.museum-item-check input {
   margin: 0;
-  flex: 0 0 auto;
+}
+
+.museum-item-body {
+  height: 100%;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 10px;
+  text-align: center;
+}
+
+.museum-item .item-thumb {
+  width: 56px;
+  height: 56px;
+  flex-basis: 56px;
+  padding: 6px;
 }
 
 .museum-item-copy {
   display: grid;
   gap: 2px;
   min-width: 0;
+  justify-items: center;
 }
 
 .museum-item-copy strong {
-  font-size: 1rem;
-  line-height: 1.25;
+  font-size: 0.98rem;
+  line-height: 1.3;
 }
 
 .pill-grid {
