@@ -445,6 +445,18 @@ select {
   border-color: #3d316f;
 }
 
+.tab-button-secret {
+  background: linear-gradient(180deg, rgba(149, 113, 176, 0.98), rgba(106, 73, 134, 0.98));
+  box-shadow:
+    0 5px 0 rgba(63, 42, 86, 0.34),
+    inset 0 0 0 2px rgba(242, 225, 255, 0.18);
+}
+
+.tab-button-secret.is-active {
+  background: linear-gradient(180deg, #d8b4f0, #a36bcc);
+  border-color: #5d3f7a;
+}
+
 .tab-panel {
   display: none;
   animation: panel-rise 0.25s ease;
@@ -1403,6 +1415,12 @@ input[type="checkbox"] {
 
 .planner-table input {
   min-width: 90px;
+}
+
+.museum-card p {
+  margin: 0 0 14px;
+  color: var(--ink-soft);
+  line-height: 1.55;
 }
 
 .pill-grid {

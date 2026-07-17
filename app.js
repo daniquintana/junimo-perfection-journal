@@ -9,11 +9,15 @@ const RELEASES_API_URL =
   "https://api.github.com/repos/daniquintana/junimo-perfection-journal/releases";
 const OWNER_SECRET_TAP_TARGET = 5;
 const OWNER_SECRET_TAP_WINDOW_MS = 2200;
+const MUSEUM_SECRET_TAP_TARGET = 5;
+const MUSEUM_SECRET_TAP_WINDOW_MS = 2200;
+const MUSEUM_DONATION_TARGET = 95;
 const SAVE_STATE_KEYS = [
   "fish",
   "cooking",
   "crafting",
   "hoard",
+  "museum",
   "shipping",
   "villagers",
   "monsterGoals",
@@ -230,10 +234,12 @@ const hoardItemNames = buildHoardItemNames();
 
 const initialSave = loadSaved();
 let state = buildState(initialSave.state);
+syncMuseumRewardState();
 let ownerStats = loadOwnerStats();
 const ui = {
   activeTab: "general",
   lastStandardTab: "general",
+  museumUnlocked: false,
   fishSearch: "",
   fishSpot: "all",
   fishSeason: "all",
@@ -253,6 +259,10 @@ const ui = {
 };
 let scheduledRenderHandle = 0;
 let lastRenderedPerfect = getProgressSnapshot().overallPercent >= 100;
+const museumSecretUi = {
+  tapCount: 0,
+  tapResetHandle: 0,
+};
 const ownerStatsUi = {
   tapCount: 0,
   tapResetHandle: 0,
@@ -335,7 +345,7 @@ function populateStaticOptions() {
     versionPill.textContent = RELEASE_NAME
       ? `Version ${APP_VERSION} • ${RELEASE_NAME}`
       : `Version ${APP_VERSION}`;
-    versionPill.title = `Save format v${SAVE_SCHEMA_VERSION}`;
+    versionPill.title = `Save format v${SAVE_SCHEMA_VERSION} • secret museum test`;
   }
 }
 
@@ -503,6 +513,7 @@ function bindEvents() {
       hideOwnerStats();
     }
   });
+  document.getElementById("version-pill").addEventListener("click", handleMuseumSecretTap);
   document.getElementById("hero-emblem-trigger").addEventListener("click", handleOwnerSecretTap);
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
@@ -525,6 +536,17 @@ function handleStateChange(event) {
     state.shipping[target.dataset.id] = target.checked;
   } else if (target.matches("[data-action='stardrop-toggle']")) {
     state.stardrops[target.dataset.id] = target.checked;
+    if (target.dataset.id === "museum-donation") {
+      if (target.checked) {
+        state.museum.donations = MUSEUM_DONATION_TARGET;
+        state.museum.complete = true;
+      } else {
+        state.museum.complete = false;
+        if (state.museum.donations >= MUSEUM_DONATION_TARGET) {
+          state.museum.donations = MUSEUM_DONATION_TARGET - 1;
+        }
+      }
+    }
   } else if (target.matches("[data-action='building-toggle']")) {
     state.buildings[target.dataset.id] = target.checked;
   } else if (target.matches("[data-action='villager-hearts']")) {
@@ -566,6 +588,14 @@ function handleStateChange(event) {
     state.hoard[target.dataset.item] = target.checked
       ? needed
       : Math.max(Math.min(current, needed) - 1, 0);
+  } else if (target.matches("[data-action='museum-donations']")) {
+    state.museum.donations = clampNumber(target.value, 0, MUSEUM_DONATION_TARGET);
+    state.museum.complete = state.museum.donations >= MUSEUM_DONATION_TARGET;
+  } else if (target.matches("[data-action='museum-complete']")) {
+    state.museum.complete = target.checked;
+    state.museum.donations = target.checked
+      ? MUSEUM_DONATION_TARGET
+      : Math.min(state.museum.donations, MUSEUM_DONATION_TARGET - 1);
   } else if (target.matches("[data-action='building-owned']")) {
     state.buildingStock[target.dataset.item] = clampNumber(target.value, 0, 999999999);
   } else if (target.matches("[data-action='golden-walnuts']")) {
@@ -576,10 +606,11 @@ function handleStateChange(event) {
     return;
   }
 
+  syncMuseumRewardState();
   const deferRenderUntilCommit =
     event.type === "input" &&
     target.matches(
-      "[data-action='villager-hearts'], [data-action='monster-count'], [data-action='skill-level'], [data-action='golden-walnuts']"
+      "[data-action='villager-hearts'], [data-action='monster-count'], [data-action='skill-level'], [data-action='golden-walnuts'], [data-action='museum-donations']"
     );
 
   saveState();
@@ -590,11 +621,13 @@ function handleStateChange(event) {
 }
 
 function renderAllDynamic() {
+  syncMuseumRewardState();
   const progress = renderGeneral();
   renderFish();
   renderCooking();
   renderCrafting();
   renderHoard();
+  renderMuseum();
   renderShipping();
   renderOther();
   syncPerfectionCelebration(progress.overallPercent >= 100);
@@ -609,6 +642,8 @@ function renderActiveTab() {
     renderCrafting();
   } else if (ui.activeTab === "hoard") {
     renderHoard();
+  } else if (ui.activeTab === "museum") {
+    renderMuseum();
   } else if (ui.activeTab === "shipping") {
     renderShipping();
   } else if (ui.activeTab === "other") {
@@ -1737,6 +1772,71 @@ function getHoardRows() {
     });
 }
 
+function renderMuseum() {
+  const summaryEl = document.getElementById("museum-summary");
+  const contentEl = document.getElementById("museum-content");
+  if (!summaryEl || !contentEl) {
+    return;
+  }
+
+  const donations = clampNumber(state.museum.donations, 0, MUSEUM_DONATION_TARGET);
+  const complete = getMuseumCompletion();
+  const left = Math.max(MUSEUM_DONATION_TARGET - donations, 0);
+  const progress = ratioToPercent(donations / MUSEUM_DONATION_TARGET);
+
+  summaryEl.innerHTML = `
+    ${summaryCard("Donated", `${donations}/${MUSEUM_DONATION_TARGET}`, "", progress)}
+    ${summaryCard("Left", `${left}`, "", ratioToPercent(left / MUSEUM_DONATION_TARGET))}
+    ${summaryCard("Reward", complete ? "Checked" : "Not yet", "", complete ? 100 : 0)}
+  `;
+
+  contentEl.innerHTML = `
+    <div class="section-card-grid">
+      <article class="mini-card museum-card">
+        <h3>Donation progress</h3>
+        <p>
+          Use this hidden test tab if you want the museum reward tracked
+          separately before we ever build a full museum list.
+        </p>
+        <div class="control-stack">
+          <div class="number-line">
+            <span class="subtle">Current donations</span>
+            <input
+              type="number"
+              min="0"
+              max="${MUSEUM_DONATION_TARGET}"
+              step="1"
+              value="${donations}"
+              data-action="museum-donations"
+            />
+          </div>
+          <label class="toggle-line">
+            <input
+              type="checkbox"
+              data-action="museum-complete"
+              ${complete ? "checked" : ""}
+            />
+            <span>Reward claimed</span>
+          </label>
+        </div>
+        ${progressBar(donations / MUSEUM_DONATION_TARGET)}
+      </article>
+      <article class="mini-card museum-card">
+        <h3>What this syncs</h3>
+        <p>
+          This only controls the Museum Donation Reward check in Other
+          Perfection. It does not track the full 95 museum items yet.
+        </p>
+        <div class="pill-grid">
+          <span class="token">Museum Donation Reward</span>
+          <span class="token">95 total donations</span>
+          <span class="token">Hidden test mode</span>
+        </div>
+      </article>
+    </div>
+  `;
+}
+
 function renderVillagers() {
   const villagers = [...data.other.villagers].sort((left, right) => left.name.localeCompare(right.name));
 
@@ -2490,6 +2590,17 @@ function buildSavePayload(stateOverride) {
   };
 }
 
+function getMuseumCompletion() {
+  return state.museum.complete || state.museum.donations >= MUSEUM_DONATION_TARGET;
+}
+
+function syncMuseumRewardState() {
+  if (!state?.museum || !state?.stardrops) {
+    return;
+  }
+  state.stardrops["museum-donation"] = getMuseumCompletion();
+}
+
 function normalizeSavePayload(payload) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     throw new Error("invalid-save-file");
@@ -2657,6 +2768,10 @@ function buildState(saved) {
       stock: craftingStock,
     },
     hoard,
+    museum: {
+      donations: clampNumber(saved?.museum?.donations, 0, MUSEUM_DONATION_TARGET),
+      complete: Boolean(saved?.museum?.complete),
+    },
     shipping: buildBooleanMap(flatShippingItems.map((item) => item.id), saved?.shipping),
     villagers: buildNumberMap(data.other.villagers.map((villager) => villager.id), saved?.villagers, 0, 14),
     monsterGoals: buildNumberMap(data.other.monsterGoals.map((goal) => goal.id), saved?.monsterGoals, 0, 999999),
@@ -2666,6 +2781,35 @@ function buildState(saved) {
     buildingStock,
     goldenWalnuts: clampNumber(saved?.goldenWalnuts, 0, data.other.goldenWalnutsTarget),
   };
+}
+
+function handleMuseumSecretTap() {
+  museumSecretUi.tapCount += 1;
+  if (museumSecretUi.tapResetHandle) {
+    window.clearTimeout(museumSecretUi.tapResetHandle);
+  }
+  museumSecretUi.tapResetHandle = window.setTimeout(() => {
+    museumSecretUi.tapCount = 0;
+    museumSecretUi.tapResetHandle = 0;
+  }, MUSEUM_SECRET_TAP_WINDOW_MS);
+
+  if (museumSecretUi.tapCount < MUSEUM_SECRET_TAP_TARGET) {
+    return;
+  }
+
+  museumSecretUi.tapCount = 0;
+  window.clearTimeout(museumSecretUi.tapResetHandle);
+  museumSecretUi.tapResetHandle = 0;
+  ui.museumUnlocked = !ui.museumUnlocked;
+  if (ui.museumUnlocked) {
+    setActiveTab("museum");
+  } else {
+    if (ui.activeTab === "museum") {
+      setActiveTab("general");
+    } else {
+      updateVisibleTab();
+    }
+  }
 }
 
 function buildBooleanMap(keys, saved) {
@@ -2877,6 +3021,14 @@ function escapeAttribute(value) {
 }
 
 function updateVisibleTab() {
+  const museumTabButton = document.getElementById("museum-tab-button");
+  const museumPanel = document.getElementById("museum");
+  if (museumTabButton) {
+    museumTabButton.hidden = !ui.museumUnlocked;
+  }
+  if (museumPanel) {
+    museumPanel.hidden = !ui.museumUnlocked;
+  }
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.tab === ui.activeTab);
   });
