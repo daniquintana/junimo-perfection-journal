@@ -1478,10 +1478,10 @@ input[type="checkbox"] {
 }
 
 .museum-item .item-thumb {
-  width: 56px;
-  height: 56px;
-  flex-basis: 56px;
-  padding: 6px;
+  width: 46px;
+  height: 46px;
+  flex-basis: 46px;
+  padding: 5px;
 }
 
 .museum-item-copy {
