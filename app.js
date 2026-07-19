@@ -608,6 +608,7 @@ function bindEvents() {
   document.body.addEventListener("change", handleStateChange);
   document.body.addEventListener("focusin", handleZeroNumberFieldActivation);
   document.body.addEventListener("click", handleZeroNumberFieldActivation);
+  document.body.addEventListener("click", handleStepperButtonClick);
 
   document.getElementById("export-data").addEventListener("click", exportSave);
   document.getElementById("import-data").addEventListener("click", () => {
@@ -722,6 +723,48 @@ function handleStateChange(event) {
 
 function handleZeroNumberFieldActivation(event) {
   selectZeroNumberField(event.target);
+}
+
+function handleStepperButtonClick(event) {
+  const button = event.target.closest("[data-stepper-direction]");
+  if (!button) {
+    return;
+  }
+
+  const wrapper = button.closest(".number-stepper");
+  const input = wrapper?.querySelector('input[type="number"]');
+  if (!input) {
+    return;
+  }
+
+  const direction = Number.parseInt(button.dataset.stepperDirection, 10);
+  const stepValue = Number.parseFloat(input.step);
+  const minimum = Number.parseFloat(input.min);
+  const maximum = Number.parseFloat(input.max);
+  const currentValue = Number.parseFloat(input.value);
+  const step = Number.isFinite(stepValue) && stepValue > 0 ? stepValue : 1;
+  const current = Number.isFinite(currentValue) ? currentValue : 0;
+
+  let next = current + direction * step;
+  if (Number.isFinite(minimum)) {
+    next = Math.max(minimum, next);
+  }
+  if (Number.isFinite(maximum)) {
+    next = Math.min(maximum, next);
+  }
+  if (step >= 1) {
+    next = Math.round(next);
+  }
+  if (next === current) {
+    input.focus();
+    selectZeroNumberField(input);
+    return;
+  }
+
+  input.value = String(next);
+  input.dispatchEvent(new Event("change", { bubbles: true }));
+  input.focus({ preventScroll: true });
+  selectZeroNumberField(input);
 }
 
 function selectZeroNumberField(target) {
@@ -1504,14 +1547,15 @@ function renderHoard() {
                       <td>${escapeHtml(row.categoryLabel)}</td>
                       <td>${formatNumber(row.needed)}</td>
                       <td>
-                        <input
-                          type="number"
-                          min="0"
-                          step="1"
-                          value="${row.owned}"
-                          data-action="hoard-owned"
-                          data-item="${escapeAttribute(row.name)}"
-                        />
+                        ${renderStepperInput({
+                          value: row.owned,
+                          min: 0,
+                          step: 1,
+                          action: "hoard-owned",
+                          attributes: {
+                            item: row.name,
+                          },
+                        })}
                       </td>
                       <td><strong>${formatNumber(row.remaining)}</strong></td>
                     </tr>
@@ -1678,14 +1722,15 @@ function renderRecipePlanner(config) {
                       ${kind === "cooking" ? `<td>${escapeHtml(row.category)}</td>` : ""}
                       <td>${formatNumber(row.needed)}</td>
                       <td>
-                        <input
-                          type="number"
-                          min="0"
-                          step="1"
-                          data-action="${stockAction}"
-                          data-item="${escapeAttribute(row.item)}"
-                          value="${row.owned}"
-                        />
+                        ${renderStepperInput({
+                          value: row.owned,
+                          min: 0,
+                          step: 1,
+                          action: stockAction,
+                          attributes: {
+                            item: row.item,
+                          },
+                        })}
                       </td>
                       <td><strong>${formatNumber(row.remaining)}</strong></td>
                     </tr>
@@ -2016,16 +2061,17 @@ function renderVillagers() {
                   <label class="subtle" for="villager-${villager.id}">Current hearts</label>
                   <div class="villager-heart-entry">
                     <div class="villager-portrait">${itemThumb(villager, villager.name)}</div>
-                    <input
-                      id="villager-${villager.id}"
-                      type="number"
-                      min="0"
-                      max="14"
-                      step="1"
-                      value="${current}"
-                      data-action="villager-hearts"
-                      data-id="${villager.id}"
-                    />
+                    ${renderStepperInput({
+                      id: `villager-${villager.id}`,
+                      value: current,
+                      min: 0,
+                      max: 14,
+                      step: 1,
+                      action: "villager-hearts",
+                      attributes: {
+                        id: villager.id,
+                      },
+                    })}
                   </div>
                 </div>
               </div>
@@ -2099,14 +2145,15 @@ function renderMonsterGoals() {
 	                  </td>
 	                  <td class="monster-target-cell">${formatNumber(goal.target)}</td>
 	                  <td class="monster-number-cell">
-	                    <input
-	                      type="number"
-	                      min="0"
-	                      step="1"
-	                      value="${current}"
-	                      data-action="monster-count"
-	                      data-id="${goal.id}"
-	                    />
+	                    ${renderStepperInput({
+                        value: current,
+                        min: 0,
+                        step: 1,
+                        action: "monster-count",
+                        attributes: {
+                          id: goal.id,
+                        },
+                      })}
 	                  </td>
 	                  <td class="monster-remaining-cell"><strong>${formatNumber(remaining)}</strong></td>
 	                </tr>
@@ -2146,15 +2193,16 @@ function renderSkills() {
               <div class="control-stack">
                 <div class="number-line">
                   <span class="subtle">Current level</span>
-                  <input
-                    type="number"
-                    min="0"
-                    max="10"
-                    step="1"
-                    value="${current}"
-                    data-action="skill-level"
-                    data-id="${skill.id}"
-                  />
+                  ${renderStepperInput({
+                    value: current,
+                    min: 0,
+                    max: 10,
+                    step: 1,
+                    action: "skill-level",
+                    attributes: {
+                      id: skill.id,
+                    },
+                  })}
                 </div>
               </div>
               <div class="skill-footer">
@@ -2209,14 +2257,13 @@ function renderStardropsAndWalnuts() {
         <div class="control-stack">
           <div class="number-line">
             <span class="subtle">Current found</span>
-            <input
-              type="number"
-              min="0"
-              max="${data.other.goldenWalnutsTarget}"
-              step="1"
-              value="${state.goldenWalnuts}"
-              data-action="golden-walnuts"
-            />
+            ${renderStepperInput({
+              value: state.goldenWalnuts,
+              min: 0,
+              max: data.other.goldenWalnutsTarget,
+              step: 1,
+              action: "golden-walnuts",
+            })}
           </div>
           <label class="toggle-line">
             <input
@@ -3145,6 +3192,28 @@ function itemThumb(item, alt) {
     return "";
   }
   return `<img class="item-thumb" src="${escapeAttribute(item.imageUrl)}" alt="${escapeAttribute(alt)}" loading="lazy" />`;
+}
+
+function renderStepperInput({ id = "", value = 0, min = 0, max = null, step = 1, action, attributes = {} }) {
+  const inputId = id ? ` id="${escapeAttribute(id)}"` : "";
+  const minAttr = Number.isFinite(min) ? ` min="${min}"` : "";
+  const maxAttr = Number.isFinite(max) ? ` max="${max}"` : "";
+  const stepAttr = Number.isFinite(step) ? ` step="${step}"` : "";
+  const dataActionAttr = action ? ` data-action="${escapeAttribute(action)}"` : "";
+  const extraAttrs = Object.entries(attributes)
+    .map(([key, attrValue]) => ` data-${escapeAttribute(key)}="${escapeAttribute(String(attrValue))}"`)
+    .join("");
+
+  return `
+    <div class="number-stepper">
+      <button type="button" class="stepper-button" data-stepper-direction="-1" aria-label="Decrease value">-</button>
+      <input
+        type="number"
+        value="${escapeAttribute(String(value))}"${inputId}${minAttr}${maxAttr}${stepAttr}${dataActionAttr}${extraAttrs}
+      />
+      <button type="button" class="stepper-button" data-stepper-direction="1" aria-label="Increase value">+</button>
+    </div>
+  `;
 }
 
 function progressBar(ratio) {

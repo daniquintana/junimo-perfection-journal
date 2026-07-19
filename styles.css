@@ -598,6 +598,44 @@ select {
   outline: none;
 }
 
+.number-stepper {
+  display: inline-grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 6px;
+  width: min(100%, 154px);
+}
+
+.number-stepper input {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  padding: 12px 8px;
+}
+
+.stepper-button {
+  height: 46px;
+  border: 2px solid rgba(119, 74, 31, 0.34);
+  border-radius: 14px;
+  background: rgba(255, 248, 228, 0.92);
+  color: var(--wood-dark);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.stepper-button:hover {
+  transform: translateY(-1px);
+}
+
+.stepper-button:focus {
+  border-color: rgba(168, 106, 43, 0.78);
+  box-shadow: 0 0 0 4px rgba(226, 194, 122, 0.22);
+}
+
 input:focus,
 select:focus {
   border-color: rgba(168, 106, 43, 0.78);
@@ -1417,6 +1455,11 @@ input[type="checkbox"] {
   min-width: 90px;
 }
 
+.planner-table .number-stepper {
+  width: min(100%, 156px);
+  margin-left: auto;
+}
+
 .museum-card p {
   margin: 0 0 14px;
   color: var(--ink-soft);
@@ -1558,10 +1601,6 @@ input[type="checkbox"] {
   margin-bottom: 8px;
 }
 
-.walnut-card .number-line input {
-  width: 74px;
-}
-
 .number-line {
   display: flex;
   align-items: center;
@@ -1572,10 +1611,6 @@ input[type="checkbox"] {
 .control-stack {
   display: grid;
   gap: 10px;
-}
-
-.number-line input {
-  width: 76px;
 }
 
 .villager-number-line {
@@ -1622,8 +1657,8 @@ input[type="checkbox"] {
   border-radius: 12px;
 }
 
-.villager-heart-entry input {
-  width: 86px;
+.villager-heart-entry .number-stepper {
+  width: min(100%, 132px);
 }
 
 .toggle-line {
@@ -1771,8 +1806,9 @@ input[type="checkbox"] {
   text-align: center;
 }
 
-.monster-number-cell input {
-  width: min(100%, 96px);
+.monster-number-cell .number-stepper {
+  width: min(100%, 150px);
+  margin-inline: auto;
 }
 
 .monster-remaining-cell {
