@@ -1926,13 +1926,17 @@ function renderShipping() {
                 ${page.items
                   .map((item) => {
                     const done = state.shipping[item.id];
+                    const shippingDisplayItem = {
+                      ...item,
+                      imageUrl: item.imageUrl || hoardItemCatalogMap[item.name]?.imageUrl || "",
+                    };
                     return `
                       <label class="shipping-item ${done ? "is-done" : ""}">
                         <span class="shipping-item-check">
                           <input type="checkbox" data-action="shipping-toggle" data-id="${item.id}" ${done ? "checked" : ""} />
                         </span>
                         <span class="shipping-item-body">
-                          ${itemThumb(item, item.name)}
+                          ${itemThumb(shippingDisplayItem, item.name)}
                           <span class="shipping-item-copy">
                             <strong>${escapeHtml(item.name)}</strong>
                           </span>
