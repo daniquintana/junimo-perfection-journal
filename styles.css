@@ -1756,6 +1756,16 @@ input[type="checkbox"] {
   text-align: left;
 }
 
+.monster-goal-inline {
+  gap: 10px;
+}
+
+.monster-goal-inline .item-thumb {
+  width: 34px;
+  height: 34px;
+  flex-basis: 34px;
+}
+
 .monster-target-cell,
 .monster-number-cell {
   text-align: center;

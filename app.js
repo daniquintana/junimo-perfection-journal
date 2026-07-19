@@ -10,6 +10,20 @@ const RELEASES_API_URL =
 const OWNER_SECRET_TAP_TARGET = 5;
 const OWNER_SECRET_TAP_WINDOW_MS = 2200;
 const MUSEUM_DONATION_TARGET = 95;
+const MONSTER_GOAL_IMAGE_FILES = {
+  "slime-any-color-excludes-big-slimes-and-slimes-in-the-slime-hutch": "Slime.png",
+  "void-spirits-shadow-shaman-shadow-shaman-dangerous-shadow-brute-shadow-brute-dangerous-shadow-sniper": "Shadow_Brute.png",
+  "bats-bat-bat-dangerous-frost-bat-frost-bat-dangerous-lava-bat-iridium-bat": "Bat.png",
+  "skeletons-skeleton-skeleton-dangerous-skeleton-mage": "Skeleton.png",
+  "cave-insects-bug-bug-dangerous-cave-fly-cave-fly-dangerous-grub-grub-dangerous-mutant-fly-mutant-grub-armored-bug-armored-bug-dangerous": "Bug.png",
+  "duggies-duggy-duggy-dangerous-magma-duggy": "Duggy.png",
+  "dust-sprites-dust-sprite-dust-sprite-dangerous": "Dust_Sprite.png",
+  "rock-crabs-rock-crab-rock-crab-dangerous-lava-crab-lava-crab-dangerous-iridium-crab": "Rock_Crab.png",
+  "mummies-mummy-mummy-dangerous": "Mummy.png",
+  "pepper-rex": "Pepper_Rex.png",
+  "serpents-serpent-royal-serpent": "Serpent.png",
+  "magma-sprites-magma-sprite-magma-sparker": "Magma_Sprite.png",
+};
 const MUSEUM_ARTIFACT_NAMES = [
   "Dwarf Scroll I",
   "Dwarf Scroll II",
@@ -2078,7 +2092,10 @@ function renderMonsterGoals() {
 	                    />
 	                  </td>
 	                  <td class="monster-goal-cell">
+                      <div class="item-inline monster-goal-inline">
+                        ${itemThumb({ imageUrl: buildMonsterGoalImageUrl(goal) }, getMonsterGoalLabel(goal))}
 	                    <strong>${escapeHtml(getMonsterGoalLabel(goal))}</strong>
+                      </div>
 	                  </td>
 	                  <td class="monster-target-cell">${formatNumber(goal.target)}</td>
 	                  <td class="monster-number-cell">
@@ -2987,6 +3004,14 @@ function buildMuseumItem(type, index, name) {
     name,
     imageUrl: buildMuseumImageUrl(name),
   };
+}
+
+function buildMonsterGoalImageUrl(goal) {
+  const wikiFileName = MONSTER_GOAL_IMAGE_FILES[goal.id];
+  if (!wikiFileName) {
+    return "";
+  }
+  return `https://stardewvalleywiki.com/Special:Redirect/file/${encodeURIComponent(wikiFileName)}`;
 }
 
 function buildMuseumImageUrl(name) {
