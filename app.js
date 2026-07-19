@@ -3437,4 +3437,10 @@ function updateVisibleTab() {
       ? heroEmblem.dataset.hoardSrc || heroEmblem.src
       : heroEmblem.dataset.regularSrc || heroEmblem.src;
   }
+  const frontJunimo = document.getElementById("front-junimo-image");
+  if (frontJunimo) {
+    frontJunimo.src = isHoardMode
+      ? frontJunimo.dataset.hoardSrc || frontJunimo.src
+      : frontJunimo.dataset.regularSrc || frontJunimo.src;
+  }
 }
