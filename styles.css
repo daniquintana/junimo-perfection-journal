@@ -600,26 +600,33 @@ select {
 
 .number-stepper {
   display: inline-grid;
-  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  grid-template-columns: minmax(0, 1fr) 22px;
   align-items: center;
   gap: 6px;
-  width: min(100%, 154px);
+  width: min(100%, 112px);
 }
 
 .number-stepper input {
   width: 100%;
   min-width: 0;
   text-align: center;
-  padding: 12px 8px;
+  padding: 12px 10px;
+}
+
+.stepper-stack {
+  display: grid;
+  grid-template-rows: repeat(2, 18px);
+  gap: 4px;
 }
 
 .stepper-button {
-  height: 46px;
+  width: 22px;
+  height: 18px;
   border: 2px solid rgba(119, 74, 31, 0.34);
-  border-radius: 14px;
+  border-radius: 8px;
   background: rgba(255, 248, 228, 0.92);
   color: var(--wood-dark);
-  font-size: 1.25rem;
+  font-size: 0.9rem;
   font-weight: 700;
   line-height: 1;
   padding: 0;
@@ -1456,7 +1463,7 @@ input[type="checkbox"] {
 }
 
 .planner-table .number-stepper {
-  width: min(100%, 156px);
+  width: min(100%, 118px);
   margin-left: auto;
 }
 
@@ -1658,7 +1665,7 @@ input[type="checkbox"] {
 }
 
 .villager-heart-entry .number-stepper {
-  width: min(100%, 132px);
+  width: min(100%, 108px);
 }
 
 .toggle-line {
@@ -1807,7 +1814,7 @@ input[type="checkbox"] {
 }
 
 .monster-number-cell .number-stepper {
-  width: min(100%, 150px);
+  width: min(100%, 118px);
   margin-inline: auto;
 }
 

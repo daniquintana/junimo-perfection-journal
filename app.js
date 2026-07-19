@@ -3206,12 +3206,14 @@ function renderStepperInput({ id = "", value = 0, min = 0, max = null, step = 1,
 
   return `
     <div class="number-stepper">
-      <button type="button" class="stepper-button" data-stepper-direction="-1" aria-label="Decrease value">-</button>
       <input
         type="number"
         value="${escapeAttribute(String(value))}"${inputId}${minAttr}${maxAttr}${stepAttr}${dataActionAttr}${extraAttrs}
       />
-      <button type="button" class="stepper-button" data-stepper-direction="1" aria-label="Increase value">+</button>
+      <div class="stepper-stack" aria-hidden="true">
+        <button type="button" class="stepper-button" data-stepper-direction="1" aria-label="Increase value">+</button>
+        <button type="button" class="stepper-button" data-stepper-direction="-1" aria-label="Decrease value">-</button>
+      </div>
     </div>
   `;
 }
