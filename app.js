@@ -9,8 +9,6 @@ const RELEASES_API_URL =
   "https://api.github.com/repos/daniquintana/junimo-perfection-journal/releases";
 const OWNER_SECRET_TAP_TARGET = 5;
 const OWNER_SECRET_TAP_WINDOW_MS = 2200;
-const MUSEUM_SECRET_TAP_TARGET = 5;
-const MUSEUM_SECRET_TAP_WINDOW_MS = 2200;
 const MUSEUM_DONATION_TARGET = 95;
 const MUSEUM_ARTIFACT_NAMES = [
   "Dwarf Scroll I",
@@ -345,7 +343,6 @@ let ownerStats = loadOwnerStats();
 const ui = {
   activeTab: "general",
   lastStandardTab: "general",
-  museumUnlocked: false,
   fishSearch: "",
   fishSpot: "all",
   fishSeason: "all",
@@ -365,10 +362,6 @@ const ui = {
 };
 let scheduledRenderHandle = 0;
 let lastRenderedPerfect = getProgressSnapshot().overallPercent >= 100;
-const museumSecretUi = {
-  tapCount: 0,
-  tapResetHandle: 0,
-};
 const ownerStatsUi = {
   tapCount: 0,
   tapResetHandle: 0,
@@ -451,7 +444,7 @@ function populateStaticOptions() {
     versionPill.textContent = RELEASE_NAME
       ? `Version ${APP_VERSION} • ${RELEASE_NAME}`
       : `Version ${APP_VERSION}`;
-    versionPill.title = `Save format v${SAVE_SCHEMA_VERSION} • secret museum test`;
+    versionPill.title = `Save format v${SAVE_SCHEMA_VERSION}`;
   }
 }
 
@@ -619,7 +612,6 @@ function bindEvents() {
       hideOwnerStats();
     }
   });
-  document.getElementById("version-pill").addEventListener("click", handleMuseumSecretTap);
   document.getElementById("hero-emblem-trigger").addEventListener("click", handleOwnerSecretTap);
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
@@ -1887,10 +1879,11 @@ function renderMuseum() {
 
   contentEl.innerHTML = `
     <article class="mini-card museum-card">
-      <h3>How this hidden test works</h3>
+      <h3>How this works</h3>
       <p>
-        Check museum items one by one here. The Museum Donation Reward in
-        Other Perfection turns on automatically once all 95 items are checked.
+        Check museum items one by one here. This tab follows the artifacts and
+        minerals collection lists, and the Museum Donation Reward in Other
+        Perfection turns on automatically once all 95 items are checked.
       </p>
     </article>
     <div class="museum-section-grid">
@@ -2922,35 +2915,6 @@ function buildState(saved) {
   };
 }
 
-function handleMuseumSecretTap() {
-  museumSecretUi.tapCount += 1;
-  if (museumSecretUi.tapResetHandle) {
-    window.clearTimeout(museumSecretUi.tapResetHandle);
-  }
-  museumSecretUi.tapResetHandle = window.setTimeout(() => {
-    museumSecretUi.tapCount = 0;
-    museumSecretUi.tapResetHandle = 0;
-  }, MUSEUM_SECRET_TAP_WINDOW_MS);
-
-  if (museumSecretUi.tapCount < MUSEUM_SECRET_TAP_TARGET) {
-    return;
-  }
-
-  museumSecretUi.tapCount = 0;
-  window.clearTimeout(museumSecretUi.tapResetHandle);
-  museumSecretUi.tapResetHandle = 0;
-  ui.museumUnlocked = !ui.museumUnlocked;
-  if (ui.museumUnlocked) {
-    setActiveTab("museum");
-  } else {
-    if (ui.activeTab === "museum") {
-      setActiveTab("general");
-    } else {
-      updateVisibleTab();
-    }
-  }
-}
-
 function buildBooleanMap(keys, saved) {
   const output = {};
   keys.forEach((key) => {
@@ -3187,14 +3151,6 @@ function escapeAttribute(value) {
 }
 
 function updateVisibleTab() {
-  const museumTabButton = document.getElementById("museum-tab-button");
-  const museumPanel = document.getElementById("museum");
-  if (museumTabButton) {
-    museumTabButton.hidden = !ui.museumUnlocked;
-  }
-  if (museumPanel) {
-    museumPanel.hidden = !ui.museumUnlocked;
-  }
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.tab === ui.activeTab);
   });
