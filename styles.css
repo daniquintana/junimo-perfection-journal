@@ -717,7 +717,7 @@ select:focus {
 
 .general-primary-card-feature p:first-child {
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 1.26rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -766,9 +766,9 @@ select:focus {
 .general-category-card h3 {
   margin: 0 0 10px;
   font-family: inherit;
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--berry);
   line-height: 1.25;
