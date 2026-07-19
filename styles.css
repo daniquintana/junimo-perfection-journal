@@ -245,7 +245,7 @@ select {
 }
 
 .hero-text {
-  max-width: 60ch;
+  max-width: 72ch;
   margin: 14px 0 0;
   color: var(--ink-soft);
   line-height: 1.6;
