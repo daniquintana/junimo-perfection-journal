@@ -5819,7 +5819,7 @@ window.STARDEW_WIKI_DATA = {
     "shippingPages": [
       {
         "id": "shipping-page-1",
-        "name": "Shipping Collection Page 1",
+        "name": "Shipping Collection (Page 1)",
         "items": [
           {
             "id": "page-1-1-1-wild-horseradish",
@@ -6105,7 +6105,7 @@ window.STARDEW_WIKI_DATA = {
       },
       {
         "id": "shipping-page-2",
-        "name": "Shipping Collection Page 2",
+        "name": "Shipping Collection (Page 2)",
         "items": [
           {
             "id": "page-2-1-1-wood",
@@ -6391,7 +6391,7 @@ window.STARDEW_WIKI_DATA = {
       },
       {
         "id": "shipping-page-3",
-        "name": "Shipping Collection Page 3",
+        "name": "Shipping Collection (Page 3)",
         "items": [
           {
             "id": "page-3-1-1-magma-cap",
