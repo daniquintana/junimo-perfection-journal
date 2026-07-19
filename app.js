@@ -592,6 +592,8 @@ function bindEvents() {
 
   document.body.addEventListener("input", handleStateChange);
   document.body.addEventListener("change", handleStateChange);
+  document.body.addEventListener("focusin", handleZeroNumberFieldActivation);
+  document.body.addEventListener("click", handleZeroNumberFieldActivation);
 
   document.getElementById("export-data").addEventListener("click", exportSave);
   document.getElementById("import-data").addEventListener("click", () => {
@@ -702,6 +704,35 @@ function handleStateChange(event) {
     return;
   }
   scheduleRenderAllDynamic();
+}
+
+function handleZeroNumberFieldActivation(event) {
+  selectZeroNumberField(event.target);
+}
+
+function selectZeroNumberField(target) {
+  if (!target?.matches?.('input[type="number"]')) {
+    return;
+  }
+  if (target.value !== "0") {
+    return;
+  }
+
+  const selectContents = () => {
+    if (document.activeElement !== target || target.value !== "0") {
+      return;
+    }
+    target.select();
+    if (typeof target.setSelectionRange === "function") {
+      target.setSelectionRange(0, target.value.length);
+    }
+  };
+
+  if (typeof window !== "undefined" && typeof window.requestAnimationFrame === "function") {
+    window.requestAnimationFrame(selectContents);
+  } else {
+    setTimeout(selectContents, 0);
+  }
 }
 
 function renderAllDynamic() {
