@@ -931,7 +931,7 @@ function renderOwnerDownloadsCard() {
   }
 
   const summary = ownerStatsUi.downloadSummary;
-  if (!summary || !summary.assets.length) {
+  if (!summary || !summary.hasRelease) {
     return `
       <section class="owner-stat-card">
         <h3>App downloads</h3>
@@ -941,11 +941,21 @@ function renderOwnerDownloadsCard() {
     `;
   }
 
+  if (!summary.assets.length) {
+    return `
+      <section class="owner-stat-card">
+        <h3>App downloads</h3>
+        <p class="owner-stat-big">0</p>
+        <p class="owner-stat-note">No downloads recorded yet for ${escapeHtml(summary.releaseLabel)}.</p>
+      </section>
+    `;
+  }
+
   return `
     <section class="owner-stat-card">
       <h3>App downloads</h3>
       <p class="owner-stat-big">${formatNumber(summary.totalDownloads)}</p>
-      <p class="owner-stat-note">Summed from public GitHub release assets across ${formatNumber(summary.releaseCount)} releases.</p>
+      <p class="owner-stat-note">Latest public release: ${escapeHtml(summary.releaseLabel)}.</p>
       <ul class="owner-stat-list">
         ${summary.assets
           .map(
@@ -980,24 +990,38 @@ async function loadReleaseDownloadStats() {
       throw new Error("GitHub releases response was not valid.");
     }
 
-    const assetCounts = new Map();
-    let totalDownloads = 0;
+    const latestRelease = releases.find(
+      (release) => !release?.draft && Array.isArray(release?.assets) && release.assets.length
+    );
 
-    releases.forEach((release) => {
-      (release.assets || []).forEach((asset) => {
-        const name = asset?.name || "Unnamed asset";
-        const count = Number.isFinite(asset?.download_count) ? asset.download_count : 0;
-        totalDownloads += count;
-        assetCounts.set(name, (assetCounts.get(name) || 0) + count);
-      });
-    });
+    if (!latestRelease) {
+      ownerStatsUi.downloadSummary = {
+        hasRelease: false,
+        releaseLabel: "",
+        totalDownloads: 0,
+        assets: [],
+      };
+      ownerStatsUi.downloadsLoaded = true;
+      return;
+    }
+
+    const releaseLabel =
+      latestRelease.name || latestRelease.tag_name || "latest public release";
+    const assets = (latestRelease.assets || [])
+      .map((asset) => ({
+        name: asset?.name || "Unnamed asset",
+        count: Number.isFinite(asset?.download_count) ? asset.download_count : 0,
+      }))
+      .filter((asset) => asset.count > 0)
+      .sort((left, right) => right.count - left.count || left.name.localeCompare(right.name));
+
+    const totalDownloads = assets.reduce((sum, asset) => sum + asset.count, 0);
 
     ownerStatsUi.downloadSummary = {
+      hasRelease: true,
+      releaseLabel,
       totalDownloads,
-      releaseCount: releases.length,
-      assets: [...assetCounts.entries()]
-        .map(([name, count]) => ({ name, count }))
-        .sort((left, right) => right.count - left.count || left.name.localeCompare(right.name)),
+      assets,
     };
     ownerStatsUi.downloadsLoaded = true;
   } catch (error) {
