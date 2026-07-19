@@ -956,7 +956,7 @@ function renderGeneral() {
 
   document.getElementById("general-top").innerHTML = `
     <section class="general-overview">
-      <div class="general-primary-grid">
+      <div class="general-feature-row">
         ${summaryCard(
           "Perfection",
           `${progress.overallPercent.toFixed(1)}%`,
@@ -964,6 +964,8 @@ function renderGeneral() {
           progress.overallPercent,
           "general-primary-card general-primary-card-feature"
         )}
+      </div>
+      <div class="general-primary-grid">
         ${primaryCounters
           .map((entry) =>
             summaryCard(

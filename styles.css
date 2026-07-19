@@ -671,10 +671,15 @@ select:focus {
   margin-bottom: 18px;
 }
 
+.general-feature-row,
 .general-primary-grid,
 .general-extra-grid {
   display: grid;
   gap: 14px;
+}
+
+.general-feature-row {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .general-primary-grid {
@@ -708,6 +713,7 @@ select:focus {
   background:
     radial-gradient(circle at top right, rgba(255, 244, 197, 0.78), rgba(255, 244, 197, 0) 44%),
     linear-gradient(180deg, rgba(250, 239, 208, 0.99), rgba(239, 220, 170, 0.97));
+  min-height: 220px;
 }
 
 .general-primary-card-feature strong {
