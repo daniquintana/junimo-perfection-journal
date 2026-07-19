@@ -208,6 +208,10 @@ select {
   text-transform: uppercase;
 }
 
+#other .section-kicker {
+  font-size: 0.96rem;
+}
+
 .hero-meta {
   display: flex;
   flex-wrap: wrap;
@@ -725,15 +729,27 @@ select:focus {
   font-size: clamp(3.8rem, 8vw, 5.4rem);
 }
 
-.general-primary-card-feature .progress-track {
-  width: min(520px, 100%);
+.general-primary-progress-row {
+  width: min(620px, 100%);
   margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.general-primary-card-feature p:last-of-type {
-  margin-top: 14px;
+.general-primary-card-feature .general-primary-progress-row .progress-track {
+  width: auto;
+  flex: 1 1 320px;
+  margin-top: 0;
+}
+
+.general-primary-progress-count {
   font-size: 1rem;
   text-align: center;
+  color: var(--ink-soft);
+  white-space: nowrap;
 }
 
 .general-category-grid {
@@ -742,32 +758,32 @@ select:focus {
 
 .general-category-card {
   min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .general-category-card h3 {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   font-family: inherit;
-  font-size: 0.94rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--berry);
-  line-height: 1.35;
+  line-height: 1.25;
 }
 
 .general-category-card .category-meta {
-  margin-top: 10px;
-  align-items: baseline;
-  flex-wrap: wrap;
+  margin-top: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .general-category-card .category-meta span:first-child {
   font-size: 1.65rem;
   color: var(--ink);
-}
-
-.general-category-card .category-meta span:last-child {
-  color: var(--ink-soft);
 }
 
 .summary-card,

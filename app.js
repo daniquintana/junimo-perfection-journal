@@ -885,13 +885,14 @@ function renderGeneral() {
   document.getElementById("general-top").innerHTML = `
     <section class="general-overview">
       <div class="general-feature-row">
-        ${summaryCard(
-          "✦ Perfection ✦",
-          `${progress.overallPercent.toFixed(1)}%`,
-          `${formatNumber(totalTasksDone)}/${formatNumber(totalTasksTracked)} complete`,
-          progress.overallPercent,
-          "general-primary-card general-primary-card-feature"
-        )}
+        <article class="summary-card general-primary-card general-primary-card-feature">
+          <p>✦ Perfection ✦</p>
+          <strong>${progress.overallPercent.toFixed(1)}%</strong>
+          <div class="general-primary-progress-row">
+            ${progressBar(progress.overallPercent / 100)}
+            <span class="general-primary-progress-count">${formatNumber(totalTasksDone)}/${formatNumber(totalTasksTracked)} complete</span>
+          </div>
+        </article>
       </div>
       <div class="category-grid general-category-grid">
         ${officialCategories
@@ -899,7 +900,6 @@ function renderGeneral() {
             renderGeneralCategoryCard(
               category.name,
               `${formatNumber(category.current)}/${formatNumber(category.totalRequired)}`,
-              category.left ? `${formatNumber(category.left)} left` : "Complete",
               ratioToPercent(category.ratio)
             )
           )
@@ -2033,7 +2033,7 @@ function renderMuseum() {
     ${summaryCard("Donated", `${donations}/${MUSEUM_DONATION_TARGET}`, "", progress)}
     ${summaryCard("Artifacts", `${artifactsDone}/${MUSEUM_ARTIFACTS.length}`, "", ratioToPercent(artifactsDone / MUSEUM_ARTIFACTS.length))}
     ${summaryCard("Minerals", `${mineralsDone}/${MUSEUM_MINERALS.length}`, "", ratioToPercent(mineralsDone / MUSEUM_MINERALS.length))}
-    ${summaryCard("Reward", complete ? "Checked" : `${left} left`, "", complete ? 100 : ratioToPercent(donations / MUSEUM_DONATION_TARGET))}
+    ${summaryCard("Museum reward", complete ? "Checked" : "Not yet", "", complete ? 100 : ratioToPercent(donations / MUSEUM_DONATION_TARGET))}
   `;
 
   contentEl.innerHTML = `
@@ -3243,13 +3243,12 @@ function summaryCard(label, value, detail, progressPercent, className = "") {
   `;
 }
 
-function renderGeneralCategoryCard(title, value, detail, progressPercent) {
+function renderGeneralCategoryCard(title, value, progressPercent) {
   return `
     <article class="category-card general-category-card">
       <h3>${escapeHtml(title)}</h3>
       <div class="category-meta">
         <span>${escapeHtml(value)}</span>
-        <span>${escapeHtml(detail)}</span>
       </div>
       ${progressBar(progressPercent / 100)}
     </article>
