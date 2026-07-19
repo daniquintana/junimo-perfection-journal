@@ -127,6 +127,20 @@ const MUSEUM_IMAGE_FILE_OVERRIDES = {
   "Strange Doll (Green)": "Strange_Doll_(green).png",
   "Strange Doll (Yellow)": "Strange_Doll_(yellow).png",
 };
+const MUSEUM_TOTAL_DONATION_REWARD_MILESTONES = [5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 95];
+const MUSEUM_MINERAL_REWARD_MILESTONES = [11, 21, 31, 41, 50];
+const MUSEUM_ARTIFACT_REWARD_MILESTONES = [15, 20];
+const MUSEUM_SPECIAL_REWARD_GROUPS = [
+  ["Ancient Drum"],
+  ["Ancient Seed"],
+  ["Bone Flute"],
+  ["Chicken Statue"],
+  ["Dwarf Scroll I", "Dwarf Scroll II", "Dwarf Scroll III", "Dwarf Scroll IV"],
+  ["Rare Disc", "Dwarf Gadget"],
+  ["Prehistoric Skull", "Skeletal Hand", "Prehistoric Scapula"],
+  ["Prehistoric Rib", "Prehistoric Vertebra"],
+  ["Prehistoric Tibia", "Skeletal Tail"],
+];
 const SAVE_STATE_KEYS = [
   "fish",
   "cooking",
@@ -349,6 +363,12 @@ const hoardItemNames = buildHoardItemNames();
 const MUSEUM_ITEMS = buildMuseumItems();
 const MUSEUM_ARTIFACTS = MUSEUM_ITEMS.filter((item) => item.type === "artifact");
 const MUSEUM_MINERALS = MUSEUM_ITEMS.filter((item) => item.type === "mineral");
+const MUSEUM_ITEMS_BY_NAME = new Map(MUSEUM_ITEMS.map((item) => [item.name, item]));
+const MUSEUM_REWARD_TARGET =
+  MUSEUM_TOTAL_DONATION_REWARD_MILESTONES.length +
+  MUSEUM_MINERAL_REWARD_MILESTONES.length +
+  MUSEUM_ARTIFACT_REWARD_MILESTONES.length +
+  MUSEUM_SPECIAL_REWARD_GROUPS.length;
 
 const initialSave = loadSaved();
 let state = buildState(initialSave.state);
@@ -2029,15 +2049,15 @@ function renderMuseum() {
   const donations = getMuseumDonationCount();
   const artifactsDone = countMuseumItems(MUSEUM_ARTIFACTS);
   const mineralsDone = countMuseumItems(MUSEUM_MINERALS);
+  const rewardsEarned = getMuseumRewardCount();
   const complete = getMuseumCompletion();
-  const left = Math.max(MUSEUM_DONATION_TARGET - donations, 0);
   const progress = ratioToPercent(donations / MUSEUM_DONATION_TARGET);
 
   summaryEl.innerHTML = `
     ${summaryCard("Donated", `${donations}/${MUSEUM_DONATION_TARGET}`, "", progress)}
     ${summaryCard("Artifacts", `${artifactsDone}/${MUSEUM_ARTIFACTS.length}`, "", ratioToPercent(artifactsDone / MUSEUM_ARTIFACTS.length))}
     ${summaryCard("Minerals", `${mineralsDone}/${MUSEUM_MINERALS.length}`, "", ratioToPercent(mineralsDone / MUSEUM_MINERALS.length))}
-    ${summaryCard("Museum reward", complete ? "Checked" : "Not yet", "", complete ? 100 : ratioToPercent(donations / MUSEUM_DONATION_TARGET))}
+    ${summaryCard("Rewards earned", `${rewardsEarned}/${MUSEUM_REWARD_TARGET}`, "", ratioToPercent(rewardsEarned / MUSEUM_REWARD_TARGET))}
   `;
 
   contentEl.innerHTML = `
@@ -2878,6 +2898,30 @@ function getMuseumDonationCount() {
 
 function countMuseumItems(items) {
   return items.filter((item) => state.museum.items[item.id]).length;
+}
+
+function hasMuseumItem(name) {
+  const item = MUSEUM_ITEMS_BY_NAME.get(name);
+  return Boolean(item && state.museum.items[item.id]);
+}
+
+function getMuseumRewardCount() {
+  const donations = getMuseumDonationCount();
+  const artifactCount = countMuseumItems(MUSEUM_ARTIFACTS);
+  const mineralCount = countMuseumItems(MUSEUM_MINERALS);
+  const donationRewards = MUSEUM_TOTAL_DONATION_REWARD_MILESTONES.filter(
+    (milestone) => donations >= milestone
+  ).length;
+  const mineralRewards = MUSEUM_MINERAL_REWARD_MILESTONES.filter(
+    (milestone) => mineralCount >= milestone
+  ).length;
+  const artifactRewards = MUSEUM_ARTIFACT_REWARD_MILESTONES.filter(
+    (milestone) => artifactCount >= milestone
+  ).length;
+  const specialRewards = MUSEUM_SPECIAL_REWARD_GROUPS.filter((group) =>
+    group.every((itemName) => hasMuseumItem(itemName))
+  ).length;
+  return donationRewards + mineralRewards + artifactRewards + specialRewards;
 }
 
 function setAllMuseumItems(checked) {
