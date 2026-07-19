@@ -712,11 +712,12 @@ select:focus {
 }
 
 .general-primary-card-feature p:first-child {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.7rem;
+  font-family: inherit;
+  font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--wood-dark);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--berry);
 }
 
 .general-primary-card-feature strong {
@@ -741,6 +742,17 @@ select:focus {
 
 .general-category-card {
   min-height: 160px;
+}
+
+.general-category-card h3 {
+  margin: 0 0 12px;
+  font-family: inherit;
+  font-size: 0.94rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--berry);
+  line-height: 1.35;
 }
 
 .general-category-card .category-meta {
