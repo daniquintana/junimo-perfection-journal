@@ -1432,6 +1432,7 @@ input[type="checkbox"] {
 .hoard-table th:first-child,
 .hoard-table td:first-child {
   width: 40%;
+  padding-left: 18px;
 }
 
 .hoard-table th:nth-child(2),
@@ -1447,6 +1448,20 @@ input[type="checkbox"] {
 .hoard-table td:nth-child(5) {
   width: 12%;
   white-space: nowrap;
+}
+
+.hoard-table th:nth-child(4),
+.hoard-table td:nth-child(4) {
+  text-align: center;
+}
+
+.hoard-table td:nth-child(4) .number-stepper {
+  margin: 0 auto;
+}
+
+.hoard-table th:nth-child(5),
+.hoard-table td:nth-child(5) {
+  padding-right: 24px;
 }
 
 .hoard-table input {
