@@ -717,7 +717,7 @@ select:focus {
 
 .general-primary-card-feature p:first-child {
   font-family: inherit;
-  font-size: 1.26rem;
+  font-size: 1.42rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -761,6 +761,7 @@ select:focus {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: center;
 }
 
 .general-category-card h3 {
@@ -772,6 +773,7 @@ select:focus {
   text-transform: none;
   color: var(--berry);
   line-height: 1.08;
+  text-align: center;
 }
 
 .general-category-card .category-meta {
