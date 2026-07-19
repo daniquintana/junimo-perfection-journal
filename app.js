@@ -889,12 +889,6 @@ function renderGeneral() {
   );
   const totalTasksDone = totalTasksTracked - totalTasksRemaining;
   const primaryCounters = [
-    {
-      label: "Main checklist left",
-      left: totalTasksRemaining,
-      total: totalTasksTracked,
-      done: totalTasksDone,
-    },
     { label: "Fish left", left: fishLeft, total: data.fish.length, done: progress.fish.done },
     {
       label: "Cooking left",
