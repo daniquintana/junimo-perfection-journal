@@ -602,6 +602,17 @@ select {
   outline: none;
 }
 
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .number-stepper {
   display: inline-grid;
   grid-template-columns: minmax(0, 1fr) 22px;
