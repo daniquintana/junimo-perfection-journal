@@ -134,14 +134,26 @@ body.is-hoard-mode .page-shell::before {
   display: block;
   width: 100%;
   height: auto;
+  image-rendering: pixelated;
 }
 
 body.is-hoard-mode .front-junimo {
   filter: drop-shadow(0 14px 16px rgba(89, 48, 133, 0.4));
 }
 
+body.is-hoard-mode .hero-emblem {
+  transform: scale(1.7);
+  transform-origin: center;
+}
+
+body.is-hoard-mode .hero-emblem:hover {
+  transform: scale(1.7) translateY(-1px);
+}
+
 body.is-hoard-mode .front-junimo img {
-  filter: hue-rotate(105deg) saturate(1.7) brightness(0.92);
+  filter: none;
+  transform: scale(1.7);
+  transform-origin: center bottom;
 }
 
 button,
