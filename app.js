@@ -1883,14 +1883,21 @@ function renderShipping() {
                 <h3>${escapeHtml(page.name)}</h3>
                 <span class="status-pill ${page.remaining === 0 ? "is-done" : "is-pending"}">${page.remaining} left</span>
               </div>
-              <div class="pill-grid">
+              <div class="shipping-grid">
                 ${page.items
                   .map((item) => {
                     const done = state.shipping[item.id];
                     return `
-                      <label class="pill-item ${done ? "is-done" : ""}">
-                        <input type="checkbox" data-action="shipping-toggle" data-id="${item.id}" ${done ? "checked" : ""} />
-                        <span>${escapeHtml(item.name)}</span>
+                      <label class="shipping-item ${done ? "is-done" : ""}">
+                        <span class="shipping-item-check">
+                          <input type="checkbox" data-action="shipping-toggle" data-id="${item.id}" ${done ? "checked" : ""} />
+                        </span>
+                        <span class="shipping-item-body">
+                          ${itemThumb(item, item.name)}
+                          <span class="shipping-item-copy">
+                            <strong>${escapeHtml(item.name)}</strong>
+                          </span>
+                        </span>
                       </label>
                     `;
                   })

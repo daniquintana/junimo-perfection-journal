@@ -1647,7 +1647,7 @@ input[type="checkbox"] {
 .villager-heart-entry {
   display: grid;
   justify-items: center;
-  gap: 3px;
+  gap: 5px;
 }
 
 .villager-portrait {
@@ -1655,6 +1655,7 @@ input[type="checkbox"] {
   display: flex;
   align-items: end;
   justify-content: center;
+  transform: translateX(-14px);
 }
 
 .villager-portrait .item-thumb {
@@ -1848,6 +1849,67 @@ input[type="checkbox"] {
 .shipping-pages {
   display: grid;
   gap: 14px;
+}
+
+.shipping-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(152px, 1fr));
+  gap: 12px;
+}
+
+.shipping-item {
+  position: relative;
+  display: block;
+  min-width: 0;
+  padding: 10px 12px 8px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 246, 220, 0.95);
+}
+
+.shipping-item.is-done {
+  background: rgba(228, 240, 214, 0.95);
+}
+
+.shipping-item-check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shipping-item-check input {
+  margin: 0;
+}
+
+.shipping-item-body {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 8px;
+  min-height: 86px;
+  text-align: center;
+}
+
+.shipping-item .item-thumb {
+  width: 38px;
+  height: 38px;
+  flex-basis: 38px;
+  padding: 4px;
+}
+
+.shipping-item-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  justify-items: center;
+}
+
+.shipping-item-copy strong {
+  font-size: 0.98rem;
+  line-height: 1.24;
 }
 
 .page-card {
