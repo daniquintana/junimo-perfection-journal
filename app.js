@@ -3429,5 +3429,12 @@ function updateVisibleTab() {
         ? "Back to the Regular Tracker"
         : "Enter the Dangerous Hoarding Pit";
   }
-  document.body.classList.toggle("is-hoard-mode", ui.activeTab === "hoard");
+  const isHoardMode = ui.activeTab === "hoard";
+  document.body.classList.toggle("is-hoard-mode", isHoardMode);
+  const heroEmblem = document.getElementById("hero-emblem-trigger");
+  if (heroEmblem) {
+    heroEmblem.src = isHoardMode
+      ? heroEmblem.dataset.hoardSrc || heroEmblem.src
+      : heroEmblem.dataset.regularSrc || heroEmblem.src;
+  }
 }
