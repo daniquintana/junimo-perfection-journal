@@ -1349,9 +1349,9 @@ function renderFish() {
     (fish) => fish.category === "Legendary Fish" && !state.fish[fish.id]
   ).length;
   document.getElementById("fish-summary").innerHTML = `
-    ${summaryCard("Fish left", `${fishLeft}`, "Unfished fish", ratioToPercent(fishLeft / data.fish.length))}
-    ${summaryCard("Caught", `${progress.fish.done}/${data.fish.length}`, "", ratioToPercent(progress.fish.ratio))}
-    ${summaryCard("Legendary left", `${legendaryLeft}`, "", ratioToPercent(legendaryLeft / 5))}
+    ${summaryCard("Fish left", `${fishLeft}`, "", ratioToPercent(fishLeft / data.fish.length), " section-stat-card")}
+    ${summaryCard("Caught", `${progress.fish.done}`, "", ratioToPercent(progress.fish.ratio), " section-stat-card")}
+    ${summaryCard("Legendary left", `${legendaryLeft}`, "", ratioToPercent(legendaryLeft / 5), " section-stat-card")}
   `;
 
   if (!filtered.length) {
@@ -1722,6 +1722,18 @@ function renderRecipePlanner(config) {
       : ingredientRows;
   const remainingUnits = summaryVisibleIngredientRows.reduce((sum, row) => sum + row.remaining, 0);
   const ownedUnits = summaryVisibleIngredientRows.reduce((sum, row) => sum + row.owned, 0);
+  const leftLabel = kind === "cooking" ? "Recipes left" : "Crafts left";
+  const doneLabel = kind === "cooking" ? "Cooked" : "Crafted";
+  const unitLabel = status === "pantry"
+    ? "Units on hand"
+    : kind === "cooking"
+    ? "Ingredients left"
+    : "Materials left";
+  const itemLabel = status === "pantry"
+    ? "Pantry items"
+    : kind === "cooking"
+    ? "Ingredients needed"
+    : "Materials needed";
   const plannerContainer = document.getElementById(ingredientsEl);
   if (plannerContainer) {
     plannerContainer.classList.toggle(
@@ -1732,22 +1744,14 @@ function renderRecipePlanner(config) {
 
   document.getElementById(summaryEl).innerHTML = showPlanner
     ? `
-    ${summaryCard(kind === "cooking" ? "Recipes left" : "Recipes left", `${remainingRecipes}`, kind === "cooking" ? "" : "Still to craft", ratioToPercent(remainingRecipes / recipes.length))}
-    ${summaryCard(kind === "cooking" ? "Cooked" : "Crafted", `${doneCount}/${recipes.length}`, kind === "cooking" ? "" : "Completion so far", ratioToPercent(doneCount / recipes.length))}
-    ${
-      status === "pantry"
-        ? summaryCard("Pantry units", `${ownedUnits}`, "", summaryVisibleIngredientRows.length ? 100 : 0)
-        : summaryCard("Materials left", `${remainingUnits}`, "", summaryVisibleIngredientRows.length ? 100 : 0)
-    }
-    ${
-      status === "pantry"
-        ? summaryCard("Ingredients on hand", `${summaryVisibleIngredientRows.length}`, "", ratioToPercent(Math.min(summaryVisibleIngredientRows.length, recipes.length) / recipes.length))
-        : summaryCard("Ingredients tracked", `${summaryVisibleIngredientRows.length}`, "", ratioToPercent(Math.min(summaryVisibleIngredientRows.length, recipes.length) / recipes.length))
-    }
+    ${summaryCard(leftLabel, `${remainingRecipes}`, "", ratioToPercent(remainingRecipes / recipes.length), " section-stat-card")}
+    ${summaryCard(doneLabel, `${doneCount}`, "", ratioToPercent(doneCount / recipes.length), " section-stat-card")}
+    ${summaryCard(unitLabel, `${status === "pantry" ? ownedUnits : remainingUnits}`, "", summaryVisibleIngredientRows.length ? 100 : 0, " section-stat-card")}
+    ${summaryCard(itemLabel, `${summaryVisibleIngredientRows.length}`, "", ratioToPercent(Math.min(summaryVisibleIngredientRows.length, recipes.length) / recipes.length), " section-stat-card")}
   `
     : `
-    ${summaryCard("Recipes left", `${remainingRecipes}`, "", ratioToPercent(remainingRecipes / recipes.length))}
-    ${summaryCard("Crafted", `${doneCount}/${recipes.length}`, "", ratioToPercent(doneCount / recipes.length))}
+    ${summaryCard(leftLabel, `${remainingRecipes}`, "", ratioToPercent(remainingRecipes / recipes.length), " section-stat-card")}
+    ${summaryCard(doneLabel, `${doneCount}`, "", ratioToPercent(doneCount / recipes.length), " section-stat-card")}
   `;
 
   document.getElementById(ingredientsEl).innerHTML = !showPlanner
@@ -1926,8 +1930,8 @@ function renderShipping() {
   const totalLeft = flatShippingItems.length - totalDone;
 
   summaryEl.innerHTML = `
-    ${summaryCard("Shipping left", `${totalLeft}`, "Items still to ship", ratioToPercent(totalLeft / flatShippingItems.length))}
-    ${summaryCard("Shipped", `${totalDone}/${flatShippingItems.length}`, "", ratioToPercent(totalDone / flatShippingItems.length))}
+    ${summaryCard("Shipping left", `${totalLeft}`, "", ratioToPercent(totalLeft / flatShippingItems.length), " section-stat-card")}
+    ${summaryCard("Shipped", `${totalDone}`, "", ratioToPercent(totalDone / flatShippingItems.length), " section-stat-card")}
   `;
 
   if (!filteredPages.length) {

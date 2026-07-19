@@ -846,6 +846,18 @@ select:focus {
   overflow: hidden;
 }
 
+.summary-card.section-stat-card {
+  text-align: center;
+}
+
+.summary-card.section-stat-card strong {
+  margin-top: 10px;
+}
+
+.summary-card.section-stat-card .progress-track {
+  width: 100%;
+}
+
 .summary-card::before {
   content: none;
 }
