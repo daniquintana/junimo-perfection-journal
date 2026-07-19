@@ -853,23 +853,133 @@ function scheduleRenderAllDynamic() {
 
 function renderGeneral() {
   const progress = getProgressSnapshot();
-  const remaining = getRemainingSnapshot();
+  const farmerLevelCategory = data.perfectionCategories.find(
+    (category) => category.id === "farmer-level"
+  );
+  const walnutsCategory = data.perfectionCategories.find(
+    (category) => category.id === "golden-walnuts-found"
+  );
+  const fishLeft = data.fish.length - progress.fish.done;
+  const cookingLeft = data.cooking.recipes.length - progress.cooking.done;
+  const craftingLeft = data.crafting.recipes.length - progress.crafting.done;
+  const shippingLeft = flatShippingItems.length - progress.shipping.done;
+  const monsterGoalsLeft = data.other.monsterGoals.length - progress.monsters.done;
+  const friendsLeft = data.other.villagers.length - progress.friends.done;
+  const skillLevelsLeft = (farmerLevelCategory?.totalRequired ?? 25) - progress.skills.done;
+  const stardropsLeft = data.other.stardrops.length - progress.stardrops.done;
+  const farmBuildsTotal =
+    data.other.buildings.filter((building) => building.type === "obelisk").length + 1;
+  const farmBuildsDone = progress.obelisks.done + progress.goldClock.done;
+  const farmBuildsLeft = farmBuildsTotal - farmBuildsDone;
+  const walnutsLeft = (walnutsCategory?.totalRequired ?? data.other.goldenWalnutsTarget) - progress.walnuts.done;
   const totalTasksRemaining =
-    (data.fish.length - progress.fish.done) +
-    (data.cooking.recipes.length - progress.cooking.done) +
-    (data.crafting.recipes.length - progress.crafting.done) +
-    (flatShippingItems.length - progress.shipping.done);
+    fishLeft +
+    cookingLeft +
+    craftingLeft +
+    shippingLeft +
+    monsterGoalsLeft +
+    friendsLeft +
+    skillLevelsLeft +
+    stardropsLeft +
+    farmBuildsLeft +
+    walnutsLeft;
+  const totalTasksTracked = data.perfectionCategories.reduce(
+    (sum, category) => sum + category.totalRequired,
+    0
+  );
+  const totalTasksDone = totalTasksTracked - totalTasksRemaining;
+  const generalCounters = [
+    {
+      label: "Main checklist left",
+      left: totalTasksRemaining,
+      total: totalTasksTracked,
+      done: totalTasksDone,
+    },
+    { label: "Fish left", left: fishLeft, total: data.fish.length, done: progress.fish.done },
+    {
+      label: "Cooking left",
+      left: cookingLeft,
+      total: data.cooking.recipes.length,
+      done: progress.cooking.done,
+    },
+    {
+      label: "Crafting left",
+      left: craftingLeft,
+      total: data.crafting.recipes.length,
+      done: progress.crafting.done,
+    },
+    {
+      label: "Shipping left",
+      left: shippingLeft,
+      total: flatShippingItems.length,
+      done: progress.shipping.done,
+    },
+    {
+      label: "Friends left",
+      left: friendsLeft,
+      total: data.other.villagers.length,
+      done: progress.friends.done,
+    },
+    {
+      label: "Monster goals left",
+      left: monsterGoalsLeft,
+      total: data.other.monsterGoals.length,
+      done: progress.monsters.done,
+    },
+    {
+      label: "Farmer level left",
+      left: skillLevelsLeft,
+      total: farmerLevelCategory?.totalRequired ?? 25,
+      done: progress.skills.done,
+    },
+    {
+      label: "Stardrops left",
+      left: stardropsLeft,
+      total: data.other.stardrops.length,
+      done: progress.stardrops.done,
+    },
+    {
+      label: "Farm builds left",
+      left: farmBuildsLeft,
+      total: farmBuildsTotal,
+      done: farmBuildsDone,
+    },
+    {
+      label: "Walnuts left",
+      left: walnutsLeft,
+      total: walnutsCategory?.totalRequired ?? data.other.goldenWalnutsTarget,
+      done: progress.walnuts.done,
+    },
+  ];
 
   document.getElementById("general-top").innerHTML = `
-    ${summaryCard("Overall perfection", `${progress.overallPercent.toFixed(1)}%`, "", progress.overallPercent)}
-    ${summaryCard("Main checklist left", `${totalTasksRemaining}`, "Fish + cooking + crafting + shipping unfinished", ratioToPercent(totalTasksRemaining / (data.fish.length + data.cooking.recipes.length + data.crafting.recipes.length + flatShippingItems.length)))}
-    ${summaryCard("Fish left", `${remaining.fish.length}`, "Uncaught fish", ratioToPercent(remaining.fish.length / data.fish.length))}
-    ${summaryCard("Cooking left", `${remaining.cooking.length}`, "Recipes still to cook", ratioToPercent(remaining.cooking.length / data.cooking.recipes.length))}
-    ${summaryCard("Crafting left", `${remaining.crafting.length}`, "Recipes still to craft", ratioToPercent(remaining.crafting.length / data.crafting.recipes.length))}
-    ${summaryCard("Shipping left", `${remaining.shipping.length}`, "Items still to ship", ratioToPercent(remaining.shipping.length / flatShippingItems.length))}
+    <section class="general-overview">
+      <div class="general-main-card">
+        ${summaryCard(
+          "Perfection",
+          `${progress.overallPercent.toFixed(1)}%`,
+          `${formatNumber(totalTasksDone)}/${formatNumber(totalTasksTracked)} complete`,
+          progress.overallPercent,
+          "general-feature-card"
+        )}
+      </div>
+      <div class="general-extra-grid">
+        ${generalCounters
+          .map((entry) =>
+            summaryCard(
+              entry.label,
+              `${formatNumber(entry.left)}`,
+              `${formatNumber(entry.done)}/${formatNumber(entry.total)} complete`,
+              ratioToPercent(entry.done / entry.total),
+              "general-extra-card"
+            )
+          )
+          .join("")}
+      </div>
+    </section>
   `;
 
-  document.getElementById("general-left-board").innerHTML = renderGeneralLeftBoard(remaining);
+  document.getElementById("general-left-board").innerHTML = "";
 
   document.getElementById("general-footer").innerHTML = `
     <p class="subtle">Based on Stardew Valley Wiki data.</p>
@@ -2572,9 +2682,15 @@ function getProgressSnapshot() {
   const friendComplete = data.other.villagers.filter(
     (villager) => state.villagers[villager.id] >= villager.targetHearts
   ).length;
-  const skillsComplete = data.other.skills.filter(
-    (skill) => state.skills[skill.id] >= skill.targetLevel
-  ).length;
+  const skillsComplete = Math.min(
+    Math.floor(
+      data.other.skills.reduce(
+        (sum, skill) => sum + Math.min(state.skills[skill.id], skill.targetLevel),
+        0
+      ) / 2
+    ),
+    data.perfectionCategories.find((category) => category.id === "farmer-level")?.totalRequired ?? 25
+  );
   const stardropsDone = countTrueValues(state.stardrops);
   const obeliskTotal = data.other.buildings.filter((building) => building.type === "obelisk").length;
   const obelisksDone = data.other.buildings.filter(
@@ -2590,7 +2706,10 @@ function getProgressSnapshot() {
     shipping: snapshotEntry(shippingDone, flatShippingItems.length),
     monsters: snapshotEntry(monsterComplete, data.other.monsterGoals.length),
     friends: snapshotEntry(friendComplete, data.other.villagers.length),
-    skills: snapshotEntry(skillsComplete, data.other.skills.length),
+    skills: snapshotEntry(
+      skillsComplete,
+      data.perfectionCategories.find((category) => category.id === "farmer-level")?.totalRequired ?? 25
+    ),
     stardrops: snapshotEntry(stardropsDone, data.other.stardrops.length),
     obelisks: snapshotEntry(obelisksDone, obeliskTotal),
     goldClock: snapshotEntry(goldClockDone, 1),
@@ -3183,9 +3302,10 @@ function snapshotEntry(current, total) {
   };
 }
 
-function summaryCard(label, value, detail, progressPercent) {
+function summaryCard(label, value, detail, progressPercent, className = "") {
+  const classSuffix = className ? ` ${escapeAttribute(className)}` : "";
   return `
-    <article class="summary-card">
+    <article class="summary-card${classSuffix}">
       <p>${escapeHtml(label)}</p>
       <strong>${escapeHtml(value)}</strong>
       ${detail ? `<p>${escapeHtml(detail)}</p>` : ""}
