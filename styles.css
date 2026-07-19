@@ -700,6 +700,11 @@ select:focus {
 }
 
 .general-primary-card-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   background:
     radial-gradient(circle at top right, rgba(255, 244, 197, 0.78), rgba(255, 244, 197, 0) 44%),
     linear-gradient(180deg, rgba(250, 239, 208, 0.99), rgba(239, 220, 170, 0.97));
@@ -708,14 +713,26 @@ select:focus {
 
 .general-primary-card-feature p:first-child {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
   color: var(--wood-dark);
 }
 
 .general-primary-card-feature strong {
-  font-size: clamp(3rem, 6vw, 4.2rem);
+  margin-top: 18px;
+  font-size: clamp(3.8rem, 8vw, 5.4rem);
+}
+
+.general-primary-card-feature .progress-track {
+  width: min(520px, 100%);
+  margin-top: 20px;
+}
+
+.general-primary-card-feature p:last-of-type {
+  margin-top: 14px;
+  font-size: 1rem;
+  text-align: center;
 }
 
 .general-category-grid {

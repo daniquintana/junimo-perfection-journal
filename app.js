@@ -886,7 +886,7 @@ function renderGeneral() {
     <section class="general-overview">
       <div class="general-feature-row">
         ${summaryCard(
-          "Perfection",
+          "✦ Perfection ✦",
           `${progress.overallPercent.toFixed(1)}%`,
           `${formatNumber(totalTasksDone)}/${formatNumber(totalTasksTracked)} complete`,
           progress.overallPercent,
