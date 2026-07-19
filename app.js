@@ -853,100 +853,34 @@ function scheduleRenderAllDynamic() {
 
 function renderGeneral() {
   const progress = getProgressSnapshot();
-  const farmerLevelCategory = data.perfectionCategories.find(
-    (category) => category.id === "farmer-level"
-  );
-  const walnutsCategory = data.perfectionCategories.find(
-    (category) => category.id === "golden-walnuts-found"
-  );
-  const fishLeft = data.fish.length - progress.fish.done;
-  const cookingLeft = data.cooking.recipes.length - progress.cooking.done;
-  const craftingLeft = data.crafting.recipes.length - progress.crafting.done;
-  const shippingLeft = flatShippingItems.length - progress.shipping.done;
-  const monsterGoalsLeft = data.other.monsterGoals.length - progress.monsters.done;
-  const friendsLeft = data.other.villagers.length - progress.friends.done;
-  const skillLevelsLeft = (farmerLevelCategory?.totalRequired ?? 25) - progress.skills.done;
-  const stardropsLeft = data.other.stardrops.length - progress.stardrops.done;
-  const farmBuildsTotal =
-    data.other.buildings.filter((building) => building.type === "obelisk").length + 1;
-  const farmBuildsDone = progress.obelisks.done + progress.goldClock.done;
-  const farmBuildsLeft = farmBuildsTotal - farmBuildsDone;
-  const walnutsLeft = (walnutsCategory?.totalRequired ?? data.other.goldenWalnutsTarget) - progress.walnuts.done;
-  const totalTasksRemaining =
-    fishLeft +
-    cookingLeft +
-    craftingLeft +
-    shippingLeft +
-    monsterGoalsLeft +
-    friendsLeft +
-    skillLevelsLeft +
-    stardropsLeft +
-    farmBuildsLeft +
-    walnutsLeft;
-  const totalTasksTracked = data.perfectionCategories.reduce(
+  const categoryProgressById = {
+    "produce-forage-shipped": progress.shipping.done,
+    "obelisks-on-farm": progress.obelisks.done,
+    "golden-clock-on-farm": progress.goldClock.done,
+    "monster-slayer-hero": progress.monsters.done,
+    "great-friends": progress.friends.done,
+    "farmer-level": progress.skills.done,
+    "found-all-stardrops": progress.stardrops.done,
+    "cooking-recipes-made": progress.cooking.done,
+    "crafting-recipes-made": progress.crafting.done,
+    "fish-caught": progress.fish.done,
+    "golden-walnuts-found": progress.walnuts.done,
+  };
+  const officialCategories = data.perfectionCategories.map((category) => {
+    const current = categoryProgressById[category.id] ?? 0;
+    const left = Math.max(category.totalRequired - current, 0);
+    return {
+      ...category,
+      current,
+      left,
+      ratio: category.totalRequired ? current / category.totalRequired : 0,
+    };
+  });
+  const totalTasksTracked = officialCategories.reduce(
     (sum, category) => sum + category.totalRequired,
     0
   );
-  const totalTasksDone = totalTasksTracked - totalTasksRemaining;
-  const primaryCounters = [
-    { label: "Fish left", left: fishLeft, total: data.fish.length, done: progress.fish.done },
-    {
-      label: "Cooking left",
-      left: cookingLeft,
-      total: data.cooking.recipes.length,
-      done: progress.cooking.done,
-    },
-    {
-      label: "Crafting left",
-      left: craftingLeft,
-      total: data.crafting.recipes.length,
-      done: progress.crafting.done,
-    },
-    {
-      label: "Shipping left",
-      left: shippingLeft,
-      total: flatShippingItems.length,
-      done: progress.shipping.done,
-    },
-  ];
-  const secondaryCounters = [
-    {
-      label: "Friends left",
-      left: friendsLeft,
-      total: data.other.villagers.length,
-      done: progress.friends.done,
-    },
-    {
-      label: "Monster goals left",
-      left: monsterGoalsLeft,
-      total: data.other.monsterGoals.length,
-      done: progress.monsters.done,
-    },
-    {
-      label: "Farmer level left",
-      left: skillLevelsLeft,
-      total: farmerLevelCategory?.totalRequired ?? 25,
-      done: progress.skills.done,
-    },
-    {
-      label: "Stardrops left",
-      left: stardropsLeft,
-      total: data.other.stardrops.length,
-      done: progress.stardrops.done,
-    },
-    {
-      label: "Farm builds left",
-      left: farmBuildsLeft,
-      total: farmBuildsTotal,
-      done: farmBuildsDone,
-    },
-    {
-      label: "Walnuts left",
-      left: walnutsLeft,
-      total: walnutsCategory?.totalRequired ?? data.other.goldenWalnutsTarget,
-      done: progress.walnuts.done,
-    },
-  ];
+  const totalTasksDone = officialCategories.reduce((sum, category) => sum + category.current, 0);
 
   document.getElementById("general-top").innerHTML = `
     <section class="general-overview">
@@ -959,28 +893,14 @@ function renderGeneral() {
           "general-primary-card general-primary-card-feature"
         )}
       </div>
-      <div class="general-primary-grid">
-        ${primaryCounters
-          .map((entry) =>
-            summaryCard(
-              entry.label,
-              `${formatNumber(entry.left)}`,
-              `${formatNumber(entry.done)}/${formatNumber(entry.total)} complete`,
-              ratioToPercent(entry.done / entry.total),
-              "general-primary-card"
-            )
-          )
-          .join("")}
-      </div>
-      <div class="general-extra-grid">
-        ${secondaryCounters
-          .map((entry) =>
-            summaryCard(
-              entry.label,
-              `${formatNumber(entry.left)}`,
-              `${formatNumber(entry.done)}/${formatNumber(entry.total)} complete`,
-              ratioToPercent(entry.done / entry.total),
-              "general-extra-card"
+      <div class="category-grid general-category-grid">
+        ${officialCategories
+          .map((category) =>
+            renderGeneralCategoryCard(
+              category.name,
+              `${formatNumber(category.current)}/${formatNumber(category.totalRequired)}`,
+              category.left ? `${formatNumber(category.left)} left` : "Complete",
+              ratioToPercent(category.ratio)
             )
           )
           .join("")}
@@ -3318,6 +3238,19 @@ function summaryCard(label, value, detail, progressPercent, className = "") {
       <p>${escapeHtml(label)}</p>
       <strong>${escapeHtml(value)}</strong>
       ${detail ? `<p>${escapeHtml(detail)}</p>` : ""}
+      ${progressBar(progressPercent / 100)}
+    </article>
+  `;
+}
+
+function renderGeneralCategoryCard(title, value, detail, progressPercent) {
+  return `
+    <article class="category-card general-category-card">
+      <h3>${escapeHtml(title)}</h3>
+      <div class="category-meta">
+        <span>${escapeHtml(value)}</span>
+        <span>${escapeHtml(detail)}</span>
+      </div>
       ${progressBar(progressPercent / 100)}
     </article>
   `;
