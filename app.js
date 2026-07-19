@@ -1880,8 +1880,11 @@ function renderOther() {
 
   document.getElementById("other-summary").innerHTML = `
     ${summaryCard("Friends left", `${remaining.villagers.length}`, "Villagers not yet at perfection hearts", ratioToPercent(remaining.villagers.length / data.other.villagers.length))}
-    ${summaryCard("Monster goals left", `${remaining.monsters.length}`, "Eradication goals still unfinished", ratioToPercent(remaining.monsters.length / data.other.monsterGoals.length))}
+    ${summaryCard("Skills left", `${remaining.skills.length}`, "Farmer levels still missing", ratioToPercent(remaining.skills.length / data.other.skills.length))}
     ${summaryCard("Walnuts left", `${remaining.walnutsLeft}`, "Golden walnuts still missing", ratioToPercent(remaining.walnutsLeft / data.other.goldenWalnutsTarget))}
+    ${summaryCard("Stardrops left", `${remaining.stardrops.length}`, "Stardrops still missing", ratioToPercent(remaining.stardrops.length / data.other.stardrops.length))}
+    ${summaryCard("Obelisks & clock", `${remaining.buildings.length}`, "Buildings not yet marked built", ratioToPercent(remaining.buildings.length / data.other.buildings.length))}
+    ${summaryCard("Monster goals left", `${remaining.monsters.length}`, "Eradication goals still unfinished", ratioToPercent(remaining.monsters.length / data.other.monsterGoals.length))}
   `;
 
   renderVillagers();
