@@ -1878,14 +1878,6 @@ function renderMuseum() {
   `;
 
   contentEl.innerHTML = `
-    <article class="mini-card museum-card">
-      <h3>How this works</h3>
-      <p>
-        Check museum items one by one here. This tab follows the artifacts and
-        minerals collection lists, and the Museum Donation Reward in Other
-        Perfection turns on automatically once all 95 items are checked.
-      </p>
-    </article>
     <div class="museum-section-grid">
       <article class="mini-card museum-card">
         <div class="section-header museum-section-header">
