@@ -1883,12 +1883,12 @@ function renderOther() {
   const remaining = getRemainingSnapshot();
 
   document.getElementById("other-summary").innerHTML = `
-    ${summaryCard("Friends left", `${remaining.villagers.length}`, "Villagers not yet at perfection hearts", ratioToPercent(remaining.villagers.length / data.other.villagers.length))}
-    ${summaryCard("Skills left", `${remaining.skills.length}`, "Farmer levels still missing", ratioToPercent(remaining.skills.length / data.other.skills.length))}
-    ${summaryCard("Walnuts left", `${remaining.walnutsLeft}`, "Golden walnuts still missing", ratioToPercent(remaining.walnutsLeft / data.other.goldenWalnutsTarget))}
-    ${summaryCard("Stardrops left", `${remaining.stardrops.length}`, "Stardrops still missing", ratioToPercent(remaining.stardrops.length / data.other.stardrops.length))}
-    ${summaryCard("Obelisks & clock", `${remaining.buildings.length}`, "Buildings not yet marked built", ratioToPercent(remaining.buildings.length / data.other.buildings.length))}
-    ${summaryCard("Monster goals left", `${remaining.monsters.length}`, "Eradication goals still unfinished", ratioToPercent(remaining.monsters.length / data.other.monsterGoals.length))}
+    ${summaryCard("Friends left", `${remaining.villagers.length}`, "", ratioToPercent(remaining.villagers.length / data.other.villagers.length), " section-stat-card")}
+    ${summaryCard("Skills left", `${remaining.skills.length}`, "", ratioToPercent(remaining.skills.length / data.other.skills.length), " section-stat-card")}
+    ${summaryCard("Walnuts left", `${remaining.walnutsLeft}`, "", ratioToPercent(remaining.walnutsLeft / data.other.goldenWalnutsTarget), " section-stat-card")}
+    ${summaryCard("Stardrops left", `${remaining.stardrops.length}`, "", ratioToPercent(remaining.stardrops.length / data.other.stardrops.length), " section-stat-card")}
+    ${summaryCard("Obelisks & clock", `${remaining.buildings.length}`, "", ratioToPercent(remaining.buildings.length / data.other.buildings.length), " section-stat-card")}
+    ${summaryCard("Monster goals left", `${remaining.monsters.length}`, "", ratioToPercent(remaining.monsters.length / data.other.monsterGoals.length), " section-stat-card")}
   `;
 
   renderVillagers();
@@ -2061,10 +2061,10 @@ function renderMuseum() {
   const progress = ratioToPercent(donations / MUSEUM_DONATION_TARGET);
 
   summaryEl.innerHTML = `
-    ${summaryCard("Donated", `${donations}/${MUSEUM_DONATION_TARGET}`, "", progress)}
-    ${summaryCard("Artifacts", `${artifactsDone}/${MUSEUM_ARTIFACTS.length}`, "", ratioToPercent(artifactsDone / MUSEUM_ARTIFACTS.length))}
-    ${summaryCard("Minerals", `${mineralsDone}/${MUSEUM_MINERALS.length}`, "", ratioToPercent(mineralsDone / MUSEUM_MINERALS.length))}
-    ${summaryCard("Rewards earned", `${rewardsEarned}/${MUSEUM_REWARD_TARGET}`, "", ratioToPercent(rewardsEarned / MUSEUM_REWARD_TARGET))}
+    ${summaryCard("Donated", `${donations}/${MUSEUM_DONATION_TARGET}`, "", progress, " section-stat-card")}
+    ${summaryCard("Artifacts", `${artifactsDone}/${MUSEUM_ARTIFACTS.length}`, "", ratioToPercent(artifactsDone / MUSEUM_ARTIFACTS.length), " section-stat-card")}
+    ${summaryCard("Minerals", `${mineralsDone}/${MUSEUM_MINERALS.length}`, "", ratioToPercent(mineralsDone / MUSEUM_MINERALS.length), " section-stat-card")}
+    ${summaryCard("Rewards earned", `${rewardsEarned}/${MUSEUM_REWARD_TARGET}`, "", ratioToPercent(rewardsEarned / MUSEUM_REWARD_TARGET), " section-stat-card")}
   `;
 
   contentEl.innerHTML = `
