@@ -888,7 +888,7 @@ function renderGeneral() {
     0
   );
   const totalTasksDone = totalTasksTracked - totalTasksRemaining;
-  const generalCounters = [
+  const primaryCounters = [
     {
       label: "Main checklist left",
       left: totalTasksRemaining,
@@ -914,6 +914,8 @@ function renderGeneral() {
       total: flatShippingItems.length,
       done: progress.shipping.done,
     },
+  ];
+  const secondaryCounters = [
     {
       label: "Friends left",
       left: friendsLeft,
@@ -954,17 +956,28 @@ function renderGeneral() {
 
   document.getElementById("general-top").innerHTML = `
     <section class="general-overview">
-      <div class="general-main-card">
+      <div class="general-primary-grid">
         ${summaryCard(
           "Perfection",
           `${progress.overallPercent.toFixed(1)}%`,
           `${formatNumber(totalTasksDone)}/${formatNumber(totalTasksTracked)} complete`,
           progress.overallPercent,
-          "general-feature-card"
+          "general-primary-card general-primary-card-feature"
         )}
+        ${primaryCounters
+          .map((entry) =>
+            summaryCard(
+              entry.label,
+              `${formatNumber(entry.left)}`,
+              `${formatNumber(entry.done)}/${formatNumber(entry.total)} complete`,
+              ratioToPercent(entry.done / entry.total),
+              "general-primary-card"
+            )
+          )
+          .join("")}
       </div>
       <div class="general-extra-grid">
-        ${generalCounters
+        ${secondaryCounters
           .map((entry) =>
             summaryCard(
               entry.label,
