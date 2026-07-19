@@ -1457,7 +1457,6 @@ function renderHoard() {
   document.getElementById("hoard-content").innerHTML = filtered.length
     ? `
       <article class="planner-card hoard-card">
-        <h3>Dangerous Hoarding Pit</h3>
         <div class="table-shell">
           <table class="planner-table tight-table hoard-table">
             <thead>
