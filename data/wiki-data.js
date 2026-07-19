@@ -24,6 +24,10 @@ window.STARDEW_WIKI_DATA = {
         "url": "https://stardewvalleywiki.com/Shipping"
       },
       {
+        "label": "Museum",
+        "url": "https://stardewvalleywiki.com/Museum"
+      },
+      {
         "label": "Friendship",
         "url": "https://stardewvalleywiki.com/Friendship"
       },
