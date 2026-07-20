@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.5.1
+
+- tuned the Dangerous Hoarding Pit hero and floating Junimo visuals
+- refined General, Shipping, Museum, and Other Perfection layout polish
+- improved help-page copy and tracker guidance consistency
+
+## 1.5.0
+
+- added the Museum Collections tab with donation tracking and reward progress
+- expanded the help page and feedback access inside the tracker
+- added analytics/help polish and more cross-tab visual cleanup
+
 ## 1.4.0
 
 - added a dedicated `?` guide/help page with tracker instructions, scope, and reporting notes

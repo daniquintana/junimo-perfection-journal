@@ -67,7 +67,7 @@ A Stardew Valley perfection tracker for fish, cooking, crafting, shipping, frien
 - Based on Stardew Valley Wiki data.
 - The live site does not have login or cloud sync.
 - Some images inside the tracker load from Stardew Valley Wiki URLs, so an internet connection helps those appear.
-- Current release: `1.4.0`
+- Current release: `1.5.1`
 
 ## Repo Layout
 
