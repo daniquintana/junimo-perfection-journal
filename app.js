@@ -1138,7 +1138,7 @@ async function loadReleaseDownloadStats() {
     }
 
     const latestRelease = releases.find(
-      (release) => !release?.draft && Array.isArray(release?.assets) && release.assets.length
+      (release) => !release?.draft && !release?.prerelease
     );
 
     if (!latestRelease) {
