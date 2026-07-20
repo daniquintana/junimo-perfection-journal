@@ -137,10 +137,6 @@ body.is-hoard-mode .page-shell::before {
   image-rendering: pixelated;
 }
 
-body.is-hoard-mode .front-junimo {
-  filter: drop-shadow(0 14px 16px rgba(89, 48, 133, 0.4));
-}
-
 body.is-hoard-mode .hero-emblem {
   transform: scale(0.875);
   transform-origin: center;
