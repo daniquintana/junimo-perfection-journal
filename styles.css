@@ -142,18 +142,16 @@ body.is-hoard-mode .front-junimo {
 }
 
 body.is-hoard-mode .hero-emblem {
-  transform: scale(1.7);
-  transform-origin: center;
+  transform: none;
 }
 
 body.is-hoard-mode .hero-emblem:hover {
-  transform: scale(1.7) translateY(-1px);
+  transform: translateY(-1px);
 }
 
 body.is-hoard-mode .front-junimo img {
   filter: none;
-  transform: scale(1.7);
-  transform-origin: center bottom;
+  transform: none;
 }
 
 button,
