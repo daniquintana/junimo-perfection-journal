@@ -1345,6 +1345,12 @@ input[type="checkbox"] {
   line-height: 1.6;
 }
 
+.issue-thanks {
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
 .planner-split {
   display: grid;
   grid-template-columns: minmax(520px, 1.18fr) minmax(280px, 0.82fr);
