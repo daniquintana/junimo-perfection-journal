@@ -142,11 +142,12 @@ body.is-hoard-mode .front-junimo {
 }
 
 body.is-hoard-mode .hero-emblem {
-  transform: none;
+  transform: scale(0.875);
+  transform-origin: center;
 }
 
 body.is-hoard-mode .hero-emblem:hover {
-  transform: translateY(-1px);
+  transform: scale(0.875) translateY(-1px);
 }
 
 body.is-hoard-mode .front-junimo img {
