@@ -1345,6 +1345,33 @@ input[type="checkbox"] {
   line-height: 1.6;
 }
 
+.update-entry + .update-entry {
+  border-top: 1px solid rgba(144, 96, 40, 0.22);
+  padding-top: 18px;
+}
+
+.update-title {
+  margin: 12px 0 10px;
+  font-family: var(--title-font);
+  font-size: clamp(1.55rem, 2vw, 2rem);
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.compact-help-list {
+  gap: 8px;
+}
+
+.compact-help-list li + li {
+  margin-top: 4px;
+}
+
+.update-note {
+  margin: 10px 0 0;
+  color: var(--ink);
+  font-weight: 600;
+}
+
 .issue-thanks {
   display: inline-flex;
   align-items: center;
