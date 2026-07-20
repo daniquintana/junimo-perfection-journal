@@ -1759,7 +1759,11 @@ function renderRecipePlanner(config) {
     : visibleIngredientRows.length
     ? `
       <article class="planner-card">
-        <h3>${kind === "cooking" ? "Ingredient Planner" : "Material Planner"}</h3>
+        <div class="section-header museum-section-header">
+          <div>
+            <p class="section-kicker">${kind === "cooking" ? "Ingredient Planner" : "Material Planner"}</p>
+          </div>
+        </div>
         <div class="table-shell">
           <table class="planner-table tight-table ${kind === "cooking" ? "planner-table-cooking" : ""}">
             <thead>
