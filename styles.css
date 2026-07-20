@@ -1927,6 +1927,7 @@ input[type="checkbox"] {
 .monster-done-cell {
   width: 56px;
   text-align: center;
+  vertical-align: middle;
 }
 
 .fish-table {
@@ -2019,6 +2020,7 @@ input[type="checkbox"] {
 
 .monster-goal-cell {
   text-align: left;
+  vertical-align: middle;
 }
 
 .monster-goal-inline {
@@ -2034,6 +2036,7 @@ input[type="checkbox"] {
 .monster-target-cell,
 .monster-number-cell {
   text-align: center;
+  vertical-align: middle;
 }
 
 .monster-number-cell .number-stepper {
@@ -2044,6 +2047,7 @@ input[type="checkbox"] {
 .monster-remaining-cell {
   white-space: nowrap;
   text-align: center;
+  vertical-align: middle;
 }
 
 .building-controls {
